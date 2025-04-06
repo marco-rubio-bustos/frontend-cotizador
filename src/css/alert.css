@@ -1,0 +1,13 @@
+.alert {
+  animation-name: hidden;
+  animation-duration: 4s;
+  animation-delay: 2s;
+}
+
+@keyframes hidden {
+  0%   {opacity: 1; }
+  50% {opacity: 0; }
+  100% {opacity: 0; }
+}
+
+

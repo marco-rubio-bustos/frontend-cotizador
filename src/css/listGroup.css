@@ -1,0 +1,16 @@
+.list-group{
+  width: 100%;
+}
+
+.list-group:hover .list-group-item {
+  background: #ebebeb;
+}
+
+.list-group .list-group-item {
+  font-size: 0.95rem;
+  padding: 0.5rem;
+}
+
+.list-group-horizontal>.list-group-item:first-child:not(:last-child) {
+  text-align: center;
+}
