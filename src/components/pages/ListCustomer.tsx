@@ -53,7 +53,7 @@ const ListCustomer: React.FC = () => {
   if (error) return <p>Error al obtener clientes</p>
 
   return (
-    <div className="container bg-light">
+    <div className="container bg-light pb-5 vh-100">
       <h1 className="mb-4 pt-4">Listar Clientes</h1>
       {customersData?.customers && customersData.customers.length > 0 ? (
         customersData.customers.map((customer: Customer) => (
