@@ -82,7 +82,7 @@ const CreateQuotation: React.FC = () => {
   }
 
   return (
-    <div className="container bg-light">
+    <div className="container bg-light pb-5 vh-100">
       <h1 className="mb-4 pt-4">Crear Cotización</h1>
       <Form className="row text-left position-relative">
         {success && <Alert message={alertMessage} variant={showAlert} />}

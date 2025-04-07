@@ -53,7 +53,7 @@ const ListQuotation: React.FC = () => {
   if (error) return <p>Error al obtener clientes</p>
 
   return (
-    <div className="container bg-light">
+    <div className="container bg-light pb-5 vh-100">
       <h1 className="mb-4 pt-4">Listar Cotizaciones</h1>
       {quotationData?.quotation && quotationData.quotation.length > 0 ? (
         quotationData.quotation.map((quotation: Quotation) => (
