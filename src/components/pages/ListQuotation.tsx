@@ -9,11 +9,11 @@ import '../../css/listGroup.css'
 // Definir los tipos de los datos que esperamos recibir
 type Quotation = {
   id: string
-  description: string
-  qty: string
-  priceUnit: string
-  total: string
-  notes: string
+  name: string
+  address: string
+  rut: string
+  attention: string
+  email: string
 }
 
 type QuotationsResponse = {
@@ -66,19 +66,19 @@ const ListQuotation: React.FC = () => {
               {quotation.id}
             </ListGroup.Item>
             <ListGroup.Item className="col-12 col-lg-3">
-              {quotation.description}
+              {quotation.name}
             </ListGroup.Item>
             <ListGroup.Item className="col-12 col-lg-2">
-              {quotation.qty}
+              {quotation.address}
             </ListGroup.Item>
             <ListGroup.Item className="col-12 col-lg-2">
-              {quotation.priceUnit}
+              {quotation.rut}
             </ListGroup.Item>
             <ListGroup.Item className="col-12 col-lg-2">
-              {quotation.total}
+              {quotation.attention}
             </ListGroup.Item>
             <ListGroup.Item className="col-12 col-lg-2 ellipsis">
-              {quotation.notes}
+              {quotation.email}
             </ListGroup.Item>
           </ListGroup>
         ))

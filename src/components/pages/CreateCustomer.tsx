@@ -48,7 +48,7 @@ const CreateCustomer: React.FC = () => {
     },
   })
 
-  const save = () => {
+  const handleSave = () => {
     mutation.mutate(form)
   }
 
@@ -69,6 +69,7 @@ const CreateCustomer: React.FC = () => {
             onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
         </Form.Group>
+
         <Form.Group
           className="mb-3 col-md-3 col-12"
           controlId="exampleForm.ControlInput1"
@@ -81,6 +82,7 @@ const CreateCustomer: React.FC = () => {
             onChange={(e) => setForm({ ...form, rut: e.target.value })}
           />
         </Form.Group>
+
         <Form.Group
           className="mb-3 col-md-6 col-12"
           controlId="exampleForm.ControlInput1"
@@ -93,6 +95,7 @@ const CreateCustomer: React.FC = () => {
             onChange={(e) => setForm({ ...form, address: e.target.value })}
           />
         </Form.Group>
+
         <Form.Group
           className="mb-3 col-md-3 col-12"
           controlId="exampleForm.ControlInput1"
@@ -105,6 +108,7 @@ const CreateCustomer: React.FC = () => {
             onChange={(e) => setForm({ ...form, attention: e.target.value })}
           />
         </Form.Group>
+
         <Form.Group
           className="mb-3 col-md-3 col-12"
           controlId="exampleForm.ControlInput1"
@@ -117,6 +121,7 @@ const CreateCustomer: React.FC = () => {
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
           />
         </Form.Group>
+
         <Form.Group
           className="mb-3 col-md-4 col-12"
           controlId="exampleForm.ControlInput1"
@@ -129,6 +134,7 @@ const CreateCustomer: React.FC = () => {
             onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
         </Form.Group>
+
         <Form.Group
           className="mb-3 col-md-8 col-12"
           controlId="exampleForm.ControlTextarea1"
@@ -141,10 +147,11 @@ const CreateCustomer: React.FC = () => {
             onChange={(e) => setForm({ ...form, notesGeneral: e.target.value })}
           />
         </Form.Group>
+
         <Button
           variant="primary"
           type="button"
-          onClick={save}
+          onClick={handleSave}
           disabled={mutation.isPending}
           className="offset-md-4 col-md-4 col-12"
         >

@@ -4,7 +4,13 @@ import { getCustomers } from '../../api/apiConnection'
 import ListGroup from 'react-bootstrap/ListGroup'
 import FormattedRut from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
+import { useNavigate } from 'react-router-dom'
+
 import '../../css/listGroup.css'
+
+// redux
+import { useDispatch } from 'react-redux'
+import { setSelectedCustomer } from '../../actions'
 
 // Definir los tipos de los datos que esperamos recibir
 type Customer = {
@@ -21,6 +27,20 @@ type CustomersResponse = {
   totalItems: number
 }
 
+// Hook fuera del componente
+const useWindowSize = () => {
+  const [width, setWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth)
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  return width
+}
+
 const ListCustomer: React.FC = () => {
   const [page, setPage] = useState(1)
   const pageSize = 10
@@ -34,20 +54,19 @@ const ListCustomer: React.FC = () => {
     queryFn: () => getCustomers({ page, pageSize }),
   })
 
-  const useWindowSize = () => {
-    const [width, setWidth] = useState(window.innerWidth)
+  const width = useWindowSize() // Ahora es estable y no afecta los hooks
 
-    useEffect(() => {
-      const handleResize = () => setWidth(window.innerWidth)
+  // Redux
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
-    }, [])
+  const save = (e: React.MouseEvent<HTMLDivElement>) => {
+    const customerId = e.currentTarget.innerText[0] // Obtén el cliente seleccionado
 
-    return width
+    // Despachar la acción para actualizar el estado global
+    dispatch(setSelectedCustomer(customerId))
+    navigate('/crear-cotizacion')
   }
-
-  const width = useWindowSize()
 
   if (isLoading) return <p>Cargando...</p>
   if (error) return <p>Error al obtener clientes</p>
@@ -58,9 +77,10 @@ const ListCustomer: React.FC = () => {
       {customersData?.customers && customersData.customers.length > 0 ? (
         customersData.customers.map((customer: Customer) => (
           <ListGroup
+            onClick={save}
             key={customer.id}
             horizontal={width >= 991}
-            className="my-2"
+            className="my-2 btn p-0"
           >
             <ListGroup.Item className="col-12 col-lg-1">
               {customer.id}
@@ -83,12 +103,12 @@ const ListCustomer: React.FC = () => {
           </ListGroup>
         ))
       ) : (
-        <p>No hay clientes disponibles.</p> // Mensaje cuando no hay clientes
+        <p>No hay clientes disponibles.</p>
       )}
       <Pagination
         currentPage={page}
         onPageChange={setPage}
-        totalItems={customersData?.totalItems || 100} // Usa el valor totalItems si está disponible
+        totalItems={customersData?.totalItems || 100}
         pageSize={pageSize}
       />
     </div>

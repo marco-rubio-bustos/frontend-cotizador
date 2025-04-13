@@ -46,3 +46,27 @@
   white-space: nowrap;
   display: block;
 }
+
+.rounded-circle.btn-circle {
+  height: 30px;
+  width: 30px;
+  padding-bottom: 9px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content{
+  margin:  0 25%;
+}
+
+.alert{
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: fit-content; 
+}
+
+/* .nav-link:focus, .nav-link:hover, .nav-link:active {
+  color: #0d6efd !important
+} */
