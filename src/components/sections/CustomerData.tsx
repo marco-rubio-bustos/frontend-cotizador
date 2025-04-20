@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { Button } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import { getCustomers } from '../../api/apiConnection'
@@ -66,15 +67,12 @@ const CustomerData: React.FC<CustomerProps> = ({
 
   if (error) {
     return (
-      <p className="my-3 text-black row p-3 d-flex align-items-center bg-danger-subtle">
+      <p className="my-3 text-black row p-3 d-flex align-items-center justify-content-between bg-danger-subtle">
         {error}
-        <Button
-          variant="primary"
-          type="button"
-          className="offset-md-4 col-md-4 col-12"
-        >
+
+        <Link to="/listar-clientes" className="col-md-4 btn btn-primary">
           Agregar Cliente
-        </Button>
+        </Link>
       </p>
     )
   }

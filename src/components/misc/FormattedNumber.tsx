@@ -1,15 +1,22 @@
-// export const FormattedNumber = (value: string): string => {
-//   // const num = parseFloat(value.replace(/,/g, '')) // Eliminar comas para evitar errores
-//   // if (isNaN(num)) return '' // Si no es un número, retorna vacío
-//   // return new Intl.NumberFormat('es-ES').format(num)
-// }
-
-// export default FormattedNumber
-
-export const FormattedNumber = () => {
-  // const num = parseFloat(value.replace(/,/g, '')) // Eliminar comas para evitar errores
-  // if (isNaN(num)) return '' // Si no es un número, retorna vacío
-  // return new Intl.NumberFormat('es-ES').format(num)
+interface Props {
+  num: string
 }
 
-export default FormattedNumber
+const FormattedThousands: React.FC<Props> = ({ num }) => {
+  let cleanNum = num.replace(/\D/g, '') // Solo números
+  return cleanNum.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
+
+const FormattedDecimals: React.FC<Props> = ({ num }) => {
+  return num.replace('.', ',')
+}
+
+const FormattedPriceUnit: React.FC<Props> = ({ num }) => {
+  const parsedNum = parseFloat(num.replace(',', '.'))
+  return parsedNum.toLocaleString('es-ES', {
+    minimumFractionDigits: 2, // Asegura dos decimales
+    useGrouping: true, // Agrega puntos de miles
+  })
+}
+
+export { FormattedThousands, FormattedDecimals, FormattedPriceUnit }

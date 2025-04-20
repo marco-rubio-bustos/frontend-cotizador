@@ -4,7 +4,11 @@ import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
 import { useMutation } from '@tanstack/react-query'
 import { createQuotation } from '../../api/apiConnection'
-import FormattedNumber from '../misc/FormattedNumber'
+import {
+  FormattedThousands,
+  FormattedDecimals,
+  FormattedPriceUnit,
+} from '../misc/FormattedNumber'
 import CustomerData from '../sections/CustomerData'
 import CurrentNumberQuotation from '../sections/CurrentNumberQuotation'
 import Alert from '../alerts/Alerts'
@@ -123,11 +127,16 @@ const CreateQuotation: React.FC = () => {
       }
 
       // Multiplicar solo si ambos campos tienen valores numéricos
-      const qty = Number(updatedForm.qty)
-      const priceUnit = Number(updatedForm.priceUnit)
+      const qty = updatedForm.qty
+      const priceUnit = updatedForm.priceUnit.replace(',', '.')
+
+      console.log(qty)
+      console.log(priceUnit)
 
       updatedForm.total =
-        isNaN(qty) || isNaN(priceUnit) ? '' : (qty * priceUnit).toFixed()
+        isNaN(Number(qty)) || isNaN(Number(priceUnit))
+          ? ''
+          : (Number(qty) * Number(priceUnit)).toFixed()
 
       return updatedForm
     })
@@ -171,7 +180,6 @@ const CreateQuotation: React.FC = () => {
         notes: quotation.notes,
       })),
     }
-    console.log(dataToSave)
 
     mutation.mutate(dataToSave) // se envían los datos a la API
   }
@@ -275,21 +283,21 @@ const CreateQuotation: React.FC = () => {
               <div className="row py-3 border-bottom" key={index}>
                 <div className="col-md-5 col-12">{quotation.description}</div>
                 <div className="col-md-2 col-12 text-end">
-                  {Number(quotation.qty).toLocaleString('es-ES', {
-                    useGrouping: true,
-                  })}
+                  {String(FormattedThousands({ num: quotation.qty }) || '')}
                 </div>
                 <div className="col-md-2 col-12 text-end">
-                  $
-                  {Number(quotation.priceUnit).toLocaleString('es-ES', {
-                    useGrouping: true,
-                  })}
+                  <p className="m-0">
+                    <span> $ </span>
+                    {String(
+                      FormattedPriceUnit({ num: quotation.priceUnit }) || '',
+                    )}
+                  </p>
                 </div>
                 <div className="col-md-2 col-12 text-end">
-                  $
-                  {Number(quotation.total).toLocaleString('es-ES', {
-                    useGrouping: true,
-                  })}
+                  <p className="m-0">
+                    <span> $ </span>
+                    {String(FormattedThousands({ num: quotation.total }) || '')}
+                  </p>
                 </div>
                 <div className="col-md-1 col-12">
                   <Button
@@ -305,24 +313,30 @@ const CreateQuotation: React.FC = () => {
             ))}
           </div>
 
-          <div className="offset-8 col-md-3 col-12 pt-3">
-            <div className="d-flex justify-content-between">
+          <div className="offset-8 col-md-3 col-12 py-3">
+            <div className="d-flex justify-content-between px-3">
               <strong>Sub-Total:</strong>$
               {Number(subTotal).toLocaleString('es-ES', {
                 useGrouping: true,
               })}
             </div>
-            <div className="d-flex justify-content-between">
-              <strong>Iva:</strong>$
-              {Number(iva).toLocaleString('es-ES', {
-                useGrouping: true,
-              })}
+            <div className="d-flex justify-content-between px-3 pb-3">
+              <strong>Iva:</strong>
+              <p className="m-0">
+                <span> $ </span>
+                {Number(iva).toLocaleString('es-ES', {
+                  useGrouping: true,
+                })}
+              </p>
             </div>
-            <div className="d-flex justify-content-between">
-              <strong>Total:</strong>$
-              {Number(total).toLocaleString('es-ES', {
-                useGrouping: true,
-              })}
+            <div className="d-flex justify-content-between p-3 bg-primary-subtle">
+              <strong>Total:</strong>
+              <p className="m-0">
+                <span> $ </span>
+                {Number(total).toLocaleString('es-ES', {
+                  useGrouping: true,
+                })}
+              </p>
             </div>
           </div>
         </>
@@ -354,7 +368,7 @@ const CreateQuotation: React.FC = () => {
             <Form.Control
               type="text"
               className="border-0"
-              value={String(FormattedNumber({ num: form.qty }) || '')} // formateo
+              value={String(FormattedThousands({ num: form.qty }) || '')} // formateo
               onChange={(e) => handleChange(e, 'qty')}
             />
           </Form.Group>
@@ -370,7 +384,7 @@ const CreateQuotation: React.FC = () => {
                 className="border-0"
                 type="text"
                 placeholder=""
-                value={String(FormattedNumber({ num: form.priceUnit }) || '')} // formateo
+                value={String(FormattedDecimals({ num: form.priceUnit }) || '')} // formateo
                 onChange={(e) => handleChange(e, 'priceUnit')}
               />
             </InputGroup>
@@ -387,7 +401,7 @@ const CreateQuotation: React.FC = () => {
                 className="border-0"
                 type="text"
                 placeholder=""
-                value={String(FormattedNumber({ num: form.total }) || '')} // formateo
+                value={String(FormattedThousands({ num: form.total }) || '')} // formateo
                 readOnly
               />
             </InputGroup>
