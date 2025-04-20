@@ -3,6 +3,8 @@ import { Button } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import { useMutation } from '@tanstack/react-query'
 import { createCustomer } from '../../api/apiConnection'
+import FormattedRut from '../misc/FormattedRut'
+import FormattedCleaningNumber from '../misc/FormattedCleaningNumber'
 import Alert from '../alerts/Alerts'
 import '../../css/form.css'
 
@@ -53,7 +55,7 @@ const CreateCustomer: React.FC = () => {
   }
 
   return (
-    <div className="container bg-light pb-5 vh-100">
+    <div className="container bg-light pb-5 px-4">
       <h1 className="mb-4 pt-4">Crear Cliente</h1>
       <Form className="row text-left position-relative">
         {success && <Alert message={alertMessage} variant={showAlert} />}
@@ -63,6 +65,7 @@ const CreateCustomer: React.FC = () => {
         >
           <Form.Label>Cliente</Form.Label>
           <Form.Control
+            className="text-capitalize"
             type="text"
             placeholder=""
             value={form.name}
@@ -78,8 +81,16 @@ const CreateCustomer: React.FC = () => {
           <Form.Control
             type="text"
             placeholder=""
-            value={form.rut}
-            onChange={(e) => setForm({ ...form, rut: e.target.value })}
+            value={String(FormattedRut({ rut: form.rut }) || '')} // formateo
+            onChange={
+              (e) =>
+                setForm({
+                  ...form,
+                  rut: String(
+                    FormattedCleaningNumber({ rut: e.target.value }) || '',
+                  ),
+                }) // FormattedCleaningNumber
+            }
           />
         </Form.Group>
 
@@ -89,6 +100,7 @@ const CreateCustomer: React.FC = () => {
         >
           <Form.Label>Dirección</Form.Label>
           <Form.Control
+            className="text-capitalize"
             type="email"
             placeholder=""
             value={form.address}
@@ -102,6 +114,7 @@ const CreateCustomer: React.FC = () => {
         >
           <Form.Label>Atención</Form.Label>
           <Form.Control
+            className="text-capitalize"
             type="text"
             placeholder=""
             value={form.attention}

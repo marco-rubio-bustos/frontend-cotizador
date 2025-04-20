@@ -3,9 +3,10 @@ import axios from 'axios'
 const url =
   import.meta.env.VITE_API_URL || 'http://localhost:5000/api/customers'
 
-const API_URL = `${url}/api/customers`
-const API_URLL = `${url}/api/quotation`
-const API_URLLL = `${url}/api/quotationPrice`
+const API_CUSTOMERS = `${url}/api/customers`
+const API_QUOTATION = `${url}/api/quotation`
+const API_QUOTATIONITEMS = `${url}/api/quotationItems`
+const API_QUOTATIONPRICE = `${url}/api/quotationPrice`
 
 interface CustomerData {
   name: string
@@ -24,6 +25,9 @@ interface QuotationData {
   attention: string
   phone: string
   email: string
+  subTotal: number
+  iva: number
+  total: number
   notesGeneral: string
   quotations: QuotationItem[]
 }
@@ -31,15 +35,15 @@ interface QuotationData {
 interface QuotationItem {
   idPrice: number
   description: string
-  qty: string
-  priceUnit: string
-  total: string
+  qty: number
+  priceUnit: number
+  total: number
   notes: string
 }
 
 export const createCustomer = async (data: CustomerData) => {
   try {
-    const response = await axios.post(API_URL, data)
+    const response = await axios.post(API_CUSTOMERS, data)
     return response.data
   } catch (error) {
     console.error('Error al crear el cliente en la base de datos:', error)
@@ -49,8 +53,7 @@ export const createCustomer = async (data: CustomerData) => {
 
 export const createQuotation = async (data: QuotationData) => {
   try {
-    const response = await axios.post(API_URLL, data)
-    console.log(response.data)
+    const response = await axios.post(API_QUOTATION, data)
     return response.data
   } catch (error) {
     console.error('Error al crear la cotización en la base de datos:', error)
@@ -60,9 +63,7 @@ export const createQuotation = async (data: QuotationData) => {
 
 export const createPriceQuote = async (data: QuotationItem) => {
   try {
-    console.log('Datos a guardar:', data)
-    const response = await axios.post(API_URLLL, data)
-    console.log(response.data)
+    const response = await axios.post(API_QUOTATIONPRICE, data)
     if (response.data.idPrice) {
       console.log('Datos guardados exitosamente con ID:', response.data.idPrice)
     }
@@ -81,16 +82,20 @@ interface PaginationParams {
 }
 
 export const getCustomers = async ({ page, pageSize }: PaginationParams) => {
-  const response = await axios.get(`${API_URL}?page=${page}&limit=${pageSize}`)
+  const response = await axios.get(
+    `${API_CUSTOMERS}?page=${page}&limit=${pageSize}`,
+  )
   return response.data
 }
 
 export const getQuotation = async ({ page, pageSize }: PaginationParams) => {
-  const response = await axios.get(`${API_URLL}?page=${page}&limit=${pageSize}`)
+  const response = await axios.get(
+    `${API_QUOTATION}?page=${page}&limit=${pageSize}`,
+  )
   return response.data
 }
 
-export const getNumberQuotation = async () => {
-  const response = await axios.get(`${API_URLL}`)
+export const getQuotationItems = async () => {
+  const response = await axios.get(`${API_QUOTATIONITEMS}`)
   return response.data
 }

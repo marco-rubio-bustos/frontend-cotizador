@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Button } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import { getCustomers } from '../../api/apiConnection'
 
@@ -64,7 +65,18 @@ const CustomerData: React.FC<CustomerProps> = ({
   }
 
   if (error) {
-    return <p>{error}</p>
+    return (
+      <p className="my-3 text-black row p-3 d-flex align-items-center bg-danger-subtle">
+        {error}
+        <Button
+          variant="primary"
+          type="button"
+          className="offset-md-4 col-md-4 col-12"
+        >
+          Agregar Cliente
+        </Button>
+      </p>
+    )
   }
 
   return (
@@ -72,7 +84,11 @@ const CustomerData: React.FC<CustomerProps> = ({
       <h3 className="mb-4 pt-4">Datos del cliente</h3>
       <Form.Group className="mb-3 col-md-9 col-12" controlId="formName">
         <Form.Label>Cliente</Form.Label>
-        <Form.Control value={customer?.name || ''} readOnly />
+        <Form.Control
+          className="text-capitalize"
+          value={customer?.name || ''}
+          readOnly
+        />
       </Form.Group>
 
       <Form.Group className="mb-3 col-md-3 col-12" controlId="formRut">
@@ -82,12 +98,20 @@ const CustomerData: React.FC<CustomerProps> = ({
 
       <Form.Group className="mb-3 col-md-6 col-12" controlId="formAddress">
         <Form.Label>Dirección</Form.Label>
-        <Form.Control value={customer?.address || ''} readOnly />
+        <Form.Control
+          className="text-capitalize"
+          value={customer?.address || ''}
+          readOnly
+        />
       </Form.Group>
 
       <Form.Group className="mb-3 col-md-3 col-12" controlId="formAttention">
         <Form.Label>Atención</Form.Label>
-        <Form.Control value={customer?.attention || ''} readOnly />
+        <Form.Control
+          className="text-capitalize"
+          value={customer?.attention || ''}
+          readOnly
+        />
       </Form.Group>
 
       <Form.Group className="mb-3 col-md-3 col-12" controlId="formPhone">

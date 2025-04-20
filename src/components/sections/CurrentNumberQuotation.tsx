@@ -20,18 +20,19 @@ type QuotationsResponse = {
   lastId: number
 }
 
-const CurrentNumber: React.FC<CurrentProps> = ({ onUpdateCurrentNumber }) => {
+const CurrentNumberQuotation: React.FC<CurrentProps> = ({
+  onUpdateCurrentNumber,
+}) => {
   const [currentNumber, setCurrentNumber] = useState<number | null>(null)
 
   const { data: quotationData, isSuccess } = useQuery<QuotationsResponse>({
     queryKey: ['quotation'],
     queryFn: () => getQuotation({ page: 1, pageSize: 2 }),
+    refetchInterval: 1000,
   })
 
   useEffect(() => {
     if (isSuccess && quotationData && quotationData.lastId !== undefined) {
-      console.log('Datos disponibles en quotationData:', quotationData)
-
       if (currentNumber !== quotationData.lastId) {
         const customerData = {
           number: currentNumber ?? 0, // Valor por defecto
@@ -43,15 +44,13 @@ const CurrentNumber: React.FC<CurrentProps> = ({ onUpdateCurrentNumber }) => {
         onUpdateCurrentNumber(customerData)
       }
     }
-  }, [quotationData, isSuccess, onUpdateCurrentNumber])
+  }, [quotationData, isSuccess])
 
   return (
-    <>
-      <h2 className="m-0 pe-5">
-        N° {currentNumber !== null ? currentNumber : 'Cargando...'}
-      </h2>
-    </>
+    <h2 className="m-0 pe-5">
+      N° {currentNumber !== null ? currentNumber + 1 : 'Cargando...'}
+    </h2>
   )
 }
 
-export default CurrentNumber
+export default CurrentNumberQuotation

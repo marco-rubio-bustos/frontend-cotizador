@@ -66,6 +66,26 @@
   margin: auto;
   width: fit-content; 
 }
+.accordion .accordion-item:first-of-type>.accordion-header .accordion-button, .accordion .accordion-item:last-of-type>.accordion-header .accordion-button.collapsed{
+  border-radius: 0;
+}
+
+.accordion-header button {
+  padding: 0;
+}
+
+.accordion-item:first-of-type>.accordion-header .accordion-button{
+  padding-right: 15px;
+}
+
+.item-title{
+  background: #EBEBEB;
+}
+
+.etiquetando .form-control.capitalize:first-letter {
+  text-transform: capitalize !important;
+  font-size: inherit;
+}
 
 /* .nav-link:focus, .nav-link:hover, .nav-link:active {
   color: #0d6efd !important

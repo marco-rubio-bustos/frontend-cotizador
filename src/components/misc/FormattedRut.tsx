@@ -1,8 +1,13 @@
 interface Props {
-  rut: string // Recibe la fecha como string desde la BD
+  rut: string
 }
 
 const formatRut: React.FC<Props> = ({ rut }) => {
+  // Verificar si rut es null o una cadena vacía
+  if (!rut) {
+    return '' // O puedes devolver un valor por defecto
+  }
+
   // Eliminar puntos y guiones previos
   let cleanRut = rut.replace(/\D/g, '') // Solo números
 

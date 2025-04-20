@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Button } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
+import InputGroup from 'react-bootstrap/InputGroup'
 import { useMutation } from '@tanstack/react-query'
 import { createQuotation } from '../../api/apiConnection'
-//import FormattedNumber from '../misc/FormattedNumber'
+import FormattedNumber from '../misc/FormattedNumber'
 import CustomerData from '../sections/CustomerData'
-import CurrentNumber from '../sections/CurrentNumber'
+import CurrentNumberQuotation from '../sections/CurrentNumberQuotation'
 import Alert from '../alerts/Alerts'
 import CustomModal from '../misc/CustomModal'
 import '../../css/form.css'
@@ -18,6 +19,7 @@ import { RootState } from '../../store/store'
 
 type Current = {
   number: number
+  lastId: number
 }
 
 type Customer = {
@@ -39,15 +41,18 @@ type QuotationData = {
   phone: string
   email: string
   notesGeneral: string
+  subTotal: number
+  iva: number
+  total: number
   quotations: QuotationItem[]
 }
 
 type QuotationItem = {
   idPrice: number
   description: string
-  qty: string
-  priceUnit: string
-  total: string
+  qty: number
+  priceUnit: number
+  total: number
   notes: string
 }
 
@@ -93,7 +98,7 @@ const CreateQuotation: React.FC = () => {
         notes: '',
       }) // Limpia el formulario después de guardar
       setSuccess(true)
-      setAlertMessage('¡Se creo la cotización correctamente!')
+      setAlertMessage(`¡Se creó la cotización correctamente!`)
       setShowAlert('success')
       timeout()
     },
@@ -110,19 +115,19 @@ const CreateQuotation: React.FC = () => {
   // y lo guardo en el total
   const handleChange = (e: React.ChangeEvent<any>, field: string) => {
     const value = e.target.value
+
     setForm((prevForm) => {
       const updatedForm = {
         ...prevForm,
         [field]: value,
       }
-      console.log(updatedForm)
 
       // Multiplicar solo si ambos campos tienen valores numéricos
       const qty = Number(updatedForm.qty)
       const priceUnit = Number(updatedForm.priceUnit)
 
       updatedForm.total =
-        isNaN(qty) || isNaN(priceUnit) ? '' : (qty * priceUnit).toString()
+        isNaN(qty) || isNaN(priceUnit) ? '' : (qty * priceUnit).toFixed()
 
       return updatedForm
     })
@@ -154,6 +159,9 @@ const CreateQuotation: React.FC = () => {
       phone: getCustomerData.phone,
       email: getCustomerData.email,
       notesGeneral: getCustomerData.notesGeneral,
+      subTotal: subTotal,
+      iva: iva,
+      total: total,
       quotations: savedQuotations.map((quotation) => ({
         idPrice: quotation.id,
         description: quotation.description,
@@ -163,6 +171,7 @@ const CreateQuotation: React.FC = () => {
         notes: quotation.notes,
       })),
     }
+    console.log(dataToSave)
 
     mutation.mutate(dataToSave) // se envían los datos a la API
   }
@@ -185,8 +194,6 @@ const CreateQuotation: React.FC = () => {
       notes: form.notes,
       getCustomerData,
     }
-
-    console.log('Objeto enviado al backend:', quotationData)
 
     // Agregar la cotización al estado
     setSavedQuotations((prev) => [...prev, quotationData])
@@ -217,13 +224,10 @@ const CreateQuotation: React.FC = () => {
   // recibo el dato del hijo CustomerData
   const handleUpdateCustomer = (customer: Customer | null) => {
     setGetCustomerData(customer)
-    console.log(setGetCustomerData(customer))
   }
 
-  // recibo el dato del hijo CurrentNumber
   const handleUpdateCurrentNumber = (current: Current | null) => {
-    setGetCurrent(current)
-    console.log(setGetCurrent(current))
+    setGetCurrent(current) // No se esta utilizando
   }
 
   const subTotal = savedQuotations.reduce((acc, item) => {
@@ -240,16 +244,16 @@ const CreateQuotation: React.FC = () => {
   // fin redux
 
   return (
-    <div className="container bg-light pb-5">
+    <div className="container bg-light pb-5 px-4">
       <CustomModal
         modalState={modalState}
         onHide={(data) => handleModalClose(data)}
       />
       <div className="d-flex justify-content-between align-items-center mb-4 pt-4">
         <h1 className="m-0">Crear Cotización</h1>
-        <div className="">
-          <CurrentNumber onUpdateCurrentNumber={handleUpdateCurrentNumber} />
-        </div>
+        <CurrentNumberQuotation
+          onUpdateCurrentNumber={handleUpdateCurrentNumber}
+        />
       </div>
       {success && <Alert message={alertMessage} variant={showAlert} />}
       <CustomerData
@@ -259,16 +263,38 @@ const CreateQuotation: React.FC = () => {
       {savedQuotations.length > 0 ? (
         <>
           <div className="pt-4">
+            <div className="row py-3 border-bottom">
+              <div className="col-md-5 col-12">Descripción</div>
+              <div className="col-md-2 col-12 text-end">Cantidad</div>
+              <div className="col-md-2 col-12 text-end">Precio Unitario</div>
+              <div className="col-md-2 col-12 text-end">Total</div>
+              <div className="col-md-1 col-12 text-center">Borrar</div>
+            </div>
+
             {savedQuotations.map((quotation, index) => (
               <div className="row py-3 border-bottom" key={index}>
                 <div className="col-md-5 col-12">{quotation.description}</div>
-                <div className="col-md-2 col-12">{quotation.qty}</div>
-                <div className="col-md-2 col-12">{quotation.priceUnit}</div>
-                <div className="col-md-2 col-12">{quotation.total}</div>
+                <div className="col-md-2 col-12 text-end">
+                  {Number(quotation.qty).toLocaleString('es-ES', {
+                    useGrouping: true,
+                  })}
+                </div>
+                <div className="col-md-2 col-12 text-end">
+                  $
+                  {Number(quotation.priceUnit).toLocaleString('es-ES', {
+                    useGrouping: true,
+                  })}
+                </div>
+                <div className="col-md-2 col-12 text-end">
+                  $
+                  {Number(quotation.total).toLocaleString('es-ES', {
+                    useGrouping: true,
+                  })}
+                </div>
                 <div className="col-md-1 col-12">
                   <Button
                     variant="danger"
-                    className="rounded-circle btn-circle"
+                    className="rounded-circle btn-circle m-auto"
                     onClick={() => handleDelete(index)}
                   >
                     x
@@ -279,25 +305,33 @@ const CreateQuotation: React.FC = () => {
             ))}
           </div>
 
-          <div className="offset-7 col-md-3 col-12 pt-3">
+          <div className="offset-8 col-md-3 col-12 pt-3">
             <div className="d-flex justify-content-between">
-              <strong>Sub-Total:</strong>
-              <p>{subTotal}</p>
+              <strong>Sub-Total:</strong>$
+              {Number(subTotal).toLocaleString('es-ES', {
+                useGrouping: true,
+              })}
             </div>
             <div className="d-flex justify-content-between">
-              <strong>Iva:</strong>
-              <p> {iva}</p>
+              <strong>Iva:</strong>$
+              {Number(iva).toLocaleString('es-ES', {
+                useGrouping: true,
+              })}
             </div>
             <div className="d-flex justify-content-between">
-              <strong>Total:</strong>
-              <p>{total}</p>
+              <strong>Total:</strong>$
+              {Number(total).toLocaleString('es-ES', {
+                useGrouping: true,
+              })}
             </div>
           </div>
         </>
       ) : (
-        <p className="my-3">Aún no ha agregado ítems a la cotización</p>
+        <p className="my-3 row p-3 text-black bg-danger-subtle">
+          Aún no ha agregado ítems a la cotización.
+        </p>
       )}
-      <Form className=" text-left position-relative">
+      <Form className="text-left position-relative">
         <div className="row py-5 bg-secondary-subtle">
           <Form.Group
             className="mb-3 col-md-6 col-12"
@@ -305,6 +339,7 @@ const CreateQuotation: React.FC = () => {
           >
             <Form.Label>Descripción</Form.Label>
             <Form.Control
+              className="capitalize border-0"
               type="text"
               placeholder=""
               value={form.description}
@@ -317,7 +352,9 @@ const CreateQuotation: React.FC = () => {
           <Form.Group className="mb-3 col-md-2 col-12" controlId="controlIdQty">
             <Form.Label>Cantidad</Form.Label>
             <Form.Control
-              value={form.qty}
+              type="text"
+              className="border-0"
+              value={String(FormattedNumber({ num: form.qty }) || '')} // formateo
               onChange={(e) => handleChange(e, 'qty')}
             />
           </Form.Group>
@@ -327,26 +364,33 @@ const CreateQuotation: React.FC = () => {
             controlId="controlIdPriceUnit"
           >
             <Form.Label className="ellipsis">Precio unitario</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder=""
-              value={form.priceUnit}
-              onChange={(e) => handleChange(e, 'priceUnit')}
-            />
+            <InputGroup>
+              <InputGroup.Text className="border-0">$</InputGroup.Text>
+              <Form.Control
+                className="border-0"
+                type="text"
+                placeholder=""
+                value={String(FormattedNumber({ num: form.priceUnit }) || '')} // formateo
+                onChange={(e) => handleChange(e, 'priceUnit')}
+              />
+            </InputGroup>
           </Form.Group>
 
           <Form.Group
             className="mb-3 col-md-2 col-12"
             controlId="controlIdTotal"
           >
-            <Form.Label className="ellipsis">Precio total</Form.Label>
-            <Form.Control
-              className="border-0"
-              type="text"
-              placeholder=""
-              value={form.total}
-              readOnly
-            />
+            <Form.Label className="text-end">Precio total</Form.Label>
+            <InputGroup>
+              <InputGroup.Text className="border-0">$</InputGroup.Text>
+              <Form.Control
+                className="border-0"
+                type="text"
+                placeholder=""
+                value={String(FormattedNumber({ num: form.total }) || '')} // formateo
+                readOnly
+              />
+            </InputGroup>
           </Form.Group>
 
           <Form.Group
@@ -368,7 +412,7 @@ const CreateQuotation: React.FC = () => {
             disabled={mutation.isPending}
             className="offset-md-4 col-md-4 col-12"
           >
-            {mutation.isPending ? 'Guardando...' : 'Crear Item'}
+            {mutation.isPending ? 'Guardando...' : 'Crear Ítem'}
           </Button>
         </div>
         <Button
