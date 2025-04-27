@@ -25,6 +25,7 @@ type Quotation = {
   notesGeneral: string
   created_at: string
 }
+
 type QuotationItems = {
   id: string
   idPrice: string

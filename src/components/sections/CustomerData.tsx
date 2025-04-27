@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Button } from 'react-bootstrap'
+import FormattedRut from '../misc/FormattedRut'
 import Form from 'react-bootstrap/Form'
 import { getCustomers } from '../../api/apiConnection'
 
@@ -33,7 +33,7 @@ const CustomerData: React.FC<CustomerProps> = ({
       setLoading(true)
       setError(null)
       try {
-        const customersData = await getCustomers({ page: 1, pageSize: 10 })
+        const customersData = await getCustomers({ all: true })
 
         // Verificar si customersData y customersData.customers están definidos
         if (customersData && customersData.customers) {
@@ -86,12 +86,15 @@ const CustomerData: React.FC<CustomerProps> = ({
           className="text-capitalize"
           value={customer?.name || ''}
           readOnly
+          disabled
         />
       </Form.Group>
 
       <Form.Group className="mb-3 col-md-3 col-12" controlId="formRut">
         <Form.Label>Rut</Form.Label>
-        <Form.Control value={customer?.rut || ''} readOnly />
+        <div className="form-control bg-input-disabled" aria-disabled="true">
+          <FormattedRut rut={customer?.rut || ''} />
+        </div>
       </Form.Group>
 
       <Form.Group className="mb-3 col-md-6 col-12" controlId="formAddress">
@@ -100,6 +103,7 @@ const CustomerData: React.FC<CustomerProps> = ({
           className="text-capitalize"
           value={customer?.address || ''}
           readOnly
+          disabled
         />
       </Form.Group>
 
@@ -109,17 +113,18 @@ const CustomerData: React.FC<CustomerProps> = ({
           className="text-capitalize"
           value={customer?.attention || ''}
           readOnly
+          disabled
         />
       </Form.Group>
 
       <Form.Group className="mb-3 col-md-3 col-12" controlId="formPhone">
         <Form.Label>Teléfono</Form.Label>
-        <Form.Control value={customer?.phone || ''} readOnly />
+        <Form.Control value={customer?.phone || ''} readOnly disabled />
       </Form.Group>
 
       <Form.Group className="mb-3 col-md-4 col-12" controlId="formEmail">
         <Form.Label>Email</Form.Label>
-        <Form.Control value={customer?.email || ''} readOnly />
+        <Form.Control value={customer?.email || ''} readOnly disabled />
       </Form.Group>
 
       <Form.Group className="mb-3 col-md-8 col-12" controlId="formNotes">
@@ -129,6 +134,7 @@ const CustomerData: React.FC<CustomerProps> = ({
           rows={3}
           value={customer?.notesGeneral || ''}
           readOnly
+          disabled
         />
       </Form.Group>
     </div>

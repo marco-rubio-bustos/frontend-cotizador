@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import ListGroup from 'react-bootstrap/ListGroup'
+import Form from 'react-bootstrap/Form'
 import Accordion from 'react-bootstrap/Accordion'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { getCustomers } from '../../api/apiConnection'
 import FormattedRut from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
+import CreatedQuotation from '../sections/CreatedQuotation'
 import '../../css/listGroup.css'
 
 // redux
@@ -55,7 +57,6 @@ const ListCustomer: React.FC = () => {
     queryKey: ['customers', page],
     queryFn: () => getCustomers({ page, pageSize }),
   })
-  console.log(customersData)
 
   const width = useWindowSize()
 
@@ -64,11 +65,18 @@ const ListCustomer: React.FC = () => {
   const navigate = useNavigate()
 
   const save = (e: React.MouseEvent<HTMLDivElement>) => {
-    const customerId = e.currentTarget.innerText[0] // Obtén el cliente seleccionado
+    const customerId = e.currentTarget.getAttribute('data-customer-id') // Obtén el ID completo
+    if (customerId) {
+      // Despachar la acción para actualizar el estado global
+      dispatch(setSelectedCustomer(customerId))
+      navigate('/crear-cotizacion')
+    }
+  }
 
-    // Despachar la acción para actualizar el estado global
-    dispatch(setSelectedCustomer(customerId))
-    navigate('/crear-cotizacion')
+  const [searchValue, setSearchValue] = useState('')
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value)
   }
 
   if (isLoading) return <p>Cargando...</p>
@@ -77,6 +85,15 @@ const ListCustomer: React.FC = () => {
   return (
     <div className="container bg-light pb-5 px-4">
       <h1 className="mb-4 pt-4">Listar Clientes</h1>
+
+      <Form>
+        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+          <Form.Label>Buscar</Form.Label>
+
+          <Form.Control type="text" onChange={handleChange} placeholder="" />
+        </Form.Group>
+      </Form>
+
       {customersData?.totalItems && customersData?.totalItems >= 21 && (
         <Pagination
           currentPage={page}
@@ -86,50 +103,62 @@ const ListCustomer: React.FC = () => {
         />
       )}
       {customersData?.customers && customersData.customers.length > 0 ? (
-        customersData.customers.map((customer: Customer) => (
-          <Accordion key={customer.id}>
-            <Accordion.Item className="border-0" eventKey={customer.id}>
-              <Accordion.Header className="rounded-0">
-                <ListGroup
-                  onClick={save}
-                  horizontal={width >= 991}
-                  className="my-2 btn p-0 px-2 m-0"
-                >
-                  <ListGroup.Item className="col-12 col-lg-1">
-                    {customer.id}
-                  </ListGroup.Item>
-                  <ListGroup.Item className="col-12 col-lg-3 text-capitalize">
-                    {customer.name}
-                  </ListGroup.Item>
-                  <ListGroup.Item className="col-12 col-lg-2">
-                    <FormattedRut rut={customer.rut} />
-                  </ListGroup.Item>
-                  <ListGroup.Item className="col-12 col-lg-2 text-capitalize">
-                    {customer.attention}
-                  </ListGroup.Item>
-                  <ListGroup.Item className="col-12 col-lg-2">
-                    {customer.phone}
-                  </ListGroup.Item>
-                  <ListGroup.Item className="col-12 col-lg-2 ellipsis">
-                    {customer.email}
-                  </ListGroup.Item>
-                </ListGroup>
-              </Accordion.Header>
-              <Accordion.Body>
-                <div className="row">
-                  <div className="col-12">
-                    <b>Dirección: </b>
-                    {customer.address}
+        customersData.customers
+          .filter((customer: Customer) => {
+            // Si searchValue está vacío, devuelve todos los elementos
+            if (!searchValue) {
+              return true
+            }
+            return customer.name
+              .toLowerCase()
+              .includes(searchValue.toLowerCase())
+          })
+          .map((customer: Customer) => (
+            <Accordion key={customer.id}>
+              <Accordion.Item className="border-0" eventKey={customer.id}>
+                <Accordion.Header className="rounded-0">
+                  <ListGroup
+                    onClick={save}
+                    horizontal={width >= 991}
+                    className="my-2 btn p-0 px-2 m-0"
+                    data-customer-id={customer.id}
+                  >
+                    <ListGroup.Item className="col-12 col-lg-1">
+                      {customer.id}
+                    </ListGroup.Item>
+                    <ListGroup.Item className="col-12 col-lg-3 text-capitalize">
+                      {customer.name}
+                    </ListGroup.Item>
+                    <ListGroup.Item className="col-12 col-lg-2">
+                      <FormattedRut rut={customer.rut} />
+                    </ListGroup.Item>
+                    <ListGroup.Item className="col-12 col-lg-2 text-capitalize">
+                      {customer.attention}
+                    </ListGroup.Item>
+                    <ListGroup.Item className="col-12 col-lg-2">
+                      {customer.phone}
+                    </ListGroup.Item>
+                    <ListGroup.Item className="col-12 col-lg-2 ellipsis">
+                      {customer.email}
+                    </ListGroup.Item>
+                  </ListGroup>
+                </Accordion.Header>
+                <Accordion.Body>
+                  <div className="row">
+                    <div className="col-12">
+                      <b>Dirección: </b>
+                      {customer.address}
+                    </div>
+                    <div className="col-12">
+                      <b>Notas Generales: </b>
+                      {customer.notesGeneral}
+                    </div>
                   </div>
-                  <div className="col-12">
-                    <b>Notas Generales: </b>
-                    {customer.notesGeneral}
-                  </div>
-                </div>
-              </Accordion.Body>
-            </Accordion.Item>
-          </Accordion>
-        ))
+                  <CreatedQuotation quotationCustomer={customer.name} />
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
+          ))
       ) : (
         <p>No hay clientes disponibles.</p>
       )}

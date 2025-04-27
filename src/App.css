@@ -87,6 +87,9 @@
   font-size: inherit;
 }
 
+.form-control.bg-input-disabled{
+  background: #e9ecef;
+}
 /* .nav-link:focus, .nav-link:hover, .nav-link:active {
   color: #0d6efd !important
 } */

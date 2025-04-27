@@ -77,14 +77,33 @@ export const createPriceQuote = async (data: QuotationItem) => {
 //////////////
 
 interface PaginationParams {
-  page: number
-  pageSize: number
+  page?: number
+  pageSize?: number
+  all?: boolean
 }
 
-export const getCustomers = async ({ page, pageSize }: PaginationParams) => {
+// export const getCustomers = async ({ page, pageSize }: PaginationParams) => {
+//   const response = await axios.get(
+//     `${API_CUSTOMERS}?page=${page}&limit=${pageSize}`,
+//   )
+//   return response.data
+// }
+
+export const getCustomers = async ({
+  page,
+  pageSize,
+  all,
+}: PaginationParams) => {
+  if (all) {
+    // Realiza una solicitud al backend para obtener todos los clientes sin paginación
+    const response = await axios.get(`${API_CUSTOMERS}?all=true`)
+    return response.data
+  }
+  // Lógica para manejar paginación si no se usa `all`
   const response = await axios.get(
     `${API_CUSTOMERS}?page=${page}&limit=${pageSize}`,
   )
+
   return response.data
 }
 

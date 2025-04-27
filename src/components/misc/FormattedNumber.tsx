@@ -3,7 +3,7 @@ interface Props {
 }
 
 const FormattedThousands: React.FC<Props> = ({ num }) => {
-  let cleanNum = num.replace(/\D/g, '') // Solo números
+  const cleanNum = num.replace(/\D/g, '') // Eliminar caracteres no numéricos
   return cleanNum.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
 

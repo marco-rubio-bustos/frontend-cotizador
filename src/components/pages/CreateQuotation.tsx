@@ -3,6 +3,8 @@ import { Button } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
 import { useMutation } from '@tanstack/react-query'
+import { PDFDownloadLink } from '@react-pdf/renderer'
+import CreatePdf from '../pdf/Pdf' // Importa el PDF
 import { createQuotation } from '../../api/apiConnection'
 import {
   FormattedThousands,
@@ -118,7 +120,11 @@ const CreateQuotation: React.FC = () => {
   // hago la multiplicacion de cantidad y precio unitario
   // y lo guardo en el total
   const handleChange = (e: React.ChangeEvent<any>, field: string) => {
-    const value = e.target.value
+    // const value = e.target.value
+    const value =
+       'priceUnit' === field ? e.target.value : e.target.value.replace(/\D/g, '')
+
+    console.log(value)
 
     setForm((prevForm) => {
       const updatedForm = {
@@ -129,9 +135,6 @@ const CreateQuotation: React.FC = () => {
       // Multiplicar solo si ambos campos tienen valores numéricos
       const qty = updatedForm.qty
       const priceUnit = updatedForm.priceUnit.replace(',', '.')
-
-      console.log(qty)
-      console.log(priceUnit)
 
       updatedForm.total =
         isNaN(Number(qty)) || isNaN(Number(priceUnit))
@@ -182,6 +185,8 @@ const CreateQuotation: React.FC = () => {
     }
 
     mutation.mutate(dataToSave) // se envían los datos a la API
+
+    // handleDownload() // descarga el PDF
   }
 
   const handleCreate = () => {
@@ -250,6 +255,25 @@ const CreateQuotation: React.FC = () => {
     (state: RootState) => state.selectedCustomer,
   )
   // fin redux
+
+  // const handleDownload = async () => {
+  //   const pdfInstance = (
+  //     <CreatePdf
+  //       quotation={5}
+  //       cliente={getCustomerData?.name || 'Cliente'}
+  //       total={total}
+  //     />
+  //   )
+  //   const blob = await (await import('@react-pdf/renderer'))
+  //     .pdf(pdfInstance)
+  //     .toBlob()
+  //   const url = URL.createObjectURL(blob)
+  //   const a = document.createElement('a')
+  //   a.href = url
+  //   a.download = 'cotizacion.pdf'
+  //   a.click()
+  //   URL.revokeObjectURL(url)
+  // }
 
   return (
     <div className="container bg-light pb-5 px-4">
@@ -403,6 +427,7 @@ const CreateQuotation: React.FC = () => {
                 placeholder=""
                 value={String(FormattedThousands({ num: form.total }) || '')} // formateo
                 readOnly
+                disabled
               />
             </InputGroup>
           </Form.Group>
@@ -419,17 +444,20 @@ const CreateQuotation: React.FC = () => {
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
             />
           </Form.Group>
-          <Button
-            variant="primary"
-            type="button"
-            onClick={handleCreate}
-            disabled={mutation.isPending}
-            className="offset-md-4 col-md-4 col-12"
-          >
-            {mutation.isPending ? 'Guardando...' : 'Crear Ítem'}
-          </Button>
+
+          <div className="d-flex justify-content-center">
+            <Button
+              variant="primary"
+              type="button"
+              onClick={handleCreate}
+              disabled={mutation.isPending}
+              className="col-md-4 col-12"
+            >
+              {mutation.isPending ? 'Guardando...' : 'Crear Ítem'}
+            </Button>
+          </div>
         </div>
-        <Button
+        {/* <Button
           variant="info"
           type="button"
           onClick={handleSave}
@@ -437,7 +465,57 @@ const CreateQuotation: React.FC = () => {
           className="offset-md-4 col-md-4 col-12 mt-5"
         >
           {mutation.isPending ? 'Guardando...' : 'Crear Cotización'}
-        </Button>
+        </Button> */}
+        <div className="d-flex justify-content-center py-5">
+          {!getCustomerData || savedQuotations.length === 0 ? (
+            <button className="btn btn-warning col-md-4 col-12" disabled>
+              Ingrese Información
+            </button>
+          ) : (
+            <PDFDownloadLink
+              className="btn btn-warning col-md-4 col-12"
+              onClick={handleSave}
+              document={
+                <CreatePdf
+                  quotation={(getCurrent?.lastId ?? 0) + 1}
+                  customer={
+                    getCustomerData ?? {
+                      name: '',
+                      address: '',
+                      rut: '',
+                      attention: '',
+                      phone: '',
+                      email: '',
+                      notesGeneral: '',
+                    }
+                  }
+                  quotations={
+                    savedQuotations?.length > 0
+                      ? savedQuotations
+                      : [
+                          {
+                            id: '',
+                            description: '',
+                            qty: '',
+                            priceUnit: '',
+                            total: '',
+                            notes: '',
+                          },
+                        ]
+                  }
+                  subTotal={subTotal}
+                  iva={iva}
+                  total={total}
+                />
+              }
+              fileName={`cotizacion_${getCustomerData.name}_${(getCurrent?.lastId ?? 0) + 1}.pdf`}
+            >
+              {mutation.isPending
+                ? 'Guardando...'
+                : 'Crear Cotización y Descargar PDF'}
+            </PDFDownloadLink>
+          )}
+        </div>
       </Form>
     </div>
   )
