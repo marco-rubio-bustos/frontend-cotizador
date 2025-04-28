@@ -79,6 +79,15 @@ const ListCustomer: React.FC = () => {
     setSearchValue(value)
   }
 
+  const showPagination =
+    customersData?.customers &&
+    customersData.customers.filter((customer: Customer) => {
+      if (!searchValue) {
+        return true
+      }
+      return customer.name.toLowerCase().includes(searchValue.toLowerCase())
+    }).length > 0
+
   if (isLoading) return <p>Cargando...</p>
   if (error) return <p>Error al obtener clientes</p>
 
@@ -86,27 +95,19 @@ const ListCustomer: React.FC = () => {
     <div className="container bg-light pb-5 px-4">
       <h1 className="mb-4 pt-4">Listar Clientes</h1>
       <Search onSearchValueChange={handleSearchValueChange} />
-      {customersData?.customers &&
-        customersData.customers.filter((customer: Customer) => {
-          return customer.name.toLowerCase().includes(searchValue.toLowerCase())
-        }).length > 0 && (
-          // Mostrar el paginador solo si hay resultados
-          <Pagination
-            currentPage={page}
-            onPageChange={setPage}
-            totalItems={customersData?.totalItems || 100}
-            pageSize={pageSize}
-          />
-        )}
+      {showPagination && (
+        // Mostrar el paginador solo si hay resultados
+        <Pagination
+          currentPage={page}
+          onPageChange={setPage}
+          totalItems={customersData?.totalItems || 100}
+          pageSize={pageSize}
+          showPagination={showPagination ?? false}
+        />
+      )}
       {/* Mostrar los resultados filtrados */}
       {customersData?.customers && customersData.customers.length > 0 ? (
-        customersData.customers.filter((customer: Customer) => {
-          // Si searchValue está vacío, devuelve todos los elementos
-          if (!searchValue) {
-            return true
-          }
-          return customer.name.toLowerCase().includes(searchValue.toLowerCase())
-        }).length > 0 ? (
+        showPagination ? (
           // Aquí verificamos si el filtro devuelve algún resultado
           customersData.customers
             .filter((customer: Customer) => {
@@ -170,18 +171,16 @@ const ListCustomer: React.FC = () => {
       ) : (
         <p>No hay clientes disponibles.</p>
       )}
-      {customersData?.customers &&
-        customersData.customers.filter((customer: Customer) => {
-          return customer.name.toLowerCase().includes(searchValue.toLowerCase())
-        }).length > 0 && (
-          // Mostrar el paginador solo si hay resultados
-          <Pagination
-            currentPage={page}
-            onPageChange={setPage}
-            totalItems={customersData?.totalItems || 100}
-            pageSize={pageSize}
-          />
-        )}
+      {showPagination && (
+        // Mostrar el paginador solo si hay resultados
+        <Pagination
+          currentPage={page}
+          onPageChange={setPage}
+          totalItems={customersData?.totalItems || 100}
+          pageSize={pageSize}
+          showPagination={showPagination ?? false}
+        />
+      )}
     </div>
   )
 }

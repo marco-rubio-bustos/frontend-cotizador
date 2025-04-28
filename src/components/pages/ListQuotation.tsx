@@ -79,6 +79,16 @@ const ListQuotation: React.FC = () => {
 
   const width = useWindowSize()
 
+  // Manejo del paginador
+  const showPagination =
+    quotationData?.quotation &&
+    quotationData.quotation.filter((quotation: Quotation) => {
+      if (!searchValue) {
+        return true
+      }
+      return quotation.name.toLowerCase().includes(searchValue.toLowerCase())
+    }).length > 0
+
   // Manejo del valor de búsqueda desde el hijo
   const handleSearchValueChange = (value: string) => {
     setSearchValue(value)
@@ -91,33 +101,20 @@ const ListQuotation: React.FC = () => {
     <div className="container bg-light pb-5 px-4">
       <h1 className="mb-4 pt-4">Listar Cotizaciones</h1>
       <Search onSearchValueChange={handleSearchValueChange} />
-      {quotationData?.quotation &&
-        quotationData.quotation.filter((quotation: Quotation) => {
-          // Si searchValue está vacío, devuelve todos los elementos
-
-          return quotation.name
-            .toLowerCase()
-            .includes(searchValue.toLowerCase())
-        }).length > 0 && (
-          // Mostrar el paginador solo si hay resultados
-          <Pagination
-            currentPage={page}
-            onPageChange={setPage}
-            totalItems={quotationData?.totalItems || 100}
-            pageSize={pageSize}
-          />
-        )}
+      {showPagination && (
+        // Mostrar el paginador solo si hay resultados
+        <Pagination
+          currentPage={page}
+          onPageChange={setPage}
+          totalItems={quotationData?.totalItems || 100}
+          pageSize={pageSize}
+          showPagination={showPagination ?? false}
+        />
+      )}
       {/* Mostrar los resultados filtrados */}
       {quotationData?.quotation && quotationData.quotation.length > 0 ? (
-        quotationData.quotation.filter((quotation: Quotation) => {
-          // Si searchValue está vacío, devuelve todos los elementos
-          if (!searchValue) {
-            return true
-          }
-          return quotation.name
-            .toLowerCase()
-            .includes(searchValue.toLowerCase())
-        }).length > 0 ? ( // Aquí verificamos si el filtro devuelve algún resultado
+        showPagination ? (
+          // Aquí verificamos si el filtro devuelve algún resultado
           quotationData.quotation
             .filter((quotation: Quotation) => {
               if (!searchValue) {
@@ -270,22 +267,16 @@ const ListQuotation: React.FC = () => {
       ) : (
         <p>No hay clientes disponibles.</p>
       )}
-      {quotationData?.quotation &&
-        quotationData.quotation.filter((quotation: Quotation) => {
-          // Si searchValue está vacío, devuelve todos los elementos
-
-          return quotation.name
-            .toLowerCase()
-            .includes(searchValue.toLowerCase())
-        }).length > 0 && (
-          // Mostrar el paginador solo si hay resultados
-          <Pagination
-            currentPage={page}
-            onPageChange={setPage}
-            totalItems={quotationData?.totalItems || 100}
-            pageSize={pageSize}
-          />
-        )}
+      {showPagination && (
+        // Mostrar el paginador solo si hay resultados
+        <Pagination
+          currentPage={page}
+          onPageChange={setPage}
+          totalItems={quotationData?.totalItems || 100}
+          pageSize={pageSize}
+          showPagination={showPagination ?? false}
+        />
+      )}
     </div>
   )
 }
