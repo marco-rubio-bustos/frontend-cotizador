@@ -19,6 +19,7 @@ interface CustomerData {
 }
 
 interface QuotationData {
+  createdCustomer: string
   name: string
   address: string
   rut: string

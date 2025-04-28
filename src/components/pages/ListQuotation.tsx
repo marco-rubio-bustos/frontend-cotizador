@@ -6,6 +6,7 @@ import { getQuotation, getQuotationItems } from '../../api/apiConnection'
 import FormattedRut from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
 import FormattedDate from '../misc/FormattedDate'
+import Search from '../sections/Search'
 import '../../css/listGroup.css'
 
 // Definir los tipos de los datos que esperamos recibir
@@ -46,6 +47,7 @@ type QuotationsItemsResponse = {
 }
 
 const ListQuotation: React.FC = () => {
+  const [searchValue, setSearchValue] = useState('')
   const [page, setPage] = useState(1)
   const pageSize = 20
 
@@ -77,160 +79,213 @@ const ListQuotation: React.FC = () => {
 
   const width = useWindowSize()
 
+  // Manejo del valor de búsqueda desde el hijo
+  const handleSearchValueChange = (value: string) => {
+    setSearchValue(value)
+  }
+
   if (isLoading) return <p>Cargando...</p>
   if (error) return <p>Error al obtener clientes</p>
 
   return (
     <div className="container bg-light pb-5 px-4">
       <h1 className="mb-4 pt-4">Listar Cotizaciones</h1>
-      {quotationData?.totalItems && quotationData?.totalItems >= 21 && (
-        <Pagination
-          currentPage={page}
-          onPageChange={setPage}
-          totalItems={quotationData?.totalItems || 100}
-          pageSize={pageSize}
-        />
-      )}
+      <Search onSearchValueChange={handleSearchValueChange} />
+      {quotationData?.quotation &&
+        quotationData.quotation.filter((quotation: Quotation) => {
+          // Si searchValue está vacío, devuelve todos los elementos
+
+          return quotation.name
+            .toLowerCase()
+            .includes(searchValue.toLowerCase())
+        }).length > 0 && (
+          // Mostrar el paginador solo si hay resultados
+          <Pagination
+            currentPage={page}
+            onPageChange={setPage}
+            totalItems={quotationData?.totalItems || 100}
+            pageSize={pageSize}
+          />
+        )}
+      {/* Mostrar los resultados filtrados */}
       {quotationData?.quotation && quotationData.quotation.length > 0 ? (
-        quotationData.quotation.map((quotation: Quotation) => (
-          <Accordion key={quotation.id}>
-            <Accordion.Item className="border-0" eventKey={quotation.id}>
-              <Accordion.Header>
-                <ListGroup
-                  horizontal={width >= 991}
-                  className="my-2 btn p-0 px-2 m-0"
-                >
-                  <ListGroup.Item className="col-12 col-lg-1">
-                    {quotation.id}
-                  </ListGroup.Item>
-                  <ListGroup.Item className="col-12 col-lg-2">
-                    {quotation.name}
-                  </ListGroup.Item>
-                  <ListGroup.Item className="col-12 col-lg-2 ">
-                    {quotation.address}
-                  </ListGroup.Item>
-                  <ListGroup.Item className="col-12 col-lg-2 ">
-                    <FormattedRut rut={quotation.rut} />
-                  </ListGroup.Item>
-                  <ListGroup.Item className="col-12 col-lg-1 ellipsis">
-                    {quotation.attention}
-                  </ListGroup.Item>
-                  <ListGroup.Item className="col-12 col-lg-2 ellipsis">
-                    {quotation.email}
-                  </ListGroup.Item>
-                  <ListGroup.Item className="col-12 col-lg-2 ellipsis">
-                    <FormattedDate date={quotation.created_at} />
-                  </ListGroup.Item>
-                </ListGroup>
-              </Accordion.Header>
-              <Accordion.Body>
-                <div className="row">
-                  <div className="col-12 py-5 border-bottom">
-                    <p className="m-0">
-                      <b>Notas generales:</b> {quotation.notesGeneral}
-                    </p>
-                  </div>
-                  <h3 className="py-3  border-bottom">Ítems</h3>
-                </div>
+        quotationData.quotation.filter((quotation: Quotation) => {
+          // Si searchValue está vacío, devuelve todos los elementos
+          if (!searchValue) {
+            return true
+          }
+          return quotation.name
+            .toLowerCase()
+            .includes(searchValue.toLowerCase())
+        }).length > 0 ? ( // Aquí verificamos si el filtro devuelve algún resultado
+          quotationData.quotation
+            .filter((quotation: Quotation) => {
+              if (!searchValue) {
+                return true
+              }
+              return quotation.name
+                .toLowerCase()
+                .includes(searchValue.toLowerCase())
+            })
+            .map((quotation: Quotation) => (
+              <Accordion key={quotation.id}>
+                <Accordion.Item className="border-0" eventKey={quotation.id}>
+                  <Accordion.Header>
+                    <ListGroup
+                      horizontal={width >= 991}
+                      className="my-2 btn p-0 px-2 m-0"
+                    >
+                      <ListGroup.Item className="col-12 col-lg-1">
+                        {quotation.id}
+                      </ListGroup.Item>
+                      <ListGroup.Item className="col-12 col-lg-2">
+                        {quotation.name}
+                      </ListGroup.Item>
+                      <ListGroup.Item className="col-12 col-lg-2 ">
+                        {quotation.address}
+                      </ListGroup.Item>
+                      <ListGroup.Item className="col-12 col-lg-2 ">
+                        <FormattedRut rut={quotation.rut} />
+                      </ListGroup.Item>
+                      <ListGroup.Item className="col-12 col-lg-1 ellipsis">
+                        {quotation.attention}
+                      </ListGroup.Item>
+                      <ListGroup.Item className="col-12 col-lg-2 ellipsis">
+                        {quotation.email}
+                      </ListGroup.Item>
+                      <ListGroup.Item className="col-12 col-lg-2 ellipsis">
+                        <FormattedDate date={quotation.created_at} />
+                      </ListGroup.Item>
+                    </ListGroup>
+                  </Accordion.Header>
+                  <Accordion.Body className="pb-5">
+                    <div className="row">
+                      <div className="col-12 py-5 border-bottom">
+                        <p className="m-0">
+                          <b>Notas generales:</b> {quotation.notesGeneral}
+                        </p>
+                      </div>
+                      <h3 className="py-3  border-bottom">Ítems</h3>
+                    </div>
 
-                <div className="row item-title py-3">
-                  <div className="col-6">Descripción </div>
-                  <div className="col-2">Cantidad</div>
-                  <div className="col-2">Precio unitario</div>
-                  <div className="col-2">Precio total</div>
-                </div>
+                    <div className="row item-title py-3">
+                      <div className="col-6">Descripción </div>
+                      <div className="col-2">Cantidad</div>
+                      <div className="col-2">Precio unitario</div>
+                      <div className="col-2">Precio total</div>
+                    </div>
 
-                {quotationItemsData?.quotationItems &&
-                quotationItemsData.quotationItems.length > 0 ? (
-                  quotationItemsData.quotationItems
-                    .filter(
-                      (quotationItems: QuotationItems) =>
-                        quotation.id === quotationItems.idPrice,
-                    )
-                    .map((quotationItems: QuotationItems) => (
-                      <div
-                        className="row border-bottom py-2"
-                        key={quotationItems.id}
-                      >
-                        <div className="col-6">
-                          {quotationItems.description}
+                    {quotationItemsData?.quotationItems &&
+                    quotationItemsData.quotationItems.length > 0 ? (
+                      quotationItemsData.quotationItems
+                        .filter(
+                          (quotationItems: QuotationItems) =>
+                            quotation.id === quotationItems.idPrice,
+                        )
+                        .map((quotationItems: QuotationItems) => (
+                          <div
+                            className="row border-bottom py-2"
+                            key={quotationItems.id}
+                          >
+                            <div className="col-6">
+                              {quotationItems.description}
+                            </div>
+                            <div className="col-2">
+                              {Number(quotationItems.qty).toLocaleString(
+                                'es-ES',
+                                {
+                                  useGrouping: true,
+                                },
+                              )}
+                            </div>
+                            <div className="col-2">
+                              $
+                              {Number(quotationItems.priceUnit).toLocaleString(
+                                'es-ES',
+                                {
+                                  useGrouping: true,
+                                },
+                              )}
+                            </div>
+                            <div className="col-2">
+                              $
+                              {Number(quotationItems.total).toLocaleString(
+                                'es-ES',
+                                {
+                                  useGrouping: true,
+                                },
+                              )}
+                            </div>
+                            <div className="col-12">
+                              <b>Notas: </b>
+                              {quotationItems.notes}
+                            </div>
+                          </div>
+                        ))
+                    ) : (
+                      <p>No hay ítems disponibles que coincidan con este ID.</p>
+                    )}
+                    <div className="row">
+                      <div className="offset-7 col-4 pt-3">
+                        <div className="col-12 d-flex justify-content-between">
+                          <b>Subtotal</b>
+                          <p className="m-0">
+                            $
+                            {Number(quotation.subTotal).toLocaleString(
+                              'es-ES',
+                              {
+                                useGrouping: true,
+                              },
+                            )}
+                          </p>
                         </div>
-                        <div className="col-2">
-                          {Number(quotationItems.qty).toLocaleString('es-ES', {
-                            useGrouping: true,
-                          })}
-                        </div>
-                        <div className="col-2">
-                          $
-                          {Number(quotationItems.priceUnit).toLocaleString(
-                            'es-ES',
-                            {
+                        <div className="col-12 d-flex justify-content-between">
+                          <b>Iva</b>
+                          <p className="m-0">
+                            $
+                            {Number(quotation.iva).toLocaleString('es-ES', {
                               useGrouping: true,
-                            },
-                          )}
+                            })}
+                          </p>
                         </div>
-                        <div className="col-2">
-                          $
-                          {Number(quotationItems.total).toLocaleString(
-                            'es-ES',
-                            {
+                        <div className="col-12 d-flex justify-content-between">
+                          <b>Total</b>
+                          <p className="m-0">
+                            $
+                            {Number(quotation.total).toLocaleString('es-ES', {
                               useGrouping: true,
-                            },
-                          )}
-                        </div>
-                        <div className="col-12">
-                          <b>Notas: </b>
-                          {quotationItems.notes}
+                            })}
+                          </p>
                         </div>
                       </div>
-                    ))
-                ) : (
-                  <p>No hay ítems disponibles que coincidan con este ID.</p>
-                )}
-                <div className="row">
-                  <div className="offset-7 col-4 pt-3">
-                    <div className="col-12 d-flex justify-content-between">
-                      <b>Subtotal</b>
-                      <p className="m-0">
-                        $
-                        {Number(quotation.subTotal).toLocaleString('es-ES', {
-                          useGrouping: true,
-                        })}
-                      </p>
                     </div>
-                    <div className="col-12 d-flex justify-content-between">
-                      <b>Iva</b>
-                      <p className="m-0">
-                        $
-                        {Number(quotation.iva).toLocaleString('es-ES', {
-                          useGrouping: true,
-                        })}
-                      </p>
-                    </div>
-                    <div className="col-12 d-flex justify-content-between">
-                      <b>Total</b>
-                      <p className="m-0">
-                        $
-                        {Number(quotation.total).toLocaleString('es-ES', {
-                          useGrouping: true,
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </Accordion.Body>
-            </Accordion.Item>
-          </Accordion>
-        ))
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+            ))
+        ) : (
+          // Mostrar mensaje si no se encuentran datos
+          <p>No se encontraron clientes con ese criterio de búsqueda.</p>
+        )
       ) : (
         <p>No hay clientes disponibles.</p>
       )}
-      <Pagination
-        currentPage={page}
-        onPageChange={setPage}
-        totalItems={quotationData?.totalItems || 0}
-        pageSize={pageSize}
-      />
+      {quotationData?.quotation &&
+        quotationData.quotation.filter((quotation: Quotation) => {
+          // Si searchValue está vacío, devuelve todos los elementos
+
+          return quotation.name
+            .toLowerCase()
+            .includes(searchValue.toLowerCase())
+        }).length > 0 && (
+          // Mostrar el paginador solo si hay resultados
+          <Pagination
+            currentPage={page}
+            onPageChange={setPage}
+            totalItems={quotationData?.totalItems || 100}
+            pageSize={pageSize}
+          />
+        )}
     </div>
   )
 }

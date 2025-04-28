@@ -40,6 +40,7 @@ type Customer = {
 }
 
 type QuotationData = {
+  createdCustomer: string
   name: string
   address: string
   rut: string
@@ -122,7 +123,7 @@ const CreateQuotation: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<any>, field: string) => {
     // const value = e.target.value
     const value =
-       'priceUnit' === field ? e.target.value : e.target.value.replace(/\D/g, '')
+      'priceUnit' === field ? e.target.value : e.target.value.replace(/\D/g, '')
 
     console.log(value)
 
@@ -164,6 +165,7 @@ const CreateQuotation: React.FC = () => {
 
     // Combinar los datos del cliente y las cotizaciones en un único objeto
     const dataToSave: QuotationData = {
+      createdCustomer: getCustomerData.id.toString(),
       name: getCustomerData.name,
       address: getCustomerData.address,
       rut: getCustomerData.rut,

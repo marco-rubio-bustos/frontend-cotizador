@@ -79,7 +79,7 @@ const CustomerData: React.FC<CustomerProps> = ({
 
   return (
     <div className="row border-bottom pb-5">
-      <h3 className="mb-4 pt-4">Datos del cliente</h3>
+      <h3 className="mb-4 pt-4">Datos del cliente {customer?.id}</h3>
       <Form.Group className="mb-3 col-md-9 col-12" controlId="formName">
         <Form.Label>Cliente</Form.Label>
         <Form.Control

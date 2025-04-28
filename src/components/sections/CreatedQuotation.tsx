@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getQuotation } from '../../api/apiConnection'
-import Pagination from '../pagination/PaginationBasic'
 import { FormattedThousands } from '../misc/FormattedNumber'
 
 type Quotation = {
@@ -32,70 +31,39 @@ type QuotationsResponse = {
 }
 
 const CreatedQuotation: React.FC<Props> = ({ quotationCustomer }) => {
-  const [page, setPage] = useState(1)
-  const pageSize = 10
-
   const {
     data: quotationData,
     error,
     isLoading,
   } = useQuery<QuotationsResponse>({
-    queryKey: ['quotation', page],
-    queryFn: () => getQuotation({ page, pageSize }),
+    queryKey: ['quotation'],
+    queryFn: () => getQuotation({ all: true }),
   })
 
   return (
-    <>
-      <div className="border pt-0 p-3 mt-3">
-        {quotationData?.quotation &&
-          quotationData.quotation.length > 0 &&
-          // Agrupar las cotizaciones por createdCustomer
-          Object.entries(
-            quotationData.quotation.reduce(
-              (acc: Record<number, Quotation[]>, quotation) => {
-                const key = quotation.createdCustomer // Agrupar por createdCustomer
-                if (!acc[key]) {
-                  acc[key] = [] // Inicializar el grupo si no existe
-                }
-                acc[key].push(quotation) // Agregar la cotización al grupo
-                return acc
-              },
-              {},
-            ),
-          ).map(([_, quotations]) => (
-            <>
-              {quotations.map((quotation) => {
-                if (quotationCustomer === quotation.name) {
-                  return (
-                    <div className="d-flex border-bottom" key={quotation.id}>
-                      <div className="col my-2">
-                        ID Cotización: {quotation.id}
-                      </div>
-                      <div className="col my-2">Nombre: {quotation.name}</div>
-                      <div className="col my-2">
-                        Total:
-                        {String(
-                          FormattedThousands({ num: quotation.total }) || '',
-                        )}
-                      </div>
-                    </div>
-                  )
-                } else {
-                  ;('dd')
-                }
-              })}
-            </>
-          ))}
-      </div>
-      {quotationData?.quotation && quotationData?.quotation.length > 0 && (
-        <Pagination
-          currentPage={page}
-          onPageChange={setPage}
-          totalItems={quotationData?.totalItems || 100}
-          pageSize={pageSize}
-        />
+    <div className="border pt-0 p-3 mt-3">
+      {quotationData?.quotation &&
+      quotationData.quotation.filter(
+        (quotation) => quotation.name === quotationCustomer,
+      ).length > 0 ? (
+        quotationData.quotation
+          .filter((quotation) => quotation.name === quotationCustomer)
+          .map((quotation) => (
+            <div className="d-flex border-bottom" key={quotation.id}>
+              <div className="col my-2">ID Cotización: {quotation.id}</div>
+              <div className="col my-2 text-capitalize">
+                Nombre: {quotation.name}
+              </div>
+              <div className="col my-2">
+                Total: {}
+                {String(FormattedThousands({ num: quotation.total }) || '')}
+              </div>
+            </div>
+          ))
+      ) : (
+        <p className="m-0 mt-3">No hay cotizaciones creadas.</p>
       )}
-    </>
+    </div>
   )
 }
 
