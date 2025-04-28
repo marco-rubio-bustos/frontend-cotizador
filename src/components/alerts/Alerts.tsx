@@ -8,9 +8,11 @@ interface AlertProps {
 
 const Alerts: React.FC<AlertProps> = ({ message, variant }) => {
   return (
-    <Alert variant={variant} className="alert position-absolute">
-      {message}
-    </Alert>
+    <div className="container">
+      <Alert variant={variant} className="alert position-fixed">
+        {message}
+      </Alert>
+    </div>
   )
 }
 

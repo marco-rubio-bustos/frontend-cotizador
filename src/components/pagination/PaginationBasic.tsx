@@ -5,6 +5,7 @@ interface PaginationProps {
   totalItems: number
   pageSize: number
   onPageChange: (page: number) => void
+  showPagination: boolean
 }
 
 const PaginationBasic: React.FC<PaginationProps> = ({
@@ -12,7 +13,11 @@ const PaginationBasic: React.FC<PaginationProps> = ({
   totalItems,
   pageSize,
   onPageChange,
+  showPagination,
 }) => {
+  if (!showPagination) {
+    return null // Ocultar el paginador si showPagination es false
+  }
   const totalPages = Math.ceil(totalItems / pageSize)
 
   let items = []
