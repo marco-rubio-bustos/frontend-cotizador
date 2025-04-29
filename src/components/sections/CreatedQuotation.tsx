@@ -2,6 +2,7 @@ import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getQuotation } from '../../api/apiConnection'
 import { FormattedThousands } from '../misc/FormattedNumber'
+import FormattedDate from '../misc/FormattedDate'
 
 type Quotation = {
   id: string
@@ -52,7 +53,7 @@ const CreatedQuotation: React.FC<Props> = ({ quotationCustomer }) => {
             <div className="d-flex border-bottom" key={quotation.id}>
               <div className="col my-2">ID Cotización: {quotation.id}</div>
               <div className="col my-2 text-capitalize">
-                Nombre: {quotation.name}
+                Fecha: <FormattedDate date={quotation.created_at} />
               </div>
               <div className="col my-2">
                 Total: {}
