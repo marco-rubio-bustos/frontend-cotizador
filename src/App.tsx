@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
 import '../src/css/button.css'
+import { Buffer } from 'buffer'
 import CreateCustomer from './components/pages/CreateCustomer'
 import ListCustomer from './components/pages/ListCustomer'
 import CreateQuotation from './components/pages/CreateQuotation'
@@ -8,6 +9,8 @@ import ListQuotation from './components/pages/ListQuotation'
 import Navbars from './components/navbar/Navbars'
 import store from './store/store'
 import { Provider } from 'react-redux'
+
+window.Buffer = Buffer
 
 function App() {
   return (
