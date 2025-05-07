@@ -7,7 +7,7 @@ import {
   Image,
   BlobProvider,
 } from '@react-pdf/renderer'
-import { FormattedThousands } from '../misc/FormattedNumber'
+import { FormattedThousands, FormattedDecimals } from '../misc/FormattedNumber'
 import FormattedRut from '../misc/FormattedRut'
 
 const styles = StyleSheet.create({
@@ -349,7 +349,7 @@ const PdfPrevia = ({
                   <Text>
                     $
                     {String(
-                      FormattedThousands({ num: item.priceUnit.toString() }) ||
+                      FormattedDecimals({ num: item.priceUnit.toString() }) ||
                         '',
                     )}
                   </Text>

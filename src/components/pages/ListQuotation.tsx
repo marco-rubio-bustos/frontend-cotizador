@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Accordion from 'react-bootstrap/Accordion'
+import Spinner from 'react-bootstrap/Spinner'
+import Alert from 'react-bootstrap/Alert'
 import { getQuotation, getQuotationItems } from '../../api/apiConnection'
 import FormattedRut from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
@@ -77,18 +79,20 @@ const ListQuotation: React.FC = () => {
 
   const width = useWindowSize()
 
-  // Manejo del paginador
-  // const    =
-  //   quotationData?.quotation &&
-  //   quotationData.quotation.filter((quotation: Quotation) => {
-  //     if (!searchValue) {
-  //       return true
-  //     }
-  //     return quotation.name.toLowerCase().includes(searchValue.toLowerCase())
-  //   }).length > 0
-
-  if (isLoading) return <p>Cargando...</p>
-  if (error) return <p>Error al obtener clientes</p>
+  if (isLoading)
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <Spinner animation="grow" variant="warning" />
+      </div>
+    )
+  if (error)
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        <Alert key="danger" variant="danger">
+          Error al buscar clientes
+        </Alert>
+      </div>
+    )
 
   return (
     <div className="container bg-light pb-5 px-4">
@@ -230,7 +234,7 @@ const ListQuotation: React.FC = () => {
           </Accordion>
         ))
       ) : (
-        <p>No hay clientes disponibles.</p>
+        <p>No hay cotizaciones disponibles.</p>
       )}
       <Pagination
         currentPage={page}

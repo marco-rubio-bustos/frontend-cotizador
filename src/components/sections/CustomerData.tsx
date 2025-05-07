@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import Spinner from 'react-bootstrap/Spinner'
 import FormattedRut from '../misc/FormattedRut'
 import Form from 'react-bootstrap/Form'
 import { getCustomers } from '../../api/apiConnection'
@@ -25,7 +26,7 @@ const CustomerData: React.FC<CustomerProps> = ({
   onUpdateCustomer,
 }) => {
   const [customer, setCustomer] = useState<Customer | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -62,7 +63,12 @@ const CustomerData: React.FC<CustomerProps> = ({
   }, [selectedCustomer])
 
   if (loading) {
-    return <p>Cargando datos del cliente...</p>
+    return (
+      <>
+        <p>Cargando datos del cliente...</p>{' '}
+        <Spinner animation="grow" variant="warning" />
+      </>
+    )
   }
 
   if (error) {
