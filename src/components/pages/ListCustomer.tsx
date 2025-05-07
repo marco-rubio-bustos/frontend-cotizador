@@ -49,7 +49,7 @@ const ListCustomer: React.FC = () => {
   const [searchValue, setSearchValue] = useState('')
   const [page, setPage] = useState(1)
 
-  const pageSize = 20
+  const pageSize = 10
   const {
     data: customersData,
     error,

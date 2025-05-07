@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
 
 const PdfPrevia = ({
   quotation,
+  date,
   customer,
   quotations,
   subTotal,
@@ -102,6 +103,7 @@ const PdfPrevia = ({
   total,
 }: {
   quotation: number
+  date?: string
   customer: {
     name: string
     address: string
@@ -123,6 +125,17 @@ const PdfPrevia = ({
   iva: number
   total: number
 }) => {
+  const formatOptions = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  } as const
+
+  const creationDate = new Date(date ?? Date.now()).toLocaleDateString(
+    'es-ES',
+    formatOptions,
+  )
+
   return (
     <BlobProvider
       document={
@@ -157,12 +170,7 @@ const PdfPrevia = ({
               <View style={styles.boxQuotation}>
                 <Text style={styles.title}>Cotización N° {quotation}</Text>
                 <Text style={styles.text}>
-                  Fecha de Emisión:
-                  {new Date().toLocaleDateString('es-ES', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                  })}
+                  Fecha de Emisión: {creationDate}
                 </Text>
               </View>
             </View>
