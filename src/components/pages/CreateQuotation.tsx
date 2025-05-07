@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
 import { useMutation } from '@tanstack/react-query'
-import { PDFDownloadLink } from '@react-pdf/renderer'
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer'
 import CreatePdf from '../pdf/Pdf' // Importa el PDF
 import { createQuotation } from '../../api/apiConnection'
 import {
@@ -15,6 +15,7 @@ import CustomerData from '../sections/CustomerData'
 import CurrentNumberQuotation from '../sections/CurrentNumberQuotation'
 import Alert from '../alerts/Alerts'
 import CustomModal from '../misc/CustomModal'
+import PdfPrevia from '../pdf/PdfPrevia'
 import '../../css/form.css'
 
 // redux - obtengo la funcion para guardar el cliente seleccionado
@@ -124,8 +125,6 @@ const CreateQuotation: React.FC = () => {
     // const value = e.target.value
     const value =
       'priceUnit' === field ? e.target.value : e.target.value.replace(/\D/g, '')
-
-    console.log(value)
 
     setForm((prevForm) => {
       const updatedForm = {
@@ -518,6 +517,37 @@ const CreateQuotation: React.FC = () => {
             </PDFDownloadLink>
           )}
         </div>
+        <PdfPrevia
+          quotation={(getCurrent?.lastId ?? 0) + 1}
+          customer={
+            getCustomerData ?? {
+              name: '',
+              address: '',
+              rut: '',
+              attention: '',
+              phone: '',
+              email: '',
+              notesGeneral: '',
+            }
+          }
+          quotations={
+            savedQuotations?.length > 0
+              ? savedQuotations
+              : [
+                  {
+                    id: '',
+                    description: '',
+                    qty: '',
+                    priceUnit: '',
+                    total: '',
+                    notes: '',
+                  },
+                ]
+          }
+          subTotal={subTotal}
+          iva={iva}
+          total={total}
+        />
       </Form>
     </div>
   )

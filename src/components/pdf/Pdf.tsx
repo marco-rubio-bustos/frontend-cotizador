@@ -212,7 +212,9 @@ const CreatePdf = ({
             styles.borderTopWidth,
           ]}
         >
-          <Text><FormattedRut rut={customer.rut} /></Text>
+          <Text>
+            <FormattedRut rut={customer.rut} />
+          </Text>
         </View>
         <View
           style={[

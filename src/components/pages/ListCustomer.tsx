@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Accordion from 'react-bootstrap/Accordion'
+import Spinner from 'react-bootstrap/Spinner'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { getCustomers } from '../../api/apiConnection'
+import { getCustomers, getQuotationItems } from '../../api/apiConnection'
 import FormattedRut from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
 import CreatedQuotation from '../sections/CreatedQuotation'
@@ -31,6 +32,20 @@ type CustomersResponse = {
   totalItems: number
 }
 
+type QuotationItems = {
+  id: string
+  idPrice: string
+  description: string
+  qty: string
+  priceUnit: string
+  total: string
+  notes: string
+}
+
+type QuotationsItemsResponse = {
+  quotationItems: QuotationItems[] | undefined
+}
+
 // Hook fuera del componente
 const useWindowSize = () => {
   const [width, setWidth] = useState(window.innerWidth)
@@ -49,7 +64,7 @@ const ListCustomer: React.FC = () => {
   const [searchValue, setSearchValue] = useState('')
   const [page, setPage] = useState(1)
 
-  const pageSize = 20
+  const pageSize = 10
   const {
     data: customersData,
     error,
@@ -57,6 +72,11 @@ const ListCustomer: React.FC = () => {
   } = useQuery<CustomersResponse>({
     queryKey: ['customers', page],
     queryFn: () => getCustomers({ page, pageSize }),
+  })
+
+  const { data: quotationItemsData } = useQuery<QuotationsItemsResponse>({
+    queryKey: ['quotationItems', page],
+    queryFn: () => getQuotationItems(),
   })
 
   const width = useWindowSize()
@@ -88,7 +108,12 @@ const ListCustomer: React.FC = () => {
       return customer.name.toLowerCase().includes(searchValue.toLowerCase())
     }).length > 0
 
-  if (isLoading) return <p>Cargando...</p>
+  if (isLoading)
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <Spinner animation="grow" variant="warning" />
+      </div>
+    )
   if (error) return <p>Error al obtener clientes</p>
 
   return (
@@ -159,7 +184,10 @@ const ListCustomer: React.FC = () => {
                         {customer.notesGeneral}
                       </div>
                     </div>
-                    <CreatedQuotation quotationCustomer={customer.name} />
+                    <CreatedQuotation
+                      quotationCustomer={customer.name}
+                      quotationItemsData={quotationItemsData?.quotationItems}
+                    />
                   </Accordion.Body>
                 </Accordion.Item>
               </Accordion>
