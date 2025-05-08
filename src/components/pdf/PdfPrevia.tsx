@@ -12,12 +12,13 @@ import FormattedRut from '../misc/FormattedRut'
 
 const styles = StyleSheet.create({
   image: {
-    width: 70,
-    paddingRight: 5,
+    width: 100,
+    margin: '0 20 20 5',
   },
   page: { padding: 20 },
   section: { marginBottom: 0 },
-  title: { fontSize: 16, paddingBottom: 20 },
+  title: { fontSize: 16 },
+  num: { fontWeight: 'bold', fontSize: 22, paddingBottom: 20 },
   boldText: { fontWeight: 'bold' },
   text: { fontSize: 9, paddingBottom: 4 },
   capitalize: { textTransform: 'capitalize' },
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
   },
   boxCompany: {
-    width: 350,
+    width: 290,
     //borderWidth: 1,
     padding: 0,
     //justifyContent: 'center',
@@ -168,10 +169,10 @@ const PdfPrevia = ({
                 </Text>
               </View>
               <View style={styles.boxQuotation}>
-                <Text style={styles.title}>Cotización N° {quotation}</Text>
-                <Text style={styles.text}>
-                  Fecha de Emisión: {creationDate}
-                </Text>
+                <Text style={styles.title}>Cotización N°</Text>
+                <Text style={styles.num}>{quotation}</Text>
+                <Text style={styles.text}>Fecha de Emisión:</Text>
+                <Text style={styles.text}>{creationDate}</Text>
               </View>
             </View>
             {/* Información sobre el Cliente */}
