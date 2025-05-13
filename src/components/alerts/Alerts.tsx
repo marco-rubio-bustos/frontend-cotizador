@@ -4,12 +4,13 @@ import '../../css/alert.css'
 interface AlertProps {
   message: string
   variant: string
+  show: boolean
 }
 
-const Alerts: React.FC<AlertProps> = ({ message, variant }) => {
+const Alerts: React.FC<AlertProps> = ({ message, variant, show }) => {
   return (
     <div className="container">
-      <Alert variant={variant} className="alert position-fixed">
+      <Alert variant={variant} className={`alert z-3 ${show ? 'position-fixed' : ''}`}>
         {message}
       </Alert>
     </div>

@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getQuotation } from '../../api/apiConnection'
 import { FormattedThousands } from '../misc/FormattedNumber'
 import Modal from 'react-bootstrap/Modal'
 import FormattedDate from '../misc/FormattedDate'
+import Alert from '../alerts/Alerts'
+import Spinner from 'react-bootstrap/Spinner'
 import PdfPrevia from '../pdf/PdfPrevia'
 
 type Quotation = {
@@ -44,6 +46,12 @@ type QuotationsResponse = {
   totalItems: number
 }
 
+type Message = {
+  success: boolean
+  showAlert: string
+  alertMessage: string
+}
+
 /// 3
 const CreatedQuotation: React.FC<Props> = ({
   quotationCustomer,
@@ -54,6 +62,11 @@ const CreatedQuotation: React.FC<Props> = ({
   )
 
   const [modalShow, setModalShow] = useState(false)
+  const [alertMessage, setAlertMessage] = useState<Message>({
+    success: false,
+    showAlert: '',
+    alertMessage: '',
+  })
 
   const {
     data: quotationData,
@@ -74,7 +87,6 @@ const CreatedQuotation: React.FC<Props> = ({
   // })
 
   const save = (e: React.MouseEvent<HTMLDivElement>) => {
-    console.log('Clic en cotización, abriendo modal...')
     setModalShow(true)
     const quotationId = e.currentTarget.getAttribute('data-customer-id')
     const found = filteredQuotations.find((q) => String(q.id) === quotationId)
@@ -82,6 +94,36 @@ const CreatedQuotation: React.FC<Props> = ({
       setSelectedQuotation(found) // Si tienes el setter activo
     }
   }
+
+  useEffect(() => {
+    if (error) {
+      setAlertMessage({
+        success: true,
+        showAlert: 'danger',
+        alertMessage: '¡Error al buscar cotizaciones!',
+      })
+    }
+  }, [error])
+
+  if (isLoading)
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <Spinner animation="grow" variant="warning" />
+      </div>
+    )
+
+  if (error)
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        {alertMessage.success && (
+          <Alert
+            message={alertMessage.alertMessage}
+            variant={alertMessage.showAlert}
+            show={true}
+          />
+        )}
+      </div>
+    )
 
   return (
     <div className="border pt-0 p-3 mt-3">

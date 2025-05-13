@@ -52,6 +52,7 @@ export const createCustomer = async (data: CustomerData) => {
   }
 }
 
+// Obtengo la data desde mutationFn: createQuotation
 export const createQuotation = async (data: QuotationData) => {
   try {
     const response = await axios.post(API_QUOTATION, data)

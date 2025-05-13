@@ -64,6 +64,12 @@ type QuotationItem = {
   notes: string
 }
 
+type Message = {
+  success: boolean
+  showAlert: string
+  alertMessage: string
+}
+
 const CreateQuotation: React.FC = () => {
   const [form, setForm] = useState({
     description: '',
@@ -72,9 +78,11 @@ const CreateQuotation: React.FC = () => {
     total: '',
     notes: '',
   })
-  const [success, setSuccess] = useState(false)
-  const [alertMessage, setAlertMessage] = useState('')
-  const [showAlert, setShowAlert] = useState('')
+  const [alertMessage, setAlertMessage] = useState<Message>({
+    success: false,
+    showAlert: '',
+    alertMessage: '',
+  })
   const [savedQuotations, setSavedQuotations] = useState<any[]>([])
   const [nextId, setNextId] = useState(1)
   const [modalState, setModalState] = useState<{
@@ -89,11 +97,12 @@ const CreateQuotation: React.FC = () => {
 
   const timeout = () => {
     setTimeout(() => {
-      setSuccess(false)
+      setAlertMessage({ success: false, showAlert: '', alertMessage: '' })
     }, 6000)
   }
 
   // React Query: useMutation para manejar la creación de la cotización
+  /// crear, editar o borrar datos ("POST", "PUT", "DELETE")
   const mutation = useMutation({
     mutationFn: createQuotation, // Función que envía los datos a la API
     // Se ejecuta si la API responde con éxito
@@ -105,15 +114,19 @@ const CreateQuotation: React.FC = () => {
         total: '',
         notes: '',
       }) // Limpia el formulario después de guardar
-      setSuccess(true)
-      setAlertMessage(`¡Se creó la cotización correctamente!`)
-      setShowAlert('success')
+      setAlertMessage({
+        success: true,
+        showAlert: 'success',
+        alertMessage: '¡Se creó la cotización correctamente!',
+      })
       timeout()
     },
     onError: (error) => {
-      setSuccess(true)
-      setAlertMessage('¡Hubo un error al crear la cotización!')
-      setShowAlert('danger')
+      setAlertMessage({
+        success: true,
+        showAlert: 'danger',
+        alertMessage: '¡Hubo un error al crear la cotización!',
+      })
       timeout()
       console.error('Error al crear la cotización', error)
     },
@@ -147,17 +160,21 @@ const CreateQuotation: React.FC = () => {
 
   const handleSave = () => {
     if (!getCustomerData) {
-      setSuccess(true)
-      setAlertMessage('¡No se seleccionó ningún cliente!')
-      setShowAlert('danger')
+      setAlertMessage({
+        success: true,
+        showAlert: 'danger',
+        alertMessage: '¡No se seleccionó ningún cliente!',
+      })
       timeout()
       return
     }
 
     if (savedQuotations.length === 0) {
-      setSuccess(true)
-      setAlertMessage('¡No hay cotizaciones guardadas!')
-      setShowAlert('danger')
+      setAlertMessage({
+        success: true,
+        showAlert: 'danger',
+        alertMessage: '¡No hay cotizaciones guardadas!',
+      })
       timeout()
       return
     }
@@ -179,22 +196,26 @@ const CreateQuotation: React.FC = () => {
         idPrice: quotation.id,
         description: quotation.description,
         qty: quotation.qty,
-        priceUnit: quotation.priceUnit,
+        priceUnit: Number(quotation.priceUnit.replace(',', '.')),
         total: quotation.total,
         notes: quotation.notes,
       })),
     }
 
-    mutation.mutate(dataToSave) // se envían los datos a la API
+    console.log(dataToSave)
+
+    mutation.mutate(dataToSave) // se envían los datos a la API, por medio de "mutationFn: createQuotation"
 
     // handleDownload() // descarga el PDF
   }
 
   const handleCreate = () => {
     if (!form.description || !form.qty || !form.priceUnit) {
-      setSuccess(true)
-      setAlertMessage('¡Hay campos sin llenar!')
-      setShowAlert('danger')
+      setAlertMessage({
+        success: true,
+        showAlert: 'danger',
+        alertMessage: '¡Hay campos sin llenar!',
+      })
       timeout()
       return
     }
@@ -288,7 +309,13 @@ const CreateQuotation: React.FC = () => {
           onUpdateCurrentNumber={handleUpdateCurrentNumber}
         />
       </div>
-      {success && <Alert message={alertMessage} variant={showAlert} />}
+      {alertMessage.success && (
+        <Alert
+          message={alertMessage.alertMessage}
+          variant={alertMessage.showAlert}
+          show={true}
+        />
+      )}
       <CustomerData
         selectedCustomer={selectedCustomer}
         onUpdateCustomer={handleUpdateCustomer}

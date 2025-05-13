@@ -3,11 +3,12 @@ import { useQuery } from '@tanstack/react-query'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Accordion from 'react-bootstrap/Accordion'
 import Spinner from 'react-bootstrap/Spinner'
-import Alert from 'react-bootstrap/Alert'
 import { getQuotation, getQuotationItems } from '../../api/apiConnection'
+import Alert from '../alerts/Alerts'
 import FormattedRut from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
 import FormattedDate from '../misc/FormattedDate'
+import useWindowSize from '../hooks/useWindowSize'
 import '../../css/listGroup.css'
 
 // Definir los tipos de los datos que esperamos recibir
@@ -47,10 +48,23 @@ type QuotationsItemsResponse = {
   quotationItems: QuotationItems[] | undefined
 }
 
+type Message = {
+  success: boolean
+  showAlert: string
+  alertMessage: string
+}
+
 const ListQuotation: React.FC = () => {
   const [page, setPage] = useState(1)
+  const [alertMessage, setAlertMessage] = useState<Message>({
+    success: false,
+    showAlert: '',
+    alertMessage: '',
+  })
+
   const pageSize = 20
 
+  // consultar, obtener ("GET")
   const {
     data: quotationData,
     error,
@@ -65,19 +79,17 @@ const ListQuotation: React.FC = () => {
     queryFn: () => getQuotationItems(),
   })
 
-  const useWindowSize = () => {
-    const [width, setWidth] = useState(window.innerWidth)
+  const width = useWindowSize(window)
 
-    useEffect(() => {
-      const handleResize = () => setWidth(window.innerWidth)
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
-    }, [])
-
-    return width
-  }
-
-  const width = useWindowSize()
+  useEffect(() => {
+    if (error) {
+      setAlertMessage({
+        success: true,
+        showAlert: 'danger',
+        alertMessage: '¡Error al buscar cotizaciones!',
+      })
+    }
+  }, [error])
 
   if (isLoading)
     return (
@@ -85,12 +97,17 @@ const ListQuotation: React.FC = () => {
         <Spinner animation="grow" variant="warning" />
       </div>
     )
+
   if (error)
     return (
       <div className="d-flex justify-content-center align-items-center">
-        <Alert key="danger" variant="danger">
-          Error al buscar clientes
-        </Alert>
+        {alertMessage.success && (
+          <Alert
+            message={alertMessage.alertMessage}
+            variant={alertMessage.showAlert}
+            show={true}
+          />
+        )}
       </div>
     )
 
@@ -111,7 +128,7 @@ const ListQuotation: React.FC = () => {
             <Accordion.Item className="border-0" eventKey={quotation.id}>
               <Accordion.Header>
                 <ListGroup
-                  horizontal={width >= 991}
+                  horizontal={typeof width === 'number' && width >= 991}
                   className="my-2 btn p-0 px-2 m-0"
                 >
                   <ListGroup.Item className="col-12 col-lg-1">
@@ -166,31 +183,35 @@ const ListQuotation: React.FC = () => {
                         className="row border-bottom py-2"
                         key={quotationItems.id}
                       >
-                        <div className="col-6">
+                        <div className="col-6 border-end">
                           {quotationItems.description}
                         </div>
-                        <div className="col-2">
+                        <div className="col-2 border-end text-end">
                           {Number(quotationItems.qty).toLocaleString('es-ES', {
                             useGrouping: true,
                           })}
                         </div>
-                        <div className="col-2">
-                          $
-                          {Number(quotationItems.priceUnit).toLocaleString(
-                            'es-ES',
-                            {
-                              useGrouping: true,
-                            },
-                          )}
+                        <div className="col-2 border-end px-4 d-flex justify-content-between">
+                          <span>$</span>
+                          <span>
+                            {Number(quotationItems.priceUnit).toLocaleString(
+                              'es-ES',
+                              {
+                                useGrouping: true,
+                              },
+                            )}
+                          </span>
                         </div>
-                        <div className="col-2">
-                          $
-                          {Number(quotationItems.total).toLocaleString(
-                            'es-ES',
-                            {
-                              useGrouping: true,
-                            },
-                          )}
+                        <div className="col-2 px-4 d-flex justify-content-between">
+                          <span>$</span>
+                          <span>
+                            {Number(quotationItems.total).toLocaleString(
+                              'es-ES',
+                              {
+                                useGrouping: true,
+                              },
+                            )}
+                          </span>
                         </div>
                         <div className="col-12">
                           <b>Notas: </b>
@@ -199,33 +220,34 @@ const ListQuotation: React.FC = () => {
                       </div>
                     ))}
                 <div className="row">
-                  <div className="offset-7 col-4 pt-3">
-                    <div className="col-12 d-flex justify-content-between">
-                      <b>Subtotal</b>
-                      <p className="m-0">
-                        $
+                  <div className="offset-8 col-4 pt-3">
+                    <div className="col-12 px-3 d-flex justify-content-between">
+                      <b className="col">Subtotal</b>
+                      <span className="col text-end"> $ </span>
+                      <span className="col text-end">
+                        {' '}
                         {Number(quotation.subTotal).toLocaleString('es-ES', {
                           useGrouping: true,
                         })}
-                      </p>
+                      </span>
                     </div>
-                    <div className="col-12 d-flex justify-content-between">
-                      <b>Iva</b>
-                      <p className="m-0">
-                        $
+                    <div className="col-12 px-3 d-flex justify-content-between">
+                      <b className="col">Iva</b>
+                      <span className="col text-end"> $ </span>
+                      <span className="col text-end">
                         {Number(quotation.iva).toLocaleString('es-ES', {
                           useGrouping: true,
                         })}
-                      </p>
+                      </span>
                     </div>
-                    <div className="col-12 d-flex justify-content-between">
-                      <b>Total</b>
-                      <p className="m-0">
-                        $
+                    <div className="col-12 mt-3 p-3 d-flex justify-content-between bg-primary-subtle">
+                      <b className="col">Total</b>
+                      <span className="col text-end"> $ </span>
+                      <span className="col text-end">
                         {Number(quotation.total).toLocaleString('es-ES', {
                           useGrouping: true,
                         })}
-                      </p>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -234,7 +256,11 @@ const ListQuotation: React.FC = () => {
           </Accordion>
         ))
       ) : (
-        <p>No hay cotizaciones disponibles.</p>
+        <Alert
+          message="No hay cotizaciones disponibles."
+          variant="danger"
+          show={false}
+        />
       )}
       <Pagination
         currentPage={page}

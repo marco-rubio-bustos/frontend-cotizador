@@ -2,7 +2,7 @@ interface Props {
   rut: string
 }
 
-const formatRut: React.FC<Props> = ({ rut }) => {
+const FormatRut: React.FC<Props> = ({ rut }) => {
   // Verificar si rut es null o una cadena vacía
   if (!rut) {
     return '' // O puedes devolver un valor por defecto
@@ -22,4 +22,4 @@ const formatRut: React.FC<Props> = ({ rut }) => {
   return cleanRut
 }
 
-export default formatRut
+export default FormatRut

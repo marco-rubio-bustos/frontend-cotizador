@@ -6,7 +6,14 @@ import { createCustomer } from '../../api/apiConnection'
 import FormattedRut from '../misc/FormattedRut'
 import FormattedCleaningNumber from '../misc/FormattedCleaningNumber'
 import Alert from '../alerts/Alerts'
+import setTime from '../misc/TimeOut'
 import '../../css/form.css'
+
+type Message = {
+  success: boolean
+  showAlert: string
+  alertMessage: string
+}
 
 const CreateCustomer: React.FC = () => {
   const [form, setForm] = useState({
@@ -18,9 +25,11 @@ const CreateCustomer: React.FC = () => {
     email: '',
     notesGeneral: '',
   })
-  const [success, setSuccess] = useState(false)
-  const [alertMessage, setAlertMessage] = useState('')
-  const [showAlert, setShowAlert] = useState('')
+  const [alertMessage, setAlertMessage] = useState<Message>({
+    success: false,
+    showAlert: '',
+    alertMessage: '',
+  })
 
   // React Query: useMutation para manejar la creación del cliente
   const mutation = useMutation({
@@ -35,18 +44,27 @@ const CreateCustomer: React.FC = () => {
         email: '',
         notesGeneral: '',
       })
-      setSuccess(true)
-      setAlertMessage('¡Se creo el nuevo cliente!')
-      setShowAlert('success')
-      setTimeout(() => {
-        setSuccess(false)
-      }, 6000)
+      setAlertMessage({
+        success: true,
+        showAlert: 'success',
+        alertMessage: '¡Se creo el nuevo cliente!',
+      })
+      setTime({ success: false })
+      // setTimeout(() => {
+      //   setAlertMessage({ success: false, showAlert: '', alertMessage: '' })
+      // }, 6000)
     },
-    onError: (error) => {
-      setSuccess(true)
-      setAlertMessage('¡Error al crear el cliente!')
-      setShowAlert('danger')
-      console.error('Error al crear el cliente', error)
+    onError: () => {
+      setAlertMessage({
+        success: true,
+        showAlert: 'danger',
+        alertMessage: `¡Error al crear el cliente!`,
+      })
+      // setTime
+
+      // setTimeout(() => {
+      //   setAlertMessage({ success: false, showAlert: '', alertMessage: '' })
+      // }, 6000)
     },
   })
 
@@ -58,7 +76,13 @@ const CreateCustomer: React.FC = () => {
     <div className="container bg-light pb-5 px-4">
       <h1 className="mb-4 pt-4">Crear Cliente</h1>
       <Form className="row text-left position-relative">
-        {success && <Alert message={alertMessage} variant={showAlert} />}
+        {alertMessage.success && (
+          <Alert
+            message={alertMessage.alertMessage}
+            variant={alertMessage.showAlert}
+            show={true}
+          />
+        )}
         <Form.Group
           className="mb-3 col-md-9 col-12"
           controlId="exampleForm.ControlInput1"
