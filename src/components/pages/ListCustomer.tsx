@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Accordion from 'react-bootstrap/Accordion'
 import Spinner from 'react-bootstrap/Spinner'
-import { useNavigate } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
 import { getCustomers, getQuotationItems } from '../../api/apiConnection'
+import Alert from '../alerts/Alerts'
 import FormattedRut from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
 import CreatedQuotation from '../sections/CreatedQuotation'
 import Search from '../sections/Search'
+import useWindowSize from '../hooks/useWindowSize'
 import '../../css/listGroup.css'
 
 // redux
@@ -46,23 +48,20 @@ type QuotationsItemsResponse = {
   quotationItems: QuotationItems[] | undefined
 }
 
-// Hook fuera del componente
-const useWindowSize = () => {
-  const [width, setWidth] = useState(window.innerWidth)
-
-  useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth)
-
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  return width
+type Message = {
+  success: boolean
+  showAlert: string
+  alertMessage: string
 }
 
 const ListCustomer: React.FC = () => {
   const [searchValue, setSearchValue] = useState('')
   const [page, setPage] = useState(1)
+  const [alertMessage, setAlertMessage] = useState<Message>({
+    success: false,
+    showAlert: '',
+    alertMessage: '',
+  })
 
   const pageSize = 10
   const {
@@ -79,7 +78,7 @@ const ListCustomer: React.FC = () => {
     queryFn: () => getQuotationItems(),
   })
 
-  const width = useWindowSize()
+  const width = useWindowSize(window)
 
   // Redux
   const dispatch = useDispatch()
@@ -108,13 +107,35 @@ const ListCustomer: React.FC = () => {
       return customer.name.toLowerCase().includes(searchValue.toLowerCase())
     }).length > 0
 
+  useEffect(() => {
+    if (error) {
+      setAlertMessage({
+        success: true,
+        showAlert: 'danger',
+        alertMessage: '¡Error al buscar clientes!',
+      })
+    }
+  }, [error])
+
   if (isLoading)
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <Spinner animation="grow" variant="warning" />
       </div>
     )
-  if (error) return <p>Error al obtener clientes</p>
+
+  if (error)
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        {alertMessage.success && (
+          <Alert
+            message={alertMessage.alertMessage}
+            variant={alertMessage.showAlert}
+            show={true}
+          />
+        )}
+      </div>
+    )
 
   return (
     <div className="container bg-light pb-5 px-4">
@@ -149,7 +170,7 @@ const ListCustomer: React.FC = () => {
                   <Accordion.Header className="rounded-0">
                     <ListGroup
                       onClick={save}
-                      horizontal={width >= 991}
+                      horizontal={typeof width === 'number' && width >= 991}
                       className="my-2 btn p-0 px-2 m-0"
                       data-customer-id={customer.id}
                     >
@@ -197,7 +218,11 @@ const ListCustomer: React.FC = () => {
           <p>No se encontraron clientes con ese criterio de búsqueda.</p>
         )
       ) : (
-        <p>No hay clientes disponibles.</p>
+        <Alert
+          message="No hay clientes disponibles."
+          variant="danger"
+          show={false}
+        />
       )}
       {showPagination && (
         // Mostrar el paginador solo si hay resultados
