@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Image,
 } from '@react-pdf/renderer'
-import { FormattedThousands } from '../misc/FormattedNumber'
+import { FormattedThousands, FormattedDecimals } from '../misc/FormattedNumber'
 import FormattedRut from '../misc/FormattedRut'
 // Ancho 555
 const styles = StyleSheet.create({
@@ -328,7 +328,7 @@ const CreatePdf = ({
             <Text>
               $
               {String(
-                FormattedThousands({ num: item.priceUnit.toString() }) || '',
+                FormattedDecimals({ num: item.priceUnit.toString() }) || '',
               )}
             </Text>
           </View>
