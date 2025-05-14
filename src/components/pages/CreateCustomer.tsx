@@ -6,7 +6,7 @@ import { createCustomer } from '../../api/apiConnection'
 import FormattedRut from '../misc/FormattedRut'
 import FormattedCleaningNumber from '../misc/FormattedCleaningNumber'
 import Alert from '../alerts/Alerts'
-import setTime from '../misc/TimeOut'
+import TimeOut from '../misc/TimeOut'
 import '../../css/form.css'
 
 type Message = {
@@ -49,10 +49,6 @@ const CreateCustomer: React.FC = () => {
         showAlert: 'success',
         alertMessage: '¡Se creo el nuevo cliente!',
       })
-      setTime({ success: false })
-      // setTimeout(() => {
-      //   setAlertMessage({ success: false, showAlert: '', alertMessage: '' })
-      // }, 6000)
     },
     onError: () => {
       setAlertMessage({
@@ -60,11 +56,6 @@ const CreateCustomer: React.FC = () => {
         showAlert: 'danger',
         alertMessage: `¡Error al crear el cliente!`,
       })
-      // setTime
-
-      // setTimeout(() => {
-      //   setAlertMessage({ success: false, showAlert: '', alertMessage: '' })
-      // }, 6000)
     },
   })
 
@@ -76,6 +67,10 @@ const CreateCustomer: React.FC = () => {
     <div className="container bg-light pb-5 px-4">
       <h1 className="mb-4 pt-4">Crear Cliente</h1>
       <Form className="row text-left position-relative">
+        <TimeOut
+          success={alertMessage.success}
+          setAlertMessage={setAlertMessage}
+        />
         {alertMessage.success && (
           <Alert
             message={alertMessage.alertMessage}

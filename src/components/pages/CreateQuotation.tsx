@@ -14,6 +14,7 @@ import {
 import CustomerData from '../sections/CustomerData'
 import CurrentNumberQuotation from '../sections/CurrentNumberQuotation'
 import Alert from '../alerts/Alerts'
+import TimeOut from '../misc/TimeOut'
 import CustomModal from '../misc/CustomModal'
 import PdfPrevia from '../pdf/PdfPrevia'
 import '../../css/form.css'
@@ -95,12 +96,6 @@ const CreateQuotation: React.FC = () => {
   const [getCustomerData, setGetCustomerData] = useState<Customer | null>(null)
   const [getCurrent, setGetCurrent] = useState<Current | null>(null)
 
-  const timeout = () => {
-    setTimeout(() => {
-      setAlertMessage({ success: false, showAlert: '', alertMessage: '' })
-    }, 6000)
-  }
-
   // React Query: useMutation para manejar la creación de la cotización
   /// crear, editar o borrar datos ("POST", "PUT", "DELETE")
   const mutation = useMutation({
@@ -119,7 +114,6 @@ const CreateQuotation: React.FC = () => {
         showAlert: 'success',
         alertMessage: '¡Se creó la cotización correctamente!',
       })
-      timeout()
     },
     onError: (error) => {
       setAlertMessage({
@@ -127,7 +121,6 @@ const CreateQuotation: React.FC = () => {
         showAlert: 'danger',
         alertMessage: '¡Hubo un error al crear la cotización!',
       })
-      timeout()
       console.error('Error al crear la cotización', error)
     },
   })
@@ -165,7 +158,6 @@ const CreateQuotation: React.FC = () => {
         showAlert: 'danger',
         alertMessage: '¡No se seleccionó ningún cliente!',
       })
-      timeout()
       return
     }
 
@@ -175,7 +167,6 @@ const CreateQuotation: React.FC = () => {
         showAlert: 'danger',
         alertMessage: '¡No hay cotizaciones guardadas!',
       })
-      timeout()
       return
     }
 
@@ -216,7 +207,6 @@ const CreateQuotation: React.FC = () => {
         showAlert: 'danger',
         alertMessage: '¡Hay campos sin llenar!',
       })
-      timeout()
       return
     }
     // Preparar el objeto para guardar
@@ -309,6 +299,10 @@ const CreateQuotation: React.FC = () => {
           onUpdateCurrentNumber={handleUpdateCurrentNumber}
         />
       </div>
+      <TimeOut
+          success={alertMessage.success}
+          setAlertMessage={setAlertMessage}
+        />
       {alertMessage.success && (
         <Alert
           message={alertMessage.alertMessage}
