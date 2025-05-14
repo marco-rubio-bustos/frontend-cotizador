@@ -98,12 +98,12 @@ export const getCustomers = async ({
 }: PaginationParams) => {
   if (all) {
     // Realiza una solicitud al backend para obtener todos los clientes sin paginación
-    const response = await axios.get(`${API_CUSTOMERS}?all=true`)
+    const response = await axios.get(`${API_CUSTOMERS}/get?all=true`)
     return response.data
   }
   // Lógica para manejar paginación si no se usa `all`
   const response = await axios.get(
-    `${API_CUSTOMERS}?page=${page}&limit=${pageSize}`,
+    `${API_CUSTOMERS}/get?page=${page}&limit=${pageSize}`,
   )
 
   return response.data
@@ -119,4 +119,22 @@ export const getQuotation = async ({ page, pageSize }: PaginationParams) => {
 export const getQuotationItems = async () => {
   const response = await axios.get(`${API_QUOTATIONITEMS}`)
   return response.data
+}
+
+// Upgrade
+
+export const updateCustomer = async (
+  id: string,
+  updatedCustomer: CustomerData,
+) => {
+  try {
+    const response = await axios.put(
+      `${API_CUSTOMERS}/update/${id}`,
+      updatedCustomer,
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error al actualizar cliente:', error)
+    throw error
+  }
 }

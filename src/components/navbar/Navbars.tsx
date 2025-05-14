@@ -10,7 +10,7 @@ function Navbars() {
         <Navbar.Brand as={Link} to="/" className="p-0">
           <img
             alt="logo etiquetando"
-            src="src/components/img/etiquetando.png"
+            src="/src/components/img/etiquetando.png"
             height="50"
             className="d-inline-block align-top p-0"
           />

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
+import Button from 'react-bootstrap/Button'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Accordion from 'react-bootstrap/Accordion'
 import Spinner from 'react-bootstrap/Spinner'
@@ -84,13 +85,17 @@ const ListCustomer: React.FC = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const save = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleSave = (e: React.MouseEvent<HTMLDivElement>) => {
     const customerId = e.currentTarget.getAttribute('data-customer-id') // Obtén el ID completo
     if (customerId) {
       // Despachar la acción para actualizar el estado global
       dispatch(setSelectedCustomer(customerId))
       navigate('/crear-cotizacion')
     }
+  }
+
+  const handleEdit = (customerId: string) => {
+    navigate(`/editar-cliente/${customerId}`)
   }
 
   // Manejo del valor de búsqueda desde el hijo
@@ -169,7 +174,7 @@ const ListCustomer: React.FC = () => {
                 <Accordion.Item className="border-0" eventKey={customer.id}>
                   <Accordion.Header className="rounded-0">
                     <ListGroup
-                      onClick={save}
+                      onClick={handleSave}
                       horizontal={typeof width === 'number' && width >= 991}
                       className="my-2 btn p-0 px-2 m-0"
                       data-customer-id={customer.id}
@@ -196,13 +201,23 @@ const ListCustomer: React.FC = () => {
                   </Accordion.Header>
                   <Accordion.Body>
                     <div className="row">
-                      <div className="col-12">
-                        <b>Dirección: </b>
-                        {customer.address}
+                      <div className="col-10">
+                        <div className="col-12">
+                          <b>Dirección: </b>
+                          {customer.address}
+                        </div>
+                        <div className="col-12">
+                          <b>Notas Generales: </b>
+                          {customer.notesGeneral}
+                        </div>
                       </div>
-                      <div className="col-12">
-                        <b>Notas Generales: </b>
-                        {customer.notesGeneral}
+                      <div className="col-2">
+                        <Button
+                          onClick={() => handleEdit(customer.id)}
+                          variant="success"
+                        >
+                          Editar
+                        </Button>
                       </div>
                     </div>
                     <CreatedQuotation
