@@ -7,6 +7,7 @@ import Accordion from 'react-bootstrap/Accordion'
 import Spinner from 'react-bootstrap/Spinner'
 import { getCustomers, getQuotationItems } from '../../api/apiConnection'
 import Alert from '../alerts/Alerts'
+import TimeOut from '../misc/TimeOut'
 import FormattedRut from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
 import CreatedQuotation from '../sections/CreatedQuotation'
@@ -132,6 +133,10 @@ const ListCustomer: React.FC = () => {
   if (error)
     return (
       <div className="d-flex justify-content-center align-items-center">
+        <TimeOut
+          success={alertMessage.success}
+          setAlertMessage={setAlertMessage}
+        />
         {alertMessage.success && (
           <Alert
             message={alertMessage.alertMessage}
@@ -233,11 +238,17 @@ const ListCustomer: React.FC = () => {
           <p>No se encontraron clientes con ese criterio de búsqueda.</p>
         )
       ) : (
-        <Alert
-          message="No hay clientes disponibles."
-          variant="danger"
-          show={false}
-        />
+        <>
+          <TimeOut
+            success={alertMessage.success}
+            setAlertMessage={setAlertMessage}
+          />
+          <Alert
+            message="No hay clientes disponibles."
+            variant="danger"
+            show={false}
+          />
+        </>
       )}
       {showPagination && (
         // Mostrar el paginador solo si hay resultados

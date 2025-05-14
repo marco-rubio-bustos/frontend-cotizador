@@ -8,7 +8,7 @@ import { getCustomers, updateCustomer } from '../../api/apiConnection'
 import FormattedRut from '../misc/FormattedRut'
 import FormattedCleaningNumber from '../misc/FormattedCleaningNumber'
 import Alert from '../alerts/Alerts'
-import setTime from '../misc/TimeOut'
+import TimeOut from '../misc/TimeOut'
 import '../../css/form.css'
 
 type Message = {
@@ -82,10 +82,6 @@ const CreateCustomer: React.FC = () => {
         showAlert: 'success',
         alertMessage: '¡Se actualizo el cliente!',
       })
-      setTime({ success: false })
-      // setTimeout(() => {
-      //   setAlertMessage({ success: false, showAlert: '', alertMessage: '' })
-      // }, 6000)
     },
     onError: () => {
       setAlertMessage({
@@ -93,11 +89,6 @@ const CreateCustomer: React.FC = () => {
         showAlert: 'danger',
         alertMessage: `¡Error al actualizar el cliente!`,
       })
-      // setTime
-
-      // setTimeout(() => {
-      //   setAlertMessage({ success: false, showAlert: '', alertMessage: '' })
-      // }, 6000)
     },
   })
 
@@ -133,6 +124,10 @@ const CreateCustomer: React.FC = () => {
         <>
           <h1 className="mb-4 pt-4">Editar Cliente</h1>
           <Form className="row text-left position-relative" key={customer.id}>
+            <TimeOut
+              success={alertMessage.success}
+              setAlertMessage={setAlertMessage}
+            />
             {alertMessage.success && (
               <Alert
                 message={alertMessage.alertMessage}

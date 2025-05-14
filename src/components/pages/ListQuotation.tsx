@@ -5,6 +5,7 @@ import Accordion from 'react-bootstrap/Accordion'
 import Spinner from 'react-bootstrap/Spinner'
 import { getQuotation, getQuotationItems } from '../../api/apiConnection'
 import Alert from '../alerts/Alerts'
+import TimeOut from '../misc/TimeOut'
 import FormattedRut from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
 import FormattedDate from '../misc/FormattedDate'
@@ -256,11 +257,17 @@ const ListQuotation: React.FC = () => {
           </Accordion>
         ))
       ) : (
+        <>
+          <TimeOut
+            success={alertMessage.success}
+            setAlertMessage={setAlertMessage}
+          />
         <Alert
           message="No hay cotizaciones disponibles."
           variant="danger"
           show={false}
-        />
+          />
+          </>
       )}
       <Pagination
         currentPage={page}

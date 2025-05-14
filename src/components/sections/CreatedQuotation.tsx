@@ -5,6 +5,7 @@ import { FormattedThousands } from '../misc/FormattedNumber'
 import Modal from 'react-bootstrap/Modal'
 import FormattedDate from '../misc/FormattedDate'
 import Alert from '../alerts/Alerts'
+import TimeOut from '../misc/TimeOut'
 import Spinner from 'react-bootstrap/Spinner'
 import PdfPrevia from '../pdf/PdfPrevia'
 
@@ -115,6 +116,10 @@ const CreatedQuotation: React.FC<Props> = ({
   if (error)
     return (
       <div className="d-flex justify-content-center align-items-center">
+        <TimeOut
+          success={alertMessage.success}
+          setAlertMessage={setAlertMessage}
+        />
         {alertMessage.success && (
           <Alert
             message={alertMessage.alertMessage}
