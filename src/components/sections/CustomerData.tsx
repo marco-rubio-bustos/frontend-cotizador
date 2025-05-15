@@ -1,27 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import Spinner from 'react-bootstrap/Spinner'
-import FormattedRut from '../misc/FormattedRut'
-import Form from 'react-bootstrap/Form'
+import { Spinner, Form } from 'react-bootstrap'
+import { FormatRut } from '../misc/FormattedRut'
 import { getCustomers } from '../../api/apiConnection'
+// types
+import { Customer } from '../../types/customer'
+import { SelectedCustomer } from '../../types/selectedCustomer'
 
-type Customer = {
-  id: number
-  name: string
-  rut: string
-  address: string
-  attention: string
-  phone: string
-  email: string
-  notesGeneral: string
-}
-
-type CustomerProps = {
-  selectedCustomer: string
-  onUpdateCustomer: (customer: Customer | null) => void
-}
-
-const CustomerData: React.FC<CustomerProps> = ({
+const CustomerData: React.FC<SelectedCustomer> = ({
   selectedCustomer,
   onUpdateCustomer,
 }) => {
@@ -34,7 +20,7 @@ const CustomerData: React.FC<CustomerProps> = ({
       setLoading(true)
       setError(null)
       try {
-        const customersData = await getCustomers({ all: true })
+        const customersData = await getCustomers({ all: true, onPageChange: () => {} })
 
         // Verificar si customersData y customersData.customers están definidos
         if (customersData && customersData.customers) {
@@ -99,7 +85,7 @@ const CustomerData: React.FC<CustomerProps> = ({
       <Form.Group className="mb-3 col-md-3 col-12" controlId="formRut">
         <Form.Label>Rut</Form.Label>
         <div className="form-control bg-input-disabled" aria-disabled="true">
-          <FormattedRut rut={customer?.rut || ''} />
+          <FormatRut rut={customer?.rut || ''} />
         </div>
       </Form.Group>
 

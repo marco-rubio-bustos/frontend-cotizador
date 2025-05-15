@@ -1,14 +1,8 @@
-import Pagination from 'react-bootstrap/Pagination'
+import { Pagination } from 'react-bootstrap'
+// types
+import { PaginationParams } from '../../types/paginationParams'
 
-interface PaginationProps {
-  currentPage: number
-  totalItems: number
-  pageSize: number
-  onPageChange: (page: number) => void
-  showPagination: boolean
-}
-
-const PaginationBasic: React.FC<PaginationProps> = ({
+const PaginationBasic: React.FC<PaginationParams> = ({
   currentPage,
   totalItems,
   pageSize,
@@ -18,7 +12,7 @@ const PaginationBasic: React.FC<PaginationProps> = ({
   if (!showPagination) {
     return null // Ocultar el paginador si showPagination es false
   }
-  const totalPages = Math.ceil(totalItems / pageSize)
+  const totalPages = Math.ceil((totalItems ?? 0) / (pageSize ?? 0))
 
   let items = []
   for (let number = 1; number <= totalPages; number++) {

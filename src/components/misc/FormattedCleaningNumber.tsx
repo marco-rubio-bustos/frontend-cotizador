@@ -1,9 +1,8 @@
-interface Props {
-  rut: string // Recibe la fecha como string desde la BD
-}
+// types
+import { Customer } from '../../types/customer'
 
-const FormattedCleaningNumber: React.FC<Props> = ({ rut }) => {
-  return rut.replace(/\D/g, '') // Elimina todo lo que no sea número
+const FormattedCleaningNumber: React.FC<Customer> = ({ rut }) => {
+  return rut?.replace(/\D/g, '') // Elimina todo lo que no sea número
 }
 
 export default FormattedCleaningNumber

@@ -1,22 +1,18 @@
 import { useState } from 'react'
-import { Button } from 'react-bootstrap'
-import Form from 'react-bootstrap/Form'
+import { Button, Form } from 'react-bootstrap'
 import { useMutation } from '@tanstack/react-query'
 import { createCustomer } from '../../api/apiConnection'
-import FormattedRut from '../misc/FormattedRut'
 import FormattedCleaningNumber from '../misc/FormattedCleaningNumber'
+import { FormatRut } from '../misc/FormattedRut'
 import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
 import '../../css/form.css'
-
-type Message = {
-  success: boolean
-  showAlert: string
-  alertMessage: string
-}
+// types
+import { Message } from '../../types/message'
 
 const CreateCustomer: React.FC = () => {
   const [form, setForm] = useState({
+    id: 0, // Valor por defecto
     name: '',
     address: '',
     rut: '',
@@ -36,6 +32,7 @@ const CreateCustomer: React.FC = () => {
     mutationFn: createCustomer,
     onSuccess: () => {
       setForm({
+        id: 0,
         name: '',
         address: '',
         rut: '',
@@ -100,7 +97,7 @@ const CreateCustomer: React.FC = () => {
           <Form.Control
             type="text"
             placeholder=""
-            value={String(FormattedRut({ rut: form.rut }) || '')} // formateo
+            value={String(FormatRut({ rut: form.rut }) || '')} // formateo
             onChange={
               (e) =>
                 setForm({

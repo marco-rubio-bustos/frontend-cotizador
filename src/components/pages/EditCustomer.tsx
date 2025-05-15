@@ -1,37 +1,18 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Button } from 'react-bootstrap'
-import Form from 'react-bootstrap/Form'
+import { Button, Form } from 'react-bootstrap'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import { getCustomers, updateCustomer } from '../../api/apiConnection'
-import FormattedRut from '../misc/FormattedRut'
+import { FormatRut } from '../misc/FormattedRut'
 import FormattedCleaningNumber from '../misc/FormattedCleaningNumber'
 import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
 import '../../css/form.css'
-
-type Message = {
-  success: boolean
-  showAlert: string
-  alertMessage: string
-}
-
-type Customer = {
-  id: string
-  name: string
-  rut: string
-  address: string
-  attention: string
-  phone: string
-  email: string
-  notesGeneral: string
-}
-
-type CustomersResponse = {
-  customers: Customer[] | undefined
-  totalItems: number
-}
+// types
+import { Message } from '../../types/message'
+import { Customer } from '../../types/customer'
+import { CustomersResponse } from '../../types/customersResponse'
 
 const CreateCustomer: React.FC = () => {
   const [form, setForm] = useState({
@@ -56,7 +37,7 @@ const CreateCustomer: React.FC = () => {
     isLoading,
   } = useQuery<CustomersResponse>({
     queryKey: ['customers'],
-    queryFn: () => getCustomers({ all: true }),
+    queryFn: () => getCustomers({ all: true, onPageChange: () => {} }),
   })
 
   const { id } = useParams()
@@ -64,7 +45,7 @@ const CreateCustomer: React.FC = () => {
   // React Query: useMutation para manejar la creación del cliente
   const mutation = useMutation({
     mutationFn: (updatedCustomer: Customer) =>
-      updateCustomer(updatedCustomer.id, updatedCustomer), // Asegurar que el ID y los datos sean enviados
+      updateCustomer(String(updatedCustomer.id), updatedCustomer), // Asegurar que el ID y los datos sean enviados
 
     onSuccess: () => {
       setForm({
@@ -102,7 +83,11 @@ const CreateCustomer: React.FC = () => {
       setForm((prevForm) => {
         // Solo actualiza si los valores son diferentes
         if (JSON.stringify(prevForm) !== JSON.stringify(filteredCustomer[0])) {
-          return { ...prevForm, ...filteredCustomer[0] }
+          return {
+            ...prevForm,
+            ...filteredCustomer[0],
+            id: String(filteredCustomer[0].id),
+          }
         }
         return prevForm
       })
@@ -112,7 +97,7 @@ const CreateCustomer: React.FC = () => {
   const navigate = useNavigate()
 
   const handleSave = () => {
-    mutation.mutate(form)
+    mutation.mutate({ ...form, id: Number(form.id) })
     setTimeout(() => {
       navigate('/listar-clientes')
     }, 3000)
@@ -157,7 +142,7 @@ const CreateCustomer: React.FC = () => {
               <Form.Control
                 type="text"
                 placeholder=""
-                value={String(FormattedRut({ rut: form.rut }) || '')} // formateo
+                value={String(FormatRut({ rut: form.rut }) || '')} // formateo
                 onChange={
                   (e) =>
                     setForm({
