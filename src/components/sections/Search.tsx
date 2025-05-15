@@ -1,13 +1,9 @@
 import { useState } from 'react'
-import Form from 'react-bootstrap/Form'
+import { Form } from 'react-bootstrap'
+// types
+import { CreatedQuotation } from '../../types/CreatedQuotation'
 
-interface CreatedQuotationProps {
-  onSearchValueChange: (value: string) => void
-}
-
-const CreatedQuotation: React.FC<CreatedQuotationProps> = ({
-  onSearchValueChange,
-}) => {
+const search: React.FC<CreatedQuotation> = ({ onSearchValueChange }) => {
   const [searchValue, setSearchValue] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,4 +26,4 @@ const CreatedQuotation: React.FC<CreatedQuotationProps> = ({
   )
 }
 
-export default CreatedQuotation
+export default search

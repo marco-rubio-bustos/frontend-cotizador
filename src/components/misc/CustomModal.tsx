@@ -1,12 +1,8 @@
-import Button from 'react-bootstrap/Button'
-import Modal from 'react-bootstrap/Modal'
+import { Button, Modal } from 'react-bootstrap'
+//types
+import { CustomModalMessage } from '../../types/customModalMessage'
 
-interface CustomModalProps {
-  modalState: { show: boolean; index: number }
-  onHide: (data: number) => void
-}
-
-const CustomModal: React.FC<CustomModalProps> = ({ modalState, onHide }) => {
+const CustomModal: React.FC<CustomModalMessage> = ({ modalState, onHide }) => {
   const sendDataToParent = () => {
     const myData = modalState.index
     onHide(myData) // Llamas la función del padre con el dato

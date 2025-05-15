@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import { Button } from 'react-bootstrap'
-import Form from 'react-bootstrap/Form'
-import InputGroup from 'react-bootstrap/InputGroup'
+import { Button, Form, InputGroup } from 'react-bootstrap'
 import { useMutation } from '@tanstack/react-query'
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer'
+import { PDFDownloadLink } from '@react-pdf/renderer'
 import CreatePdf from '../pdf/Pdf' // Importa el PDF
 import { createQuotation } from '../../api/apiConnection'
 import {
@@ -18,58 +16,18 @@ import TimeOut from '../misc/TimeOut'
 import CustomModal from '../misc/CustomModal'
 import PdfPrevia from '../pdf/PdfPrevia'
 import '../../css/form.css'
+// types
+import { Current } from '../../types/current'
+import { Customer } from '../../types/customer'
+import { QuotationData } from '../../types/quotationData'
+// import { QuotationData } from '../../types/quotationData'
+import { Message } from '../../types/message'
 
 // redux - obtengo la funcion para guardar el cliente seleccionado
 import { useSelector } from 'react-redux'
 
 // Import the shared Customer type
 import { RootState } from '../../store/store'
-
-type Current = {
-  number: number
-  lastId: number
-}
-
-type Customer = {
-  id: number
-  name: string
-  rut: string
-  address: string
-  attention: string
-  phone: string
-  email: string
-  notesGeneral: string
-}
-
-type QuotationData = {
-  createdCustomer: string
-  name: string
-  address: string
-  rut: string
-  attention: string
-  phone: string
-  email: string
-  notesGeneral: string
-  subTotal: number
-  iva: number
-  total: number
-  quotations: QuotationItem[]
-}
-
-type QuotationItem = {
-  idPrice: number
-  description: string
-  qty: number
-  priceUnit: number
-  total: number
-  notes: string
-}
-
-type Message = {
-  success: boolean
-  showAlert: string
-  alertMessage: string
-}
 
 const CreateQuotation: React.FC = () => {
   const [form, setForm] = useState({
@@ -172,28 +130,27 @@ const CreateQuotation: React.FC = () => {
 
     // Combinar los datos del cliente y las cotizaciones en un único objeto
     const dataToSave: QuotationData = {
-      createdCustomer: getCustomerData.id.toString(),
-      name: getCustomerData.name,
-      address: getCustomerData.address,
-      rut: getCustomerData.rut,
-      attention: getCustomerData.attention,
-      phone: getCustomerData.phone,
-      email: getCustomerData.email,
-      notesGeneral: getCustomerData.notesGeneral,
+      createdCustomer: getCustomerData?.id?.toString() || '',
+      name: getCustomerData.name || '',
+      address: getCustomerData.address || '',
+      rut: getCustomerData.rut || '',
+      attention: getCustomerData.attention || '',
+      phone: getCustomerData.phone || '',
+      email: getCustomerData.email || '',
+      notesGeneral: getCustomerData.notesGeneral || '',
       subTotal: subTotal,
       iva: iva,
       total: total,
       quotations: savedQuotations.map((quotation) => ({
-        idPrice: quotation.id,
+        id: quotation.id,
+        idPrice: String(quotation.idPrice),
         description: quotation.description,
-        qty: quotation.qty,
+        qty: Number(quotation.qty),
         priceUnit: Number(quotation.priceUnit.replace(',', '.')),
-        total: quotation.total,
+        total: Number(quotation.total),
         notes: quotation.notes,
       })),
     }
-
-    console.log(dataToSave)
 
     mutation.mutate(dataToSave) // se envían los datos a la API, por medio de "mutationFn: createQuotation"
 
@@ -300,9 +257,9 @@ const CreateQuotation: React.FC = () => {
         />
       </div>
       <TimeOut
-          success={alertMessage.success}
-          setAlertMessage={setAlertMessage}
-        />
+        success={alertMessage.success}
+        setAlertMessage={setAlertMessage}
+      />
       {alertMessage.success && (
         <Alert
           message={alertMessage.alertMessage}
@@ -500,17 +457,15 @@ const CreateQuotation: React.FC = () => {
               document={
                 <CreatePdf
                   quotation={(getCurrent?.lastId ?? 0) + 1}
-                  customer={
-                    getCustomerData ?? {
-                      name: '',
-                      address: '',
-                      rut: '',
-                      attention: '',
-                      phone: '',
-                      email: '',
-                      notesGeneral: '',
-                    }
-                  }
+                  customer={{
+                    name: getCustomerData?.name || '',
+                    address: getCustomerData?.address || '',
+                    rut: getCustomerData?.rut || '',
+                    attention: getCustomerData?.attention || '',
+                    phone: getCustomerData?.phone || '',
+                    email: getCustomerData?.email || '',
+                    notesGeneral: getCustomerData?.notesGeneral || '',
+                  }}
                   quotations={
                     savedQuotations?.length > 0
                       ? savedQuotations
@@ -540,17 +495,15 @@ const CreateQuotation: React.FC = () => {
         </div>
         <PdfPrevia
           quotation={(getCurrent?.lastId ?? 0) + 1}
-          customer={
-            getCustomerData ?? {
-              name: '',
-              address: '',
-              rut: '',
-              attention: '',
-              phone: '',
-              email: '',
-              notesGeneral: '',
-            }
-          }
+          customer={{
+            name: getCustomerData?.name || '',
+            address: getCustomerData?.address || '',
+            rut: getCustomerData?.rut || '',
+            attention: getCustomerData?.attention || '',
+            phone: getCustomerData?.phone || '',
+            email: getCustomerData?.email || '',
+            notesGeneral: getCustomerData?.notesGeneral || '',
+          }}
           quotations={
             savedQuotations?.length > 0
               ? savedQuotations

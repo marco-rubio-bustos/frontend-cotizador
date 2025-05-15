@@ -7,42 +7,12 @@ const API_CUSTOMERS = `${url}/api/customers`
 const API_QUOTATION = `${url}/api/quotation`
 const API_QUOTATIONITEMS = `${url}/api/quotationItems`
 const API_QUOTATIONPRICE = `${url}/api/quotationPrice`
+// types
+import { Customer } from '../types/customer'
+import { QuotationData, QuotationItems } from '../types/quotationData'
+import { PaginationParams } from '../types/paginationParams'
 
-interface CustomerData {
-  name: string
-  address: string
-  rut: string
-  attention: string
-  phone: string
-  email: string
-  notesGeneral: string
-}
-
-interface QuotationData {
-  createdCustomer: string
-  name: string
-  address: string
-  rut: string
-  attention: string
-  phone: string
-  email: string
-  subTotal: number
-  iva: number
-  total: number
-  notesGeneral: string
-  quotations: QuotationItem[]
-}
-
-interface QuotationItem {
-  idPrice: number
-  description: string
-  qty: number
-  priceUnit: number
-  total: number
-  notes: string
-}
-
-export const createCustomer = async (data: CustomerData) => {
+export const createCustomer = async (data: Customer) => {
   try {
     const response = await axios.post(API_CUSTOMERS, data)
     return response.data
@@ -63,7 +33,7 @@ export const createQuotation = async (data: QuotationData) => {
   }
 }
 
-export const createPriceQuote = async (data: QuotationItem) => {
+export const createPriceQuote = async (data: QuotationItems) => {
   try {
     const response = await axios.post(API_QUOTATIONPRICE, data)
     if (response.data.idPrice) {
@@ -77,12 +47,6 @@ export const createPriceQuote = async (data: QuotationItem) => {
 }
 
 //////////////
-
-interface PaginationParams {
-  page?: number
-  pageSize?: number
-  all?: boolean
-}
 
 // export const getCustomers = async ({ page, pageSize }: PaginationParams) => {
 //   const response = await axios.get(
@@ -123,10 +87,7 @@ export const getQuotationItems = async () => {
 
 // Upgrade
 
-export const updateCustomer = async (
-  id: string,
-  updatedCustomer: CustomerData,
-) => {
+export const updateCustomer = async (id: string, updatedCustomer: Customer) => {
   try {
     const response = await axios.put(
       `${API_CUSTOMERS}/update/${id}`,

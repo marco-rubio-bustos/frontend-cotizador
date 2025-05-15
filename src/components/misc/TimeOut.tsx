@@ -1,17 +1,8 @@
 import { useEffect } from 'react'
+// type
+import { TimeOut } from '../../types/timeOut'
 
-type AlertProps = {
-  success: boolean
-  setAlertMessage: React.Dispatch<
-    React.SetStateAction<{
-      success: boolean
-      showAlert: string
-      alertMessage: string
-    }>
-  >
-}
-
-const AutoHideAlert: React.FC<AlertProps> = ({ success, setAlertMessage }) => {
+const AutoHideAlert: React.FC<TimeOut> = ({ success, setAlertMessage }) => {
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => {

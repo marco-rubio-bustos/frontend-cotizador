@@ -1,8 +1,7 @@
-interface Props {
-  date: string // Recibe la fecha como string desde la BD
-}
+//types
+import { Current } from '../../types/current'
 
-const FormattedDate: React.FC<Props> = ({ date }) => {
+const FormattedDate: React.FC<Current> = ({ date }) => {
   const formatDate = (dateString: string) => {
     const fecha = new Date(dateString)
     return fecha
@@ -14,7 +13,7 @@ const FormattedDate: React.FC<Props> = ({ date }) => {
       .replace(/\//g, '/')
   }
 
-  return <span>{formatDate(date)}</span>
+  return <span>{date ? formatDate(date) : 'Invalid date'}</span>
 }
 
 export default FormattedDate

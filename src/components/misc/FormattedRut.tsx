@@ -1,8 +1,11 @@
-interface Props {
-  rut: string
+// types
+import { Customer } from '../../types/customer'
+
+const FormattedCleaningNumber: React.FC<Customer> = ({ rut }) => {
+  return rut?.replace(/\D/g, '') // Elimina todo lo que no sea número
 }
 
-const FormatRut: React.FC<Props> = ({ rut }) => {
+const FormatRut: React.FC<Customer> = ({ rut }) => {
   // Verificar si rut es null o una cadena vacía
   if (!rut) {
     return '' // O puedes devolver un valor por defecto
@@ -22,4 +25,4 @@ const FormatRut: React.FC<Props> = ({ rut }) => {
   return cleanRut
 }
 
-export default FormatRut
+export { FormattedCleaningNumber, FormatRut }

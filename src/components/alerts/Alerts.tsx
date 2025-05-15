@@ -1,16 +1,15 @@
-import Alert from 'react-bootstrap/Alert'
+import { Alert } from 'react-bootstrap'
 import '../../css/alert.css'
+// types
+import { AlertMessage } from '../../types/alertMessage'
 
-interface AlertProps {
-  message: string
-  variant: string
-  show: boolean
-}
-
-const Alerts: React.FC<AlertProps> = ({ message, variant, show }) => {
+const Alerts: React.FC<AlertMessage> = ({ message, variant, show }) => {
   return (
     <div className="container">
-      <Alert variant={variant} className={`alert z-3 ${show ? 'position-fixed' : ''}`}>
+      <Alert
+        variant={variant}
+        className={`alert z-3 ${show ? 'position-fixed' : ''}`}
+      >
         {message}
       </Alert>
     </div>

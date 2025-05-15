@@ -1,59 +1,20 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import ListGroup from 'react-bootstrap/ListGroup'
-import Accordion from 'react-bootstrap/Accordion'
-import Spinner from 'react-bootstrap/Spinner'
+import { ListGroup, Accordion, Spinner } from 'react-bootstrap'
 import { getQuotation, getQuotationItems } from '../../api/apiConnection'
 import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
-import FormattedRut from '../misc/FormattedRut'
+import { FormatRut } from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
 import FormattedDate from '../misc/FormattedDate'
 import useWindowSize from '../hooks/useWindowSize'
 import '../../css/listGroup.css'
-
-// Definir los tipos de los datos que esperamos recibir
-type Quotation = {
-  id: string
-  name: string
-  address: string
-  rut: string
-  attention: string
-  email: string
-  phone: string
-  idPrice: string
-  subTotal: string
-  iva: string
-  total: string
-  description: string
-  notesGeneral: string
-  created_at: string
-}
-
-type QuotationItems = {
-  id: string
-  idPrice: string
-  description: string
-  qty: string
-  priceUnit: string
-  total: string
-  notes: string
-}
-
-type QuotationsResponse = {
-  quotation: Quotation[] | undefined
-  totalItems: number
-}
-
-type QuotationsItemsResponse = {
-  quotationItems: QuotationItems[] | undefined
-}
-
-type Message = {
-  success: boolean
-  showAlert: string
-  alertMessage: string
-}
+// type
+import { Message } from '../../types/message'
+import { QuotationsItemsResponse } from '../../types/quotationsItemsResponse'
+import { QuotationItems } from '../../types/quotationData'
+import { Quotation } from '../../types/quotation'
+import { QuotationsResponse } from '../../types/quotationsResponse'
 
 const ListQuotation: React.FC = () => {
   const [page, setPage] = useState(1)
@@ -72,7 +33,7 @@ const ListQuotation: React.FC = () => {
     isLoading,
   } = useQuery<QuotationsResponse>({
     queryKey: ['quotation', page],
-    queryFn: () => getQuotation({ page, pageSize }),
+    queryFn: () => getQuotation({ page, pageSize, onPageChange: () => {} }),
   })
 
   const { data: quotationItemsData } = useQuery<QuotationsItemsResponse>({
@@ -142,7 +103,7 @@ const ListQuotation: React.FC = () => {
                     {quotation.address}
                   </ListGroup.Item>
                   <ListGroup.Item className="col-12 col-lg-2 ">
-                    <FormattedRut rut={quotation.rut} />
+                    <FormatRut rut={quotation.rut} />
                   </ListGroup.Item>
                   <ListGroup.Item className="col-12 col-lg-1 ellipsis">
                     {quotation.attention}
@@ -151,7 +112,7 @@ const ListQuotation: React.FC = () => {
                     {quotation.email}
                   </ListGroup.Item>
                   <ListGroup.Item className="col-12 col-lg-2 ellipsis">
-                    <FormattedDate date={quotation.created_at} />
+                    <FormattedDate date={quotation.created_at as string} />
                   </ListGroup.Item>
                 </ListGroup>
               </Accordion.Header>
@@ -262,12 +223,12 @@ const ListQuotation: React.FC = () => {
             success={alertMessage.success}
             setAlertMessage={setAlertMessage}
           />
-        <Alert
-          message="No hay cotizaciones disponibles."
-          variant="danger"
-          show={false}
+          <Alert
+            message="No hay cotizaciones disponibles."
+            variant="danger"
+            show={false}
           />
-          </>
+        </>
       )}
       <Pagination
         currentPage={page}

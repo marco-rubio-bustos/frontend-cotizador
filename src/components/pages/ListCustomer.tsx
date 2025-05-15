@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import Button from 'react-bootstrap/Button'
-import ListGroup from 'react-bootstrap/ListGroup'
-import Accordion from 'react-bootstrap/Accordion'
-import Spinner from 'react-bootstrap/Spinner'
+import { Button, ListGroup, Accordion, Spinner } from 'react-bootstrap'
 import { getCustomers, getQuotationItems } from '../../api/apiConnection'
 import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
-import FormattedRut from '../misc/FormattedRut'
+import { FormatRut } from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
 import CreatedQuotation from '../sections/CreatedQuotation'
 import Search from '../sections/Search'
@@ -18,43 +15,11 @@ import '../../css/listGroup.css'
 // redux
 import { useDispatch } from 'react-redux'
 import { setSelectedCustomer } from '../../actions'
-
-// Definir los tipos de los datos que esperamos recibir
-type Customer = {
-  id: string
-  name: string
-  rut: string
-  address: string
-  attention: string
-  phone: string
-  email: string
-  notesGeneral: string
-}
-
-type CustomersResponse = {
-  customers: Customer[] | undefined
-  totalItems: number
-}
-
-type QuotationItems = {
-  id: string
-  idPrice: string
-  description: string
-  qty: string
-  priceUnit: string
-  total: string
-  notes: string
-}
-
-type QuotationsItemsResponse = {
-  quotationItems: QuotationItems[] | undefined
-}
-
-type Message = {
-  success: boolean
-  showAlert: string
-  alertMessage: string
-}
+// type
+import { Customer } from '../../types/customer'
+import { CustomersResponse } from '../../types/customersResponse'
+import { Message } from '../../types/message'
+import { QuotationsItemsResponse } from '../../types/quotationsItemsResponse'
 
 const ListCustomer: React.FC = () => {
   const [searchValue, setSearchValue] = useState('')
@@ -72,7 +37,7 @@ const ListCustomer: React.FC = () => {
     isLoading,
   } = useQuery<CustomersResponse>({
     queryKey: ['customers', page],
-    queryFn: () => getCustomers({ page, pageSize }),
+    queryFn: () => getCustomers({ page, pageSize, onPageChange: () => {} }),
   })
 
   const { data: quotationItemsData } = useQuery<QuotationsItemsResponse>({
@@ -110,7 +75,7 @@ const ListCustomer: React.FC = () => {
       if (!searchValue) {
         return true
       }
-      return customer.name.toLowerCase().includes(searchValue.toLowerCase())
+      return customer.name?.toLowerCase().includes(searchValue.toLowerCase())
     }).length > 0
 
   useEffect(() => {
@@ -171,12 +136,15 @@ const ListCustomer: React.FC = () => {
                 return true
               }
               return customer.name
-                .toLowerCase()
+                ?.toLowerCase()
                 .includes(searchValue.toLowerCase())
             })
             .map((customer: Customer) => (
               <Accordion key={customer.id}>
-                <Accordion.Item className="border-0" eventKey={customer.id}>
+                <Accordion.Item
+                  className="border-0"
+                  eventKey={String(customer.id)}
+                >
                   <Accordion.Header className="rounded-0">
                     <ListGroup
                       onClick={handleSave}
@@ -191,7 +159,7 @@ const ListCustomer: React.FC = () => {
                         {customer.name}
                       </ListGroup.Item>
                       <ListGroup.Item className="col-12 col-lg-2">
-                        <FormattedRut rut={customer.rut} />
+                        <FormatRut rut={customer.rut} />
                       </ListGroup.Item>
                       <ListGroup.Item className="col-12 col-lg-2 text-capitalize">
                         {customer.attention}
@@ -218,7 +186,7 @@ const ListCustomer: React.FC = () => {
                       </div>
                       <div className="col-2">
                         <Button
-                          onClick={() => handleEdit(customer.id)}
+                          onClick={() => handleEdit(String(customer.id))}
                           variant="success"
                         >
                           Editar
@@ -226,8 +194,8 @@ const ListCustomer: React.FC = () => {
                       </div>
                     </div>
                     <CreatedQuotation
-                      quotationCustomer={customer.name}
-                      quotationItemsData={quotationItemsData?.quotationItems}
+                      quotationCustomer={customer.name || ''}
+                      quotationItems={quotationItemsData?.quotationItems}
                     />
                   </Accordion.Body>
                 </Accordion.Item>

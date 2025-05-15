@@ -2,61 +2,20 @@ import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getQuotation } from '../../api/apiConnection'
 import { FormattedThousands } from '../misc/FormattedNumber'
-import Modal from 'react-bootstrap/Modal'
+import { Modal, Spinner } from 'react-bootstrap'
 import FormattedDate from '../misc/FormattedDate'
 import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
-import Spinner from 'react-bootstrap/Spinner'
 import PdfPrevia from '../pdf/PdfPrevia'
+// types
+import { Quotation } from '../../types/quotation'
+import { Message } from '../../types/message'
+import { QuotationsResponse } from '../../types/quotationsResponse'
+import { QuotationsItemsResponse } from '../../types/quotationsItemsResponse'
 
-type Quotation = {
-  id: string
-  createdCustomer: number
-  name: string
-  address: string
-  rut: string
-  attention: string
-  email: string
-  phone: string
-  idPrice: string
-  subTotal: string
-  iva: string
-  total: string
-  description: string
-  notesGeneral: string
-  created_at: string
-}
-
-interface Props {
-  quotationCustomer: string
-  quotationItemsData?: QuotationItem[] /// 1
-}
-
-/// 2
-type QuotationItem = {
-  idPrice: string
-  description: string
-  qty: string
-  priceUnit: string
-  total: string
-  notes: string
-}
-
-type QuotationsResponse = {
-  quotation: Quotation[] | undefined
-  totalItems: number
-}
-
-type Message = {
-  success: boolean
-  showAlert: string
-  alertMessage: string
-}
-
-/// 3
-const CreatedQuotation: React.FC<Props> = ({
+const CreatedQuotation: React.FC<QuotationsItemsResponse> = ({
   quotationCustomer,
-  quotationItemsData,
+  quotationItems,
 }) => {
   const [selectedQuotation, setSelectedQuotation] = useState<Quotation | null>(
     null,
@@ -75,7 +34,7 @@ const CreatedQuotation: React.FC<Props> = ({
     isLoading,
   } = useQuery<QuotationsResponse>({
     queryKey: ['quotation'],
-    queryFn: () => getQuotation({ all: true }),
+    queryFn: () => getQuotation({ all: true, onPageChange: () => {} }),
   })
 
   const filteredQuotations =
@@ -181,15 +140,15 @@ const CreatedQuotation: React.FC<Props> = ({
               notesGeneral: selectedQuotation.notesGeneral,
             }}
             quotations={
-              quotationItemsData
-                ? quotationItemsData
+              quotationItems
+                ? quotationItems
                     .filter((item) => item.idPrice === selectedQuotation.id)
                     .map((item) => ({
                       id: item.idPrice,
                       description: item.description,
-                      qty: item.qty,
-                      priceUnit: item.priceUnit,
-                      total: item.total,
+                      qty: String(item.qty),
+                      priceUnit: String(item.priceUnit),
+                      total: String(item.total),
                       notes: item.notes,
                     }))
                 : []
