@@ -1,4 +1,6 @@
-export interface QuotationData {
+import { TypeBase } from './typeBase'
+
+export interface QuotationData extends TypeBase {
   createdCustomer: string
   name: string
   address: string

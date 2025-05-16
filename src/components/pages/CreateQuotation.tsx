@@ -130,6 +130,8 @@ const CreateQuotation: React.FC = () => {
 
     // Combinar los datos del cliente y las cotizaciones en un único objeto
     const dataToSave: QuotationData = {
+      idPrice: savedQuotations[0]?.idPrice ?? '', // or provide a default value
+      description: savedQuotations[0]?.description ?? '', // or provide a default value
       createdCustomer: getCustomerData?.id?.toString() || '',
       name: getCustomerData.name || '',
       address: getCustomerData.address || '',
