@@ -1,5 +1,5 @@
 export interface TypeBase {
-  id?: number | string
+  id?: string | number
   idPrice: string
   description: string
   name?: string

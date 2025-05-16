@@ -194,7 +194,7 @@ const ListCustomer: React.FC = () => {
                       </div>
                     </div>
                     <CreatedQuotation
-                      quotationCustomer={customer.name || ''}
+                      quotationCustomer={customer.id || ''}
                       quotationItems={quotationItemsData?.quotationItems}
                     />
                   </Accordion.Body>

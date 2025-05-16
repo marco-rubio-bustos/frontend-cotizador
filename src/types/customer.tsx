@@ -7,4 +7,5 @@ export interface Customer {
   phone?: string
   email?: string
   notesGeneral?: string
+  created_at?: string
 }
