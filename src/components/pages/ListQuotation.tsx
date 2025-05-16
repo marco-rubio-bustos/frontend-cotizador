@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { ListGroup, Accordion, Spinner } from 'react-bootstrap'
-import { getQuotation, getQuotationItems } from '../../api/apiConnection'
+import {
+  getQuotation,
+  getQuotationItems,
+  getCustomers,
+} from '../../api/apiConnection'
 import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
 import { FormatRut } from '../misc/FormattedRut'
@@ -15,8 +19,10 @@ import { QuotationsItemsResponse } from '../../types/quotationsItemsResponse'
 import { QuotationItems } from '../../types/quotationData'
 import { Quotation } from '../../types/quotation'
 import { QuotationsResponse } from '../../types/quotationsResponse'
+import { CustomersResponse } from '../../types/customersResponse'
 
 const ListQuotation: React.FC = () => {
+
   const [page, setPage] = useState(1)
   const [alertMessage, setAlertMessage] = useState<Message>({
     success: false,
@@ -39,6 +45,11 @@ const ListQuotation: React.FC = () => {
   const { data: quotationItemsData } = useQuery<QuotationsItemsResponse>({
     queryKey: ['quotationItems', page],
     queryFn: () => getQuotationItems(),
+  })
+
+  const { data: customersData } = useQuery<CustomersResponse>({
+    queryKey: ['customers', page],
+    queryFn: () => getCustomers({ page, pageSize, onPageChange: () => {} }),
   })
 
   const width = useWindowSize(window)
@@ -85,9 +96,12 @@ const ListQuotation: React.FC = () => {
       />
       {/* Mostrar los resultados filtrados */}
       {quotationData?.quotation && quotationData.quotation.length > 0 ? (
-        quotationData.quotation?.map((quotation: Quotation) => (
+        quotationData.quotation.map((quotation: Quotation) => (
           <Accordion key={quotation.id}>
-            <Accordion.Item className="border-0" eventKey={quotation.id}>
+            <Accordion.Item
+              className="border-0"
+              eventKey={String(quotation.id)}
+            >
               <Accordion.Header>
                 <ListGroup
                   horizontal={typeof width === 'number' && width >= 991}
@@ -97,19 +111,34 @@ const ListQuotation: React.FC = () => {
                     {quotation.id}
                   </ListGroup.Item>
                   <ListGroup.Item className="col-12 col-lg-2">
-                    {quotation.name}
+                    {customersData?.customers?.find(
+                      (c) => String(c.id) === String(quotation.createdCustomer),
+                    )?.name ?? 'Sin nombre'}
                   </ListGroup.Item>
                   <ListGroup.Item className="col-12 col-lg-2 ">
-                    {quotation.address}
+                    {customersData?.customers?.find(
+                      (c) => String(c.id) === String(quotation.createdCustomer),
+                    )?.address ?? 'Sin dirección'}
                   </ListGroup.Item>
                   <ListGroup.Item className="col-12 col-lg-2 ">
-                    <FormatRut rut={quotation.rut} />
+                    <FormatRut
+                      rut={
+                        customersData?.customers?.find(
+                          (c) =>
+                            String(c.id) === String(quotation.createdCustomer),
+                        )?.rut ?? ''
+                      }
+                    />
                   </ListGroup.Item>
                   <ListGroup.Item className="col-12 col-lg-1 ellipsis">
-                    {quotation.attention}
+                    {customersData?.customers?.find(
+                      (c) => String(c.id) === String(quotation.createdCustomer),
+                    )?.attention ?? 'Sin contacto'}
                   </ListGroup.Item>
                   <ListGroup.Item className="col-12 col-lg-2 ellipsis">
-                    {quotation.email}
+                    {customersData?.customers?.find(
+                      (c) => String(c.id) === String(quotation.createdCustomer),
+                    )?.email ?? 'Sin email'}
                   </ListGroup.Item>
                   <ListGroup.Item className="col-12 col-lg-2 ellipsis">
                     <FormattedDate date={quotation.created_at as string} />
@@ -120,7 +149,11 @@ const ListQuotation: React.FC = () => {
                 <div className="row">
                   <div className="col-12 py-5 border-bottom">
                     <p className="m-0">
-                      <b>Notas generales:</b> {quotation.notesGeneral}
+                      <b>Notas generales:</b>{' '}
+                      {customersData?.customers?.find(
+                        (c) =>
+                          String(c.id) === String(quotation.createdCustomer),
+                      )?.notesGeneral ?? ''}
                     </p>
                   </div>
                   <h3 className="py-3  border-bottom">Ítems</h3>

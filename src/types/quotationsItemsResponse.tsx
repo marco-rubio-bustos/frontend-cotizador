@@ -1,6 +1,6 @@
 import { QuotationItems } from './quotationData'
 
 export interface QuotationsItemsResponse {
-  quotationCustomer: string
+  quotationCustomer: string | number
   quotationItems: QuotationItems[] | undefined
 }

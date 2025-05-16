@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { getQuotation } from '../../api/apiConnection'
+import { getQuotation, getCustomers } from '../../api/apiConnection'
 import { FormattedThousands } from '../misc/FormattedNumber'
 import { Modal, Spinner } from 'react-bootstrap'
 import FormattedDate from '../misc/FormattedDate'
@@ -9,6 +9,7 @@ import TimeOut from '../misc/TimeOut'
 import PdfPrevia from '../pdf/PdfPrevia'
 // types
 import { Quotation } from '../../types/quotation'
+import { Customer } from '../../types/customer'
 import { Message } from '../../types/message'
 import { QuotationsResponse } from '../../types/quotationsResponse'
 import { QuotationsItemsResponse } from '../../types/quotationsItemsResponse'
@@ -37,16 +38,22 @@ const CreatedQuotation: React.FC<QuotationsItemsResponse> = ({
     queryFn: () => getQuotation({ all: true, onPageChange: () => {} }),
   })
 
+  const { data: customerData } = useQuery<{ customers: Customer[] }>({
+    queryKey: ['customer'],
+    queryFn: () => getCustomers({ all: true, onPageChange: () => {} }),
+  })
+
   const filteredQuotations =
     (quotationData?.quotation ?? []).filter(
-      (quotation) => quotation.name === quotationCustomer,
+      (quotation) =>
+        String(quotation.createdCustomer) === String(quotationCustomer),
     ) || []
 
-  // filteredQuotations.forEach((quotation) => {
-  //   console.log('ID:', quotation.id)
-  // })
+  const filteredCustomer = customerData?.customers?.find(
+    (customer) => customer.id === quotationCustomer,
+  )
 
-  const save = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleSave = (e: React.MouseEvent<HTMLDivElement>) => {
     setModalShow(true)
     const quotationId = e.currentTarget.getAttribute('data-customer-id')
     const found = filteredQuotations.find((q) => String(q.id) === quotationId)
@@ -96,7 +103,7 @@ const CreatedQuotation: React.FC<QuotationsItemsResponse> = ({
           <div
             className="d-flex border-bottom px-3 cursor-pointer"
             key={quotation.id}
-            onClick={save}
+            onClick={handleSave}
             data-customer-id={quotation.id}
           >
             <div className="col my-2">N° Cotización: {quotation.id} </div>
@@ -131,13 +138,13 @@ const CreatedQuotation: React.FC<QuotationsItemsResponse> = ({
             quotation={Number(selectedQuotation.id)}
             date={selectedQuotation.created_at}
             customer={{
-              name: selectedQuotation.name,
-              address: selectedQuotation.address,
-              rut: selectedQuotation.rut,
-              attention: selectedQuotation.attention,
-              phone: selectedQuotation.phone,
-              email: selectedQuotation.email,
-              notesGeneral: selectedQuotation.notesGeneral,
+              name: filteredCustomer?.name ?? '',
+              address: filteredCustomer?.address ?? '',
+              rut: filteredCustomer?.rut ?? '',
+              attention: filteredCustomer?.attention ?? '',
+              phone: filteredCustomer?.phone ?? '',
+              email: filteredCustomer?.email ?? '',
+              notesGeneral: filteredCustomer?.notesGeneral ?? '',
             }}
             quotations={
               quotationItems
