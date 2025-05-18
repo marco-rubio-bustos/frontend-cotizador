@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Button, Form, InputGroup } from 'react-bootstrap'
+import { useState, useEffect } from 'react'
+import { Button, Form, InputGroup, Modal } from 'react-bootstrap'
 import { useMutation } from '@tanstack/react-query'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import CreatePdf from '../pdf/Pdf' // Importa el PDF
@@ -20,6 +20,7 @@ import '../../css/form.css'
 import { Current } from '../../types/current'
 import { Customer } from '../../types/customer'
 import { QuotationData } from '../../types/quotationData'
+import { DataPdf } from '../../types/dataPdf'
 // import { QuotationData } from '../../types/quotationData'
 import { Message } from '../../types/message'
 
@@ -30,6 +31,13 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../store/store'
 
 const CreateQuotation: React.FC = () => {
+  const [dataPdf, setDataPdf] = useState<DataPdf | null>(null)
+  const [pdfData, setPdfData] = useState<any>(null)
+  const [pdfShow, setPdfShow] = useState(false)
+
+  const [modalShow, setModalShow] = useState(false)
+  const [modalShowDownload, setModalShowDownload] = useState(false)
+
   const [form, setForm] = useState({
     description: '',
     qty: '',
@@ -109,6 +117,12 @@ const CreateQuotation: React.FC = () => {
     })
   }
 
+  const handleConfirmation = (event: React.FormEvent) => {
+    event.preventDefault()
+    setPdfShow(true)
+    setModalShowDownload(true)
+  }
+
   const handleSave = () => {
     if (!getCustomerData) {
       setAlertMessage({
@@ -130,8 +144,8 @@ const CreateQuotation: React.FC = () => {
 
     // Combinar los datos del cliente y las cotizaciones en un único objeto
     const dataToSave: QuotationData = {
-      idPrice: savedQuotations[0]?.idPrice ?? '', // or provide a default value
-      description: savedQuotations[0]?.description ?? '', // or provide a default value
+      idPrice: savedQuotations[0]?.idPrice ?? '',
+      description: savedQuotations[0]?.description ?? '',
       createdCustomer: getCustomerData?.id?.toString() || '',
       name: getCustomerData.name || '',
       address: getCustomerData.address || '',
@@ -155,8 +169,6 @@ const CreateQuotation: React.FC = () => {
     }
 
     mutation.mutate(dataToSave) // se envían los datos a la API, por medio de "mutationFn: createQuotation"
-
-    // handleDownload() // descarga el PDF
   }
 
   const handleCreate = () => {
@@ -227,24 +239,68 @@ const CreateQuotation: React.FC = () => {
   )
   // fin redux
 
-  // const handleDownload = async () => {
-  //   const pdfInstance = (
-  //     <CreatePdf
-  //       quotation={5}
-  //       cliente={getCustomerData?.name || 'Cliente'}
-  //       total={total}
-  //     />
-  //   )
-  //   const blob = await (await import('@react-pdf/renderer'))
-  //     .pdf(pdfInstance)
-  //     .toBlob()
-  //   const url = URL.createObjectURL(blob)
-  //   const a = document.createElement('a')
-  //   a.href = url
-  //   a.download = 'cotizacion.pdf'
-  //   a.click()
-  //   URL.revokeObjectURL(url)
-  // }
+  const getQuoteObject = () => {
+    return {
+      quotation: (getCurrent?.lastId ?? 0) + 1,
+      customer: {
+        name: getCustomerData?.name || '',
+        address: getCustomerData?.address || '',
+        rut: getCustomerData?.rut || '',
+        attention: getCustomerData?.attention || '',
+        phone: getCustomerData?.phone || '',
+        email: getCustomerData?.email || '',
+        notesGeneral: getCustomerData?.notesGeneral || '',
+      },
+      quotations:
+        savedQuotations?.length > 0
+          ? savedQuotations
+          : [
+              {
+                id: '',
+                description: '',
+                qty: '',
+                priceUnit: '',
+                total: '',
+                notes: '',
+              },
+            ],
+      subTotal,
+      iva,
+      total,
+    }
+  }
+
+  useEffect(() => {
+    if (!getCustomerData || savedQuotations.length === 0 || !getCurrent) {
+      setDataPdf(null)
+      return
+    }
+
+    const data: DataPdf = {
+      quotation: (getCurrent?.lastId ?? 0) + 1,
+      customer: {
+        name: getCustomerData.name,
+        address: getCustomerData.address,
+        rut: getCustomerData.rut,
+        attention: getCustomerData.attention,
+        phone: getCustomerData.phone,
+        email: getCustomerData.email,
+        notesGeneral: getCustomerData.notesGeneral,
+      },
+      quotations: savedQuotations,
+      subTotal,
+      iva,
+      total,
+    }
+
+    setDataPdf(data)
+  }, [getCustomerData, savedQuotations, getCurrent, subTotal, iva, total])
+
+  const handleViewQuote = () => {
+    const data = getQuoteObject()
+    setPdfData(data)
+    setModalShow(true)
+  }
 
   return (
     <div className="container bg-light pb-5 px-4">
@@ -438,93 +494,88 @@ const CreateQuotation: React.FC = () => {
             </Button>
           </div>
         </div>
-        {/* <Button
-          variant="info"
-          type="button"
-          onClick={handleSave}
-          disabled={mutation.isPending}
-          className="offset-md-4 col-md-4 col-12 mt-5"
-        >
-          {mutation.isPending ? 'Guardando...' : 'Crear Cotización'}
-        </Button> */}
         <div className="d-flex justify-content-center py-5">
           {!getCustomerData || savedQuotations.length === 0 ? (
             <button className="btn btn-warning col-md-4 col-12" disabled>
               Ingrese Información
             </button>
           ) : (
+            <button
+              onClick={handleConfirmation}
+              className="btn btn-warning col-md-4 col-12"
+            >
+              Confirmar cotización
+            </button>
+          )}
+        </div>
+      </Form>
+      <div className="d-flex justify-content-center">
+        <Button
+          variant="primary"
+          type="button"
+          onClick={handleViewQuote}
+          disabled={mutation.isPending}
+          className="col-md-4 col-12"
+        >
+          {mutation.isPending ? 'Guardando...' : 'Visualizar Cotización'}
+        </Button>
+      </div>
+
+      <Modal
+        show={modalShowDownload}
+        onHide={() => setModalShowDownload(false)}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter example-custom-modal-styling-title"
+        dialogClassName="modal-90w"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Descargar PDF
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p>Desea descargar y guardar la cotización.</p>
+
+          {pdfShow && dataPdf?.quotation && dataPdf?.customer && (
             <PDFDownloadLink
               className="btn btn-warning col-md-4 col-12"
               onClick={handleSave}
-              document={
-                <CreatePdf
-                  quotation={(getCurrent?.lastId ?? 0) + 1}
-                  customer={{
-                    name: getCustomerData?.name || '',
-                    address: getCustomerData?.address || '',
-                    rut: getCustomerData?.rut || '',
-                    attention: getCustomerData?.attention || '',
-                    phone: getCustomerData?.phone || '',
-                    email: getCustomerData?.email || '',
-                    notesGeneral: getCustomerData?.notesGeneral || '',
-                  }}
-                  quotations={
-                    savedQuotations?.length > 0
-                      ? savedQuotations
-                      : [
-                          {
-                            id: '',
-                            description: '',
-                            qty: '',
-                            priceUnit: '',
-                            total: '',
-                            notes: '',
-                          },
-                        ]
-                  }
-                  subTotal={subTotal}
-                  iva={iva}
-                  total={total}
-                />
-              }
-              fileName={`cotizacion_${getCustomerData.name}_${(getCurrent?.lastId ?? 0) + 1}.pdf`}
+              document={<CreatePdf {...(dataPdf as any)} />}
+              fileName={`cotizacion_${getCustomerData?.name}_${(getCurrent?.lastId ?? 0) + 1}.pdf`}
             >
-              {mutation.isPending
-                ? 'Guardando...'
-                : 'Crear Cotización y Descargar PDF'}
+              Sí, descargar
             </PDFDownloadLink>
           )}
-        </div>
-        <PdfPrevia
-          quotation={(getCurrent?.lastId ?? 0) + 1}
-          customer={{
-            name: getCustomerData?.name || '',
-            address: getCustomerData?.address || '',
-            rut: getCustomerData?.rut || '',
-            attention: getCustomerData?.attention || '',
-            phone: getCustomerData?.phone || '',
-            email: getCustomerData?.email || '',
-            notesGeneral: getCustomerData?.notesGeneral || '',
-          }}
-          quotations={
-            savedQuotations?.length > 0
-              ? savedQuotations
-              : [
-                  {
-                    id: '',
-                    description: '',
-                    qty: '',
-                    priceUnit: '',
-                    total: '',
-                    notes: '',
-                  },
-                ]
-          }
-          subTotal={subTotal}
-          iva={iva}
-          total={total}
-        />
-      </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={() => setModalShowDownload(false)}>
+            No, volver a la cotización
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <CustomModal
+        modalState={modalState}
+        onHide={(data) => handleModalClose(data)}
+      />
+
+      <Modal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter example-custom-modal-styling-title"
+        dialogClassName="modal-90w"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            N° Cotización
+          </Modal.Title>
+        </Modal.Header>
+        {pdfData && <PdfPrevia {...pdfData} />}
+      </Modal>
     </div>
   )
 }

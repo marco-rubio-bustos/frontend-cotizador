@@ -7,7 +7,7 @@ import {
   Image,
 } from '@react-pdf/renderer'
 import { FormattedThousands, FormattedDecimals } from '../misc/FormattedNumber'
-import {FormatRut} from '../misc/FormattedRut'
+import { FormatRut } from '../misc/FormattedRut'
 // Ancho 555
 const styles = StyleSheet.create({
   image: {

@@ -1,14 +1,9 @@
+
+
 import { TypeBase } from './typeBase'
 
 export interface QuotationData extends TypeBase {
   createdCustomer: string
-  name: string
-  address: string
-  rut: string
-  attention: string
-  phone: string
-  email: string
-  notesGeneral: string
   subTotal: number
   iva: number
   total: number

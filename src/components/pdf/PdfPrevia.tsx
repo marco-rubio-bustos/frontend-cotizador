@@ -334,9 +334,7 @@ const PdfPrevia = ({
                   ]}
                 >
                   <Text>
-                    {String(
-                      FormattedThousands({ num: item.qty.toString() }) || '',
-                    )}
+                    {String(FormattedThousands({ num: item.qty }))}
                   </Text>
                 </View>
                 <View
