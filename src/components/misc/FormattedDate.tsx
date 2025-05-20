@@ -1,5 +1,5 @@
 //types
-import { Current } from '../../types/current'
+import { Current } from '../../types'
 
 const FormattedDate: React.FC<Current> = ({ date }) => {
   const formatDate = (dateString: string) => {

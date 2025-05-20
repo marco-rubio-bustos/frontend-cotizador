@@ -1,7 +1,7 @@
 import { Alert } from 'react-bootstrap'
 import '../../css/alert.css'
 // types
-import { AlertMessage } from '../../types/alertMessage'
+import { AlertMessage } from '../../types'
 
 const Alerts: React.FC<AlertMessage> = ({ message, variant, show }) => {
   return (

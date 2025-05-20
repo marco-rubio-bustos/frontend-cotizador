@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Form } from 'react-bootstrap'
 // types
-import { CreatedQuotation } from '../../types/createdQuotation'
+import { CreatedQuotation } from '../../types'
 
 const search: React.FC<CreatedQuotation> = ({ onSearchValueChange }) => {
   const [searchValue, setSearchValue] = useState('')

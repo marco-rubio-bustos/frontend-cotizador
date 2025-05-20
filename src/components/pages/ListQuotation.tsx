@@ -14,15 +14,16 @@ import FormattedDate from '../misc/FormattedDate'
 import useWindowSize from '../hooks/useWindowSize'
 import '../../css/listGroup.css'
 // type
-import { Message } from '../../types/message'
-import { QuotationsItemsResponse } from '../../types/quotationsItemsResponse'
-import { QuotationItems } from '../../types/quotationData'
-import { Quotation } from '../../types/quotation'
-import { QuotationsResponse } from '../../types/quotationsResponse'
-import { CustomersResponse } from '../../types/customersResponse'
+import {
+  Message,
+  QuotationsItemsResponse,
+  QuotationItems,
+  Quotation,
+  QuotationsResponse,
+  CustomersResponse,
+} from '../../types'
 
 const ListQuotation: React.FC = () => {
-
   const [page, setPage] = useState(1)
   const [alertMessage, setAlertMessage] = useState<Message>({
     success: false,

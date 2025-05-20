@@ -8,11 +8,13 @@ import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
 import PdfPrevia from '../pdf/PdfPrevia'
 // types
-import { Quotation } from '../../types/quotation'
-import { Customer } from '../../types/customer'
-import { Message } from '../../types/message'
-import { QuotationsResponse } from '../../types/quotationsResponse'
-import { QuotationsItemsResponse } from '../../types/quotationsItemsResponse'
+import {
+  Quotation,
+  Customer,
+  Message,
+  QuotationsResponse,
+  QuotationsItemsResponse,
+} from '../../types'
 
 const CreatedQuotation: React.FC<QuotationsItemsResponse> = ({
   quotationCustomer,
@@ -111,8 +113,8 @@ const CreatedQuotation: React.FC<QuotationsItemsResponse> = ({
               Fecha: <FormattedDate date={quotation.created_at} />
             </div>
             <div className="col my-2">
-              Total: {}${' '}
-              {String(FormattedThousands({ num: quotation.total }) || '')}
+              Total: $
+              <FormattedThousands num={String(quotation.total)} />
             </div>
           </div>
         ))

@@ -8,7 +8,7 @@ import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
 import '../../css/form.css'
 // types
-import { Message } from '../../types/message'
+import { Message } from '../../types'
 
 const CreateCustomer: React.FC = () => {
   const [form, setForm] = useState({

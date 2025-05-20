@@ -7,8 +7,7 @@ import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
 import { FormatRut } from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
-import CreatedQuotation from '../sections/CreatedQuotation'
-import Search from '../sections/Search'
+import { CreatedQuotation, Search } from '../sections'
 import useWindowSize from '../hooks/useWindowSize'
 import '../../css/listGroup.css'
 
@@ -16,10 +15,12 @@ import '../../css/listGroup.css'
 import { useDispatch } from 'react-redux'
 import { setSelectedCustomer } from '../../actions'
 // type
-import { Customer } from '../../types/customer'
-import { CustomersResponse } from '../../types/customersResponse'
-import { Message } from '../../types/message'
-import { QuotationsItemsResponse } from '../../types/quotationsItemsResponse'
+import {
+  Customer,
+  CustomersResponse,
+  Message,
+  QuotationsItemsResponse,
+} from '../../types'
 
 const ListCustomer: React.FC = () => {
   const [searchValue, setSearchValue] = useState('')

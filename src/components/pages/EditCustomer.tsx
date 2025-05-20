@@ -10,9 +10,7 @@ import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
 import '../../css/form.css'
 // types
-import { Message } from '../../types/message'
-import { Customer } from '../../types/customer'
-import { CustomersResponse } from '../../types/customersResponse'
+import { Message, Customer, CustomersResponse } from '../../types'
 
 const CreateCustomer: React.FC = () => {
   const [form, setForm] = useState({

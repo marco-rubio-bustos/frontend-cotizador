@@ -9,20 +9,14 @@ import {
   FormattedDecimals,
   FormattedPriceUnit,
 } from '../misc/FormattedNumber'
-import CustomerData from '../sections/CustomerData'
-import CurrentNumberQuotation from '../sections/CurrentNumberQuotation'
+import { CustomerData, CurrentNumberQuotation } from '../sections'
 import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
 import CustomModal from '../misc/CustomModal'
 import PdfPrevia from '../pdf/PdfPrevia'
 import '../../css/form.css'
 // types
-import { Current } from '../../types/current'
-import { Customer } from '../../types/customer'
-import { QuotationData } from '../../types/quotationData'
-import { DataPdf } from '../../types/dataPdf'
-// import { QuotationData } from '../../types/quotationData'
-import { Message } from '../../types/message'
+import { Current, Customer, QuotationData, DataPdf, Message } from '../../types'
 
 // redux - obtengo la funcion para guardar el cliente seleccionado
 import { useSelector } from 'react-redux'

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 // type
-import { TimeOut } from '../../types/timeOut'
+import { TimeOut } from '../../types'
 
 const AutoHideAlert: React.FC<TimeOut> = ({ success, setAlertMessage }) => {
   useEffect(() => {

@@ -3,8 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getQuotation } from '../../api/apiConnection'
 import { Spinner } from 'react-bootstrap'
 //types
-import { Current } from '../../types/current'
-import { UpdateCurrentNumber } from '../../types/updateCurrentNumber'
+import { Current , UpdateCurrentNumber} from '../../types'
 
 const CurrentNumberQuotation: React.FC<UpdateCurrentNumber> = ({
   onUpdateCurrentNumber,

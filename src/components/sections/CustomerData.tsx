@@ -4,8 +4,7 @@ import { Spinner, Form } from 'react-bootstrap'
 import { FormatRut } from '../misc/FormattedRut'
 import { getCustomers } from '../../api/apiConnection'
 // types
-import { Customer } from '../../types/customer'
-import { SelectedCustomer } from '../../types/selectedCustomer'
+import { Customer, SelectedCustomer } from '../../types'
 
 const CustomerData: React.FC<SelectedCustomer> = ({
   selectedCustomer,
@@ -20,7 +19,10 @@ const CustomerData: React.FC<SelectedCustomer> = ({
       setLoading(true)
       setError(null)
       try {
-        const customersData = await getCustomers({ all: true, onPageChange: () => {} })
+        const customersData = await getCustomers({
+          all: true,
+          onPageChange: () => {},
+        })
 
         // Verificar si customersData y customersData.customers están definidos
         if (customersData && customersData.customers) {

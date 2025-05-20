@@ -1,5 +1,5 @@
 // types
-import { Customer } from '../../types/customer'
+import { Customer } from '../../types'
 
 const FormattedCleaningNumber: React.FC<Customer> = ({ rut }) => {
   return rut?.replace(/\D/g, '') // Elimina todo lo que no sea número

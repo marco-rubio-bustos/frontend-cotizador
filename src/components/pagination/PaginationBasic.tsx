@@ -1,6 +1,6 @@
 import { Pagination } from 'react-bootstrap'
 // types
-import { PaginationParams } from '../../types/paginationParams'
+import { PaginationParams } from '../../types'
 
 const PaginationBasic: React.FC<PaginationParams> = ({
   currentPage,
