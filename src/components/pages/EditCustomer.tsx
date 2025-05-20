@@ -95,7 +95,8 @@ const CreateCustomer: React.FC = () => {
   const navigate = useNavigate()
 
   const handleSave = () => {
-    mutation.mutate({ ...form, id: Number(form.id) })
+    mutation.mutate({ ...form, id: Number(form.id), 
+    notesGeneral: form.notesGeneral ?? '',  })
     setTimeout(() => {
       navigate('/listar-clientes')
     }, 3000)

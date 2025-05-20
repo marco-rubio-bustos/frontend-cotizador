@@ -533,16 +533,14 @@ const CreateQuotation: React.FC = () => {
         <Modal.Body>
           <p>Desea descargar y guardar la cotización.</p>
 
-          {pdfShow && dataPdf?.quotation && dataPdf?.customer && (
-            <PDFDownloadLink
-              className="btn btn-warning col-md-4 col-12"
-              onClick={handleSave}
-              document={<CreatePdf {...(dataPdf as any)} />}
-              fileName={`cotizacion_${getCustomerData?.name}_${(getCurrent?.lastId ?? 0) + 1}.pdf`}
-            >
-              Sí, descargar
-            </PDFDownloadLink>
-          )}
+          <PDFDownloadLink
+            className="btn btn-warning col-md-4 col-12"
+            onClick={handleSave}
+            document={<CreatePdf {...(dataPdf as any)} />}
+            fileName={`cotizacion_${getCustomerData?.name}_${(getCurrent?.lastId ?? 0) + 1}.pdf`}
+          >
+            Sí, descargar
+          </PDFDownloadLink>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="danger" onClick={() => setModalShowDownload(false)}>
