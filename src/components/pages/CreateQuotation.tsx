@@ -163,6 +163,7 @@ const CreateQuotation: React.FC = () => {
     }
 
     mutation.mutate(dataToSave) // se envían los datos a la API, por medio de "mutationFn: createQuotation"
+    setModalShowDownload(false)
   }
 
   const handleCreate = () => {
@@ -565,7 +566,7 @@ const CreateQuotation: React.FC = () => {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            N° Cotización
+            N° Cotización {(getCurrent?.lastId ?? 0) + 1}
           </Modal.Title>
         </Modal.Header>
         {pdfData && <PdfPrevia {...pdfData} />}

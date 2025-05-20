@@ -13,7 +13,7 @@ import { Message } from '../../types'
 const CreateCustomer: React.FC = () => {
   const [form, setForm] = useState({
     id: 0, // Valor por defecto
-    name: '',
+    name: '', 
     address: '',
     rut: '',
     attention: '',
