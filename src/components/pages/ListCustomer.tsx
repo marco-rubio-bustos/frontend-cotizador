@@ -41,6 +41,23 @@ const ListCustomer: React.FC = () => {
     queryFn: () => getCustomers({ page, pageSize, onPageChange: () => {} }),
   })
 
+  const { data: allCustomersData } = useQuery<CustomersResponse>({
+    queryKey: ['allCustomers'],
+    queryFn: () => getCustomers({ all: true, onPageChange: () => {} }), // backend debería ignorar paginación si `all=true`
+  })
+
+  const filteredCustomers = allCustomersData?.customers?.filter((customer) =>
+    customer.name?.toLowerCase().includes(searchValue.toLowerCase()),
+  )
+
+  const customersToShow =
+    searchValue === ''
+      ? customersData?.customers // los paginados (pageSize)
+      : filteredCustomers // todos los que calcen con el filtro
+
+  const showPagination =
+    searchValue === '' && (customersData?.totalItems ?? 0) > pageSize
+
   const { data: quotationItemsData } = useQuery<QuotationsItemsResponse>({
     queryKey: ['quotationItems', page],
     queryFn: () => getQuotationItems(),
@@ -69,15 +86,6 @@ const ListCustomer: React.FC = () => {
   const handleSearchValueChange = (value: string) => {
     setSearchValue(value)
   }
-
-  const showPagination =
-    customersData?.customers &&
-    customersData.customers.filter((customer: Customer) => {
-      if (!searchValue) {
-        return true
-      }
-      return customer.name?.toLowerCase().includes(searchValue.toLowerCase())
-    }).length > 0
 
   useEffect(() => {
     if (error) {
@@ -128,84 +136,66 @@ const ListCustomer: React.FC = () => {
         />
       )}
       {/* Mostrar los resultados filtrados */}
-      {customersData?.customers && customersData.customers.length > 0 ? (
-        showPagination ? (
-          // Aquí verificamos si el filtro devuelve algún resultado
-          customersData.customers
-            .filter((customer: Customer) => {
-              if (!searchValue) {
-                return true
-              }
-              return customer.name
-                ?.toLowerCase()
-                .includes(searchValue.toLowerCase())
-            })
-            .map((customer: Customer) => (
-              <Accordion key={customer.id}>
-                <Accordion.Item
-                  className="border-0"
-                  eventKey={String(customer.id)}
+      {customersToShow && customersToShow?.length > 0 ? (
+        customersToShow?.map((customer: Customer) => (
+          <Accordion key={customer.id}>
+            <Accordion.Item className="border-0" eventKey={String(customer.id)}>
+              <Accordion.Header className="rounded-0">
+                <ListGroup
+                  onClick={handleSave}
+                  horizontal={typeof width === 'number' && width >= 991}
+                  className="my-2 btn p-0 px-2 m-0"
+                  data-customer-id={customer.id}
                 >
-                  <Accordion.Header className="rounded-0">
-                    <ListGroup
-                      onClick={handleSave}
-                      horizontal={typeof width === 'number' && width >= 991}
-                      className="my-2 btn p-0 px-2 m-0"
-                      data-customer-id={customer.id}
-                    >
-                      <ListGroup.Item className="col-12 col-lg-1">
-                        {customer.id}
-                      </ListGroup.Item>
-                      <ListGroup.Item className="col-12 col-lg-3 text-capitalize">
-                        {customer.name}
-                      </ListGroup.Item>
-                      <ListGroup.Item className="col-12 col-lg-2">
-                        <FormatRut rut={customer.rut} />
-                      </ListGroup.Item>
-                      <ListGroup.Item className="col-12 col-lg-2 text-capitalize">
-                        {customer.attention}
-                      </ListGroup.Item>
-                      <ListGroup.Item className="col-12 col-lg-2">
-                        {customer.phone}
-                      </ListGroup.Item>
-                      <ListGroup.Item className="col-12 col-lg-2 ellipsis">
-                        {customer.email}
-                      </ListGroup.Item>
-                    </ListGroup>
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    <div className="row">
-                      <div className="col-10">
-                        <div className="col-12">
-                          <b>Dirección: </b>
-                          {customer.address}
-                        </div>
-                        <div className="col-12">
-                          <b>Notas Generales: </b>
-                          {customer.notesGeneral}
-                        </div>
-                      </div>
-                      <div className="col-2">
-                        <Button
-                          onClick={() => handleEdit(String(customer.id))}
-                          variant="success"
-                        >
-                          Editar
-                        </Button>
-                      </div>
+                  <ListGroup.Item className="col-12 col-lg-1">
+                    {customer.id}
+                  </ListGroup.Item>
+                  <ListGroup.Item className="col-12 col-lg-3 text-capitalize">
+                    {customer.name}
+                  </ListGroup.Item>
+                  <ListGroup.Item className="col-12 col-lg-2">
+                    <FormatRut rut={customer.rut} />
+                  </ListGroup.Item>
+                  <ListGroup.Item className="col-12 col-lg-2 text-capitalize">
+                    {customer.attention}
+                  </ListGroup.Item>
+                  <ListGroup.Item className="col-12 col-lg-2">
+                    {customer.phone}
+                  </ListGroup.Item>
+                  <ListGroup.Item className="col-12 col-lg-2 ellipsis">
+                    {customer.email}
+                  </ListGroup.Item>
+                </ListGroup>
+              </Accordion.Header>
+              <Accordion.Body>
+                <div className="row">
+                  <div className="col-10">
+                    <div className="col-12">
+                      <b>Dirección: </b>
+                      {customer.address}
                     </div>
-                    <CreatedQuotation
-                      quotationCustomer={customer.id || ''}
-                      quotationItems={quotationItemsData?.quotationItems}
-                    />
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-            ))
-        ) : (
-          // Mostrar mensaje si no se encuentran datos
-          <p>No se encontraron clientes con ese criterio de búsqueda.</p>
-        )
+                    <div className="col-12">
+                      <b>Notas Generales: </b>
+                      {customer.notesGeneral}
+                    </div>
+                  </div>
+                  <div className="col-2">
+                    <Button
+                      onClick={() => handleEdit(String(customer.id))}
+                      variant="success"
+                    >
+                      Editar
+                    </Button>
+                  </div>
+                </div>
+                <CreatedQuotation
+                  quotationCustomer={customer.id || ''}
+                  quotationItems={quotationItemsData?.quotationItems}
+                />
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
+        ))
       ) : (
         <>
           <TimeOut
