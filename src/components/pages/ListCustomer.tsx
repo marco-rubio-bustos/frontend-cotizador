@@ -9,6 +9,7 @@ import { FormatRut } from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
 import { CreatedQuotation, Search } from '../sections'
 import useWindowSize from '../hooks/useWindowSize'
+import { messages } from '../locales/messages'
 import '../../css/listGroup.css'
 
 // redux
@@ -91,8 +92,8 @@ const ListCustomer: React.FC = () => {
     if (error) {
       setAlertMessage({
         success: true,
-        showAlert: 'danger',
-        alertMessage: '¡Error al buscar clientes!',
+        showAlert: messages.alert.danger,
+        alertMessage: messages.error.customer.message4,
       })
     }
   }, [error])
@@ -203,8 +204,8 @@ const ListCustomer: React.FC = () => {
             setAlertMessage={setAlertMessage}
           />
           <Alert
-            message="No hay clientes disponibles."
-            variant="danger"
+            message={messages.error.customer.message5}
+            variant={alertMessage.showAlert}
             show={false}
           />
         </>

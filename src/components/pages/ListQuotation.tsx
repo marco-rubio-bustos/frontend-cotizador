@@ -12,6 +12,7 @@ import { FormatRut } from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
 import FormattedDate from '../misc/FormattedDate'
 import useWindowSize from '../hooks/useWindowSize'
+import { messages } from '../locales/messages'
 import '../../css/listGroup.css'
 // type
 import {
@@ -59,8 +60,8 @@ const ListQuotation: React.FC = () => {
     if (error) {
       setAlertMessage({
         success: true,
-        showAlert: 'danger',
-        alertMessage: '¡Error al buscar cotizaciones!',
+        showAlert: messages.alert.danger,
+        alertMessage: messages.error.quotation.message3,
       })
     }
   }, [error])
@@ -258,8 +259,8 @@ const ListQuotation: React.FC = () => {
             setAlertMessage={setAlertMessage}
           />
           <Alert
-            message="No hay cotizaciones disponibles."
-            variant="danger"
+            message={messages.error.quotation.message4}
+            variant={alertMessage.showAlert}
             show={false}
           />
         </>

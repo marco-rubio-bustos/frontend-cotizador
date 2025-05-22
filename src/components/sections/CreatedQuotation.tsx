@@ -7,6 +7,7 @@ import FormattedDate from '../misc/FormattedDate'
 import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
 import PdfPrevia from '../pdf/PdfPrevia'
+import { messages } from '../locales/messages'
 // types
 import {
   Quotation,
@@ -68,8 +69,8 @@ const CreatedQuotation: React.FC<QuotationsItemsResponse> = ({
     if (error) {
       setAlertMessage({
         success: true,
-        showAlert: 'danger',
-        alertMessage: '¡Error al buscar cotizaciones!',
+        showAlert: messages.alert.danger,
+        alertMessage: messages.error.quotation.message3,
       })
     }
   }, [error])

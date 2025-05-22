@@ -14,6 +14,7 @@ import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
 import CustomModal from '../misc/CustomModal'
 import PdfPrevia from '../pdf/PdfPrevia'
+import { messages } from '../locales/messages'
 import '../../css/form.css'
 // types
 import { Current, Customer, QuotationData, DataPdf, Message } from '../../types'
@@ -71,17 +72,17 @@ const CreateQuotation: React.FC = () => {
       }) // Limpia el formulario después de guardar
       setAlertMessage({
         success: true,
-        showAlert: 'success',
-        alertMessage: '¡Se creó la cotización correctamente!',
+        showAlert: messages.alert.success,
+        alertMessage: messages.success.message2,
       })
     },
     onError: (error) => {
       setAlertMessage({
         success: true,
-        showAlert: 'danger',
-        alertMessage: '¡Hubo un error al crear la cotización!',
+        showAlert: messages.alert.danger,
+        alertMessage: messages.error.quotation.message1,
       })
-      console.error('Error al crear la cotización', error)
+      console.error(error)
     },
   })
 
@@ -121,8 +122,8 @@ const CreateQuotation: React.FC = () => {
     if (!getCustomerData) {
       setAlertMessage({
         success: true,
-        showAlert: 'danger',
-        alertMessage: '¡No se seleccionó ningún cliente!',
+        showAlert: messages.alert.danger,
+        alertMessage: messages.error.customer.message2,
       })
       return
     }
@@ -130,8 +131,8 @@ const CreateQuotation: React.FC = () => {
     if (savedQuotations.length === 0) {
       setAlertMessage({
         success: true,
-        showAlert: 'danger',
-        alertMessage: '¡No hay cotizaciones guardadas!',
+        showAlert: messages.alert.danger,
+        alertMessage: messages.error.quotation.message2,
       })
       return
     }
@@ -170,8 +171,8 @@ const CreateQuotation: React.FC = () => {
     if (!form.description || !form.qty || !form.priceUnit) {
       setAlertMessage({
         success: true,
-        showAlert: 'danger',
-        alertMessage: '¡Hay campos sin llenar!',
+        showAlert: messages.alert.danger,
+        alertMessage: messages.error.general.message,
       })
       return
     }

@@ -8,6 +8,7 @@ import {
 } from '@react-pdf/renderer'
 import { FormattedThousands, FormattedDecimals } from '../misc/FormattedNumber'
 import { FormatRut } from '../misc/FormattedRut'
+import { messages } from '../locales/messages'
 // Ancho 555
 const styles = StyleSheet.create({
   image: {
@@ -129,25 +130,21 @@ const CreatePdf = ({
       {/* Información sobre la Empresa */}
       <View style={[styles.container, styles.paddingBottom]}>
         <View>
-          <Image
-            src="src/components/img/etiquetando.png"
-            style={styles.image}
-          />
+          <Image src={messages.company.logo} style={styles.image} />
         </View>
         <View style={styles.boxCompany}>
           <Text style={[styles.text, styles.boldText]}>
-            COMERCIALIZADORA Y DISTRIBUIDORA DANIEL CHAPARRO E.I.R.L.
+            {messages.company.name}
           </Text>
           <Text style={styles.text}>
-            Comercialización de Etiquetas, Artículos de Oficina, Computación y
-            Servicios Afines
+            {messages.company.companyName}
+          </Text>
+          <Text style={styles.text}>Dirección: {messages.company.address}</Text>
+          <Text style={styles.text}>
+            Fonos:{messages.company.phone} - {messages.company.celular}
           </Text>
           <Text style={styles.text}>
-            Dirección: Colbún 4386, Puente Alto, Región Metropolitana
-          </Text>
-          <Text style={styles.text}>Fonos: (02) 3580415 - (09) 63410833</Text>
-          <Text style={styles.text}>
-            www.etiquetando.cl - contacto@etiquetando.cl
+            {messages.company.website} - {messages.company.email}
           </Text>
         </View>
         <View style={styles.boxQuotation}>

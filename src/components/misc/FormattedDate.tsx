@@ -13,7 +13,7 @@ const FormattedDate: React.FC<Current> = ({ date }) => {
       .replace(/\//g, '/')
   }
 
-  return <span>{date ? formatDate(date) : 'Invalid date'}</span>
+  return <span>{date ? formatDate(date) : 'Fecha inválida'}</span>
 }
 
 export default FormattedDate

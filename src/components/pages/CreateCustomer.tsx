@@ -6,6 +6,7 @@ import FormattedCleaningNumber from '../misc/FormattedCleaningNumber'
 import { FormatRut } from '../misc/FormattedRut'
 import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
+import { messages } from '../locales/messages'
 import '../../css/form.css'
 // types
 import { Message } from '../../types'
@@ -13,7 +14,7 @@ import { Message } from '../../types'
 const CreateCustomer: React.FC = () => {
   const [form, setForm] = useState({
     id: 0, // Valor por defecto
-    name: '', 
+    name: '',
     address: '',
     rut: '',
     attention: '',
@@ -43,16 +44,17 @@ const CreateCustomer: React.FC = () => {
       })
       setAlertMessage({
         success: true,
-        showAlert: 'success',
-        alertMessage: '¡Se creo el nuevo cliente!',
+        showAlert: messages.alert.success,
+        alertMessage: messages.success.message1,
       })
     },
-    onError: () => {
+    onError: (error) => {
       setAlertMessage({
         success: true,
-        showAlert: 'danger',
-        alertMessage: `¡Error al crear el cliente!`,
+        showAlert: messages.alert.danger,
+        alertMessage: messages.error.customer.message1,
       })
+      console.error(error)
     },
   })
 
