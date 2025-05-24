@@ -435,7 +435,7 @@ const CreateQuotation: React.FC = () => {
         </>
       ) : (
         <p className="my-3 row p-3 text-black bg-danger-subtle">
-          Aún no ha agregado ítems a la cotización.
+          {messages.error.general.message5}
         </p>
       )}
       <Form className="text-left position-relative">

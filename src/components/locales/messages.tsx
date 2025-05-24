@@ -11,13 +11,14 @@ export const messages = {
       message1: '¡Hubo un error al crear la cotización.!',
       message2: '¡No hay cotizaciones guardadas.!',
       message3: '¡Error al buscar cotizaciones.!',
-      message4: 'No hay cotizaciones disponibles.',
+      message4: '¡No hay cotizaciones disponibles.!',
     },
     general: {
       message1: '¡Hay campos sin llenar.!',
-      messge2: '¡Aún no ha seleccionado un cliente.!',
-      messge3: '¡No se encontraron datos de clientes.!',
-      messge4: '¡Error al obtener los datos del cliente.!',
+      message2: '¡Aún no ha seleccionado un cliente.!',
+      message3: '¡No se encontraron datos de clientes.!',
+      message4: '¡Error al obtener los datos del cliente.!',
+      message5: '¡Aún no ha agregado ítems a la cotización.!',
     },
   },
   success: {
@@ -31,7 +32,8 @@ export const messages = {
   },
   company: {
     name: 'COMERCIALIZADORA Y DISTRIBUIDORA DANIEL CHAPARRO E.I.R.L.',
-    companyName: 'Comercialización de Etiquetas, Artículos de Oficina, Computación y Servicios Afines',
+    companyName:
+      'Comercialización de Etiquetas, Artículos de Oficina, Computación y Servicios Afines',
     address: 'Colbún 4386, Puente Alto, Región Metropolitana',
     email: 'contacto@etiquetando.cl',
     website: 'www.etiquetando.cl',

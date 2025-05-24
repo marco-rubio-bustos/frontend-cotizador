@@ -1,5 +1,5 @@
 import { Container, Nav, Navbar } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 function Navbars() {
   return (
@@ -16,18 +16,38 @@ function Navbars() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link as={Link} to="/crear-cliente">
+            <NavLink
+              to="/crear-cliente"
+              className={({ isActive }: { isActive: boolean }) =>
+                isActive ? "nav-link custom active" : "nav-link custom"
+              }
+            >
               Crear Cliente
-            </Nav.Link>
-            <Nav.Link as={Link} to="/listar-clientes">
+            </NavLink>
+            <NavLink
+              to="/listar-clientes"
+              className={({ isActive }: { isActive: boolean }) =>
+                isActive ? "nav-link custom active" : "nav-link custom"
+              }
+            >
               Listar Clientes
-            </Nav.Link>
-            <Nav.Link as={Link} to="/crear-cotizacion">
+            </NavLink>
+            <NavLink
+              to="/crear-cotizacion"
+              className={({ isActive }: { isActive: boolean }) =>
+                isActive ? "nav-link custom active" : "nav-link custom"
+              }
+            >
               Crear Cotización
-            </Nav.Link>
-            <Nav.Link as={Link} to="/listar-cotizaciones">
+            </NavLink>
+            <NavLink
+              to="/listar-cotizaciones"
+              className={({ isActive }: { isActive: boolean }) =>
+                isActive ? "nav-link custom active" : "nav-link custom"
+              }
+            >
               Listar Cotizaciones
-            </Nav.Link>
+            </NavLink>
           </Nav>
         </Navbar.Collapse>
       </Container>

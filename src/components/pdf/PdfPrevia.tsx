@@ -7,6 +7,7 @@ import {
   Image,
   BlobProvider,
 } from '@react-pdf/renderer'
+import { Spinner } from 'react-bootstrap'
 import { FormattedThousands, FormattedDecimals } from '../misc/FormattedNumber'
 import { FormatRut } from '../misc/FormattedRut'
 import { messages } from '../locales/messages'
@@ -481,7 +482,9 @@ const PdfPrevia = ({
         url ? (
           <iframe src={url} style={{ width: '100%', height: '600px' }} />
         ) : (
-          'Cargando vista previa...'
+          <div className="d-flex justify-content-center align-items-center vh-100">
+            <Spinner animation="grow" variant="warning" />
+          </div>
         )
       }
     </BlobProvider>

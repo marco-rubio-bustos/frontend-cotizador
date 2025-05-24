@@ -32,7 +32,7 @@ const ListQuotation: React.FC = () => {
     alertMessage: '',
   })
 
-  const pageSize = 20
+  const pageSize = 10
 
   // consultar, obtener ("GET")
   const {
@@ -253,17 +253,11 @@ const ListQuotation: React.FC = () => {
           </Accordion>
         ))
       ) : (
-        <>
-          <TimeOut
-            success={alertMessage.success}
-            setAlertMessage={setAlertMessage}
-          />
           <Alert
             message={messages.error.quotation.message4}
-            variant={alertMessage.showAlert}
+            variant={messages.alert.danger}
             show={false}
           />
-        </>
       )}
       <Pagination
         currentPage={page}
