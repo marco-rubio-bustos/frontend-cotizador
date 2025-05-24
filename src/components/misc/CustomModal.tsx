@@ -1,6 +1,6 @@
 import { Button, Modal } from 'react-bootstrap'
 //types
-import { CustomModalMessage } from '../../types/customModalMessage'
+import { CustomModalMessage } from '../../types'
 
 const CustomModal: React.FC<CustomModalMessage> = ({ modalState, onHide }) => {
   const sendDataToParent = () => {

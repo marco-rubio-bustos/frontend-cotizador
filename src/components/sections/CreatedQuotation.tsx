@@ -7,12 +7,15 @@ import FormattedDate from '../misc/FormattedDate'
 import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
 import PdfPrevia from '../pdf/PdfPrevia'
+import { messages } from '../locales/messages'
 // types
-import { Quotation } from '../../types/quotation'
-import { Customer } from '../../types/customer'
-import { Message } from '../../types/message'
-import { QuotationsResponse } from '../../types/quotationsResponse'
-import { QuotationsItemsResponse } from '../../types/quotationsItemsResponse'
+import {
+  Quotation,
+  Customer,
+  Message,
+  QuotationsResponse,
+  QuotationsItemsResponse,
+} from '../../types'
 
 const CreatedQuotation: React.FC<QuotationsItemsResponse> = ({
   quotationCustomer,
@@ -66,8 +69,8 @@ const CreatedQuotation: React.FC<QuotationsItemsResponse> = ({
     if (error) {
       setAlertMessage({
         success: true,
-        showAlert: 'danger',
-        alertMessage: '¡Error al buscar cotizaciones!',
+        showAlert: messages.alert.danger,
+        alertMessage: messages.error.quotation.message3,
       })
     }
   }, [error])
@@ -111,8 +114,8 @@ const CreatedQuotation: React.FC<QuotationsItemsResponse> = ({
               Fecha: <FormattedDate date={quotation.created_at} />
             </div>
             <div className="col my-2">
-              Total: {}${' '}
-              {String(FormattedThousands({ num: quotation.total }) || '')}
+              Total: $
+              <FormattedThousands num={String(quotation.total)} />
             </div>
           </div>
         ))

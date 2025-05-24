@@ -1,9 +1,9 @@
 // types
-import { Current } from '../../types/current'
+import { Current } from '../../types'
 
 const FormattedThousands: React.FC<Current> = ({ num }) => {
-  const cleanNum = String(num).replace(/\D/g, '') // Eliminar caracteres no numéricos
-  return cleanNum.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  const cleanNum = num?.replace(/\D/g, '') // Eliminar caracteres no numéricos
+  return cleanNum?.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
 
 const FormattedDecimals: React.FC<Current> = ({ num }) => {

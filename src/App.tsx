@@ -3,6 +3,7 @@ import './App.css'
 import '../src/css/button.css'
 import { Buffer } from 'buffer'
 import CreateCustomer from './components/pages/CreateCustomer'
+import Welcome from './components/pages/Welcome'
 import EditCustomer from './components/pages/EditCustomer'
 import ListCustomer from './components/pages/ListCustomer'
 import CreateQuotation from './components/pages/CreateQuotation'
@@ -25,7 +26,7 @@ function App() {
       <Router>
         <Navbars />
         <Routes>
-          <Route path="/" element={<h1>Bienvenido</h1>} />
+          <Route path="/" element={<Welcome />} />
           <Route path="/crear-cliente" element={<CreateCustomer />} />
           <Route path="/editar-cliente/:id" element={<EditCustomer />} />
           <Route path="/listar-clientes" element={<ListCustomer />} />

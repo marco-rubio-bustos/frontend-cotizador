@@ -8,11 +8,10 @@ import { FormatRut } from '../misc/FormattedRut'
 import FormattedCleaningNumber from '../misc/FormattedCleaningNumber'
 import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
+import { messages } from '../locales/messages'
 import '../../css/form.css'
 // types
-import { Message } from '../../types/message'
-import { Customer } from '../../types/customer'
-import { CustomersResponse } from '../../types/customersResponse'
+import { Message, Customer, CustomersResponse } from '../../types'
 
 const CreateCustomer: React.FC = () => {
   const [form, setForm] = useState({
@@ -60,16 +59,17 @@ const CreateCustomer: React.FC = () => {
       })
       setAlertMessage({
         success: true,
-        showAlert: 'success',
-        alertMessage: '¡Se actualizo el cliente!',
+        showAlert: messages.alert.success,
+        alertMessage: messages.success.message3,
       })
     },
-    onError: () => {
+    onError: (error) => {
       setAlertMessage({
         success: true,
-        showAlert: 'danger',
-        alertMessage: `¡Error al actualizar el cliente!`,
+        showAlert: messages.alert.danger,
+        alertMessage: messages.error.customer.message3,
       })
+      console.error(error)
     },
   })
 
@@ -97,7 +97,11 @@ const CreateCustomer: React.FC = () => {
   const navigate = useNavigate()
 
   const handleSave = () => {
-    mutation.mutate({ ...form, id: Number(form.id) })
+    mutation.mutate({
+      ...form,
+      id: Number(form.id),
+      notesGeneral: form.notesGeneral ?? '',
+    })
     setTimeout(() => {
       navigate('/listar-clientes')
     }, 3000)

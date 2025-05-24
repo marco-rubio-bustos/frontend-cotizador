@@ -1,7 +1,7 @@
 export interface TypeBase {
   id?: string | number
-  idPrice: string
-  description: string
+  idPrice?: string
+  description?: string
   name?: string
   address?: string
   rut?: string

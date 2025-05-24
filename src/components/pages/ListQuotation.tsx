@@ -12,17 +12,19 @@ import { FormatRut } from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
 import FormattedDate from '../misc/FormattedDate'
 import useWindowSize from '../hooks/useWindowSize'
+import { messages } from '../locales/messages'
 import '../../css/listGroup.css'
 // type
-import { Message } from '../../types/message'
-import { QuotationsItemsResponse } from '../../types/quotationsItemsResponse'
-import { QuotationItems } from '../../types/quotationData'
-import { Quotation } from '../../types/quotation'
-import { QuotationsResponse } from '../../types/quotationsResponse'
-import { CustomersResponse } from '../../types/customersResponse'
+import {
+  Message,
+  QuotationsItemsResponse,
+  QuotationItems,
+  Quotation,
+  QuotationsResponse,
+  CustomersResponse,
+} from '../../types'
 
 const ListQuotation: React.FC = () => {
-
   const [page, setPage] = useState(1)
   const [alertMessage, setAlertMessage] = useState<Message>({
     success: false,
@@ -58,8 +60,8 @@ const ListQuotation: React.FC = () => {
     if (error) {
       setAlertMessage({
         success: true,
-        showAlert: 'danger',
-        alertMessage: '¡Error al buscar cotizaciones!',
+        showAlert: messages.alert.danger,
+        alertMessage: messages.error.quotation.message3,
       })
     }
   }, [error])
@@ -257,8 +259,8 @@ const ListQuotation: React.FC = () => {
             setAlertMessage={setAlertMessage}
           />
           <Alert
-            message="No hay cotizaciones disponibles."
-            variant="danger"
+            message={messages.error.quotation.message4}
+            variant={alertMessage.showAlert}
             show={false}
           />
         </>
