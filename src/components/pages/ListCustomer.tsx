@@ -116,7 +116,8 @@ const ListCustomer: React.FC = () => {
           <Alert
             message={alertMessage.alertMessage}
             variant={alertMessage.showAlert}
-            show={true}
+            showFixed={true}
+            showAlert={true}
           />
         )}
       </div>
@@ -198,17 +199,12 @@ const ListCustomer: React.FC = () => {
           </Accordion>
         ))
       ) : (
-        <>
-          <TimeOut
-            success={alertMessage.success}
-            setAlertMessage={setAlertMessage}
-          />
-          <Alert
-            message={messages.error.customer.message5}
-            variant={alertMessage.showAlert}
-            show={false}
-          />
-        </>
+        <Alert
+          message={messages.error.customer.message5}
+          variant={messages.alert.danger}
+          showFixed={false}
+          showAlert={false}
+        />
       )}
       {showPagination && (
         // Mostrar el paginador solo si hay resultados

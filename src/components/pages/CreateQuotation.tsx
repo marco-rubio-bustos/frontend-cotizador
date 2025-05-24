@@ -318,7 +318,8 @@ const CreateQuotation: React.FC = () => {
         <Alert
           message={alertMessage.alertMessage}
           variant={alertMessage.showAlert}
-          show={true}
+          showFixed={true}
+          showAlert={true}
         />
       )}
       <CustomerData

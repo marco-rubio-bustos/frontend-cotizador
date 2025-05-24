@@ -7,7 +7,6 @@ import {
   getCustomers,
 } from '../../api/apiConnection'
 import Alert from '../alerts/Alerts'
-import TimeOut from '../misc/TimeOut'
 import { FormatRut } from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
 import FormattedDate from '../misc/FormattedDate'
@@ -43,6 +42,8 @@ const ListQuotation: React.FC = () => {
     queryKey: ['quotation', page],
     queryFn: () => getQuotation({ page, pageSize, onPageChange: () => {} }),
   })
+
+  const showPagination = (quotationData?.totalItems ?? 0) > pageSize
 
   const { data: quotationItemsData } = useQuery<QuotationsItemsResponse>({
     queryKey: ['quotationItems', page],
@@ -80,7 +81,8 @@ const ListQuotation: React.FC = () => {
           <Alert
             message={alertMessage.alertMessage}
             variant={alertMessage.showAlert}
-            show={true}
+            showFixed={true}
+            showAlert={false}
           />
         )}
       </div>
@@ -89,15 +91,17 @@ const ListQuotation: React.FC = () => {
   return (
     <div className="container bg-light pb-5 px-4">
       <h1 className="mb-4 pt-4">Listar Cotizaciones</h1>
-      <Pagination
-        currentPage={page}
-        onPageChange={setPage}
-        totalItems={quotationData?.totalItems || 100}
-        pageSize={pageSize}
-        showPagination={true}
-      />
+      {showPagination && (
+        <Pagination
+          currentPage={page}
+          onPageChange={setPage}
+          totalItems={quotationData?.totalItems || 100}
+          pageSize={pageSize}
+          showPagination={showPagination ?? true}
+        />
+      )}
       {/* Mostrar los resultados filtrados */}
-      {quotationData?.quotation && quotationData.quotation.length > 0 ? (
+      {quotationData?.quotation && quotationData.quotation.length > 1 ? (
         quotationData.quotation.map((quotation: Quotation) => (
           <Accordion key={quotation.id}>
             <Accordion.Item
@@ -253,19 +257,22 @@ const ListQuotation: React.FC = () => {
           </Accordion>
         ))
       ) : (
-          <Alert
-            message={messages.error.quotation.message4}
-            variant={messages.alert.danger}
-            show={false}
-          />
+        <Alert
+          message={messages.error.quotation.message4}
+          variant={messages.alert.danger}
+          showFixed={false}
+          showAlert={false}
+        />
       )}
-      <Pagination
-        currentPage={page}
-        onPageChange={setPage}
-        totalItems={quotationData?.totalItems || 100}
-        pageSize={pageSize}
-        showPagination={true}
-      />
+      {showPagination && (
+        <Pagination
+          currentPage={page}
+          onPageChange={setPage}
+          totalItems={quotationData?.totalItems || 100}
+          pageSize={pageSize}
+          showPagination={showPagination ?? true}
+        />
+      )}
     </div>
   )
 }
