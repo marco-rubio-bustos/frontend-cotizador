@@ -47,16 +47,12 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
   },
   boxCompany: {
-    width: 290,
-    //borderWidth: 1,
+    width: 310,
     padding: 0,
-    //justifyContent: 'center',
-    //alignItems: 'center',
   },
   boxQuotation: {
-    width: 150,
+    width: 130,
     padding: 0,
-    //justifyContent: 'center',
     alignItems: 'center',
   },
   boxInfo: {
@@ -64,8 +60,6 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 10,
     borderRightWidth: 0,
-    //justifyContent: 'center',
-    //alignItems: 'center',
   },
   boxInfoItem: {
     width: 30,
@@ -174,7 +168,7 @@ const PdfPrevia = ({
             {/* Información sobre el Cliente */}
             <View style={[styles.container, styles.paddingBottom]}>
               <View style={[styles.boxInfo, styles.boxInfoCustomerField]}>
-                <Text>Cliente</Text>
+                <Text style={[styles.boldText]}>Cliente</Text>
               </View>
               <View
                 style={[
@@ -193,7 +187,7 @@ const PdfPrevia = ({
                   styles.borderTopWidth,
                 ]}
               >
-                <Text>Dirección</Text>
+                <Text style={[styles.boldText]}>Dirección</Text>
               </View>
               <View
                 style={[
@@ -213,7 +207,7 @@ const PdfPrevia = ({
                   styles.borderTopWidth,
                 ]}
               >
-                <Text>Rut</Text>
+                <Text style={[styles.boldText]}>Rut</Text>
               </View>
               <View
                 style={[
@@ -233,7 +227,7 @@ const PdfPrevia = ({
                   styles.borderTopWidth,
                 ]}
               >
-                <Text>Fono</Text>
+                <Text style={[styles.boldText]}>Fono</Text>
               </View>
               <View
                 style={[
@@ -252,7 +246,7 @@ const PdfPrevia = ({
                   styles.borderTopWidth,
                 ]}
               >
-                <Text>Atención</Text>
+                <Text style={[styles.boldText]}>Atención</Text>
               </View>
               <View
                 style={[
@@ -462,7 +456,7 @@ const PdfPrevia = ({
             {/* Notas generales */}
             <View style={[styles.container, styles.paddingTop_10]}>
               <View style={[styles.boxInfo, styles.boxInfoDescription]}>
-                <Text>Notas generales</Text>
+                <Text style={[styles.boldText]}>Notas generales</Text>
               </View>
               <View
                 style={[
