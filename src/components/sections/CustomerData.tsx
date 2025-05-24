@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Spinner, Form } from 'react-bootstrap'
 import { FormatRut } from '../misc/FormattedRut'
 import { getCustomers } from '../../api/apiConnection'
+import { messages } from '../locales/messages'
 // types
 import { Customer, SelectedCustomer } from '../../types'
 
@@ -34,14 +35,14 @@ const CustomerData: React.FC<SelectedCustomer> = ({
             setCustomer(foundCustomer)
             onUpdateCustomer(foundCustomer) // Envía el objeto al padre
           } else {
-            setError('Aún no ha seleccionado un cliente.')
+            setError(messages.error.general.messge2)
             onUpdateCustomer(null) // Envía null si no se encuentra cliente
           }
         } else {
-          setError('No se encontraron datos de clientes.')
+          setError(messages.error.general.messge3)
         }
       } catch (err) {
-        setError('Error al obtener los datos del cliente.')
+        setError(messages.error.general.messge4)
       } finally {
         setLoading(false)
       }
@@ -64,7 +65,10 @@ const CustomerData: React.FC<SelectedCustomer> = ({
       <p className="my-3 text-black row p-3 d-flex align-items-center justify-content-between bg-danger-subtle">
         {error}
 
-        <Link to="/listar-clientes" className="col-md-4 btn btn-primary mt-3 mt-md-0">
+        <Link
+          to="/listar-clientes"
+          className="col-md-4 btn btn-primary mt-3 mt-md-0"
+        >
           Agregar Cliente
         </Link>
       </p>

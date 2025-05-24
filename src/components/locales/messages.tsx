@@ -14,7 +14,10 @@ export const messages = {
       message4: 'No hay cotizaciones disponibles.',
     },
     general: {
-      message: '¡Hay campos sin llenar.!',
+      message1: '¡Hay campos sin llenar.!',
+      messge2: '¡Aún no ha seleccionado un cliente.!',
+      messge3: '¡No se encontraron datos de clientes.!',
+      messge4: '¡Error al obtener los datos del cliente.!',
     },
   },
   success: {

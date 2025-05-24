@@ -172,7 +172,7 @@ const CreateQuotation: React.FC = () => {
       setAlertMessage({
         success: true,
         showAlert: messages.alert.danger,
-        alertMessage: messages.error.general.message,
+        alertMessage: messages.error.general.message1,
       })
       return
     }
