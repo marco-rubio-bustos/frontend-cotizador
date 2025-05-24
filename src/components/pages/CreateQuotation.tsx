@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button, Form, InputGroup, Modal } from 'react-bootstrap'
+import { Button, Form, InputGroup, Modal, ButtonGroup } from 'react-bootstrap'
 import { useMutation } from '@tanstack/react-query'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import CreatePdf from '../pdf/Pdf' // Importa el PDF
@@ -328,35 +328,72 @@ const CreateQuotation: React.FC = () => {
       {savedQuotations.length > 0 ? (
         <>
           <div className="pt-4">
-            <div className="row py-3 border-bottom">
-              <div className="col-md-5 col-12">Descripción</div>
-              <div className="col-md-2 col-12 text-end">Cantidad</div>
-              <div className="col-md-2 col-12 text-end">Precio Unitario</div>
-              <div className="col-md-2 col-12 text-end">Total</div>
-              <div className="col-md-1 col-12 text-center">Borrar</div>
+            <div className="row py-3 border-bottom d-none d-md-flex">
+              <div className="col-md-11">
+                <div className="row">
+                  <div className="col-md-6 col-12">Descripción</div>
+                  <div className="col-md-2 col-12 text-end">Cantidad</div>
+                  <div className="col-md-2 col-12 text-end">
+                    Precio Unitario
+                  </div>
+                  <div className="col-md-2 col-12 text-end">Total</div>
+                </div>
+              </div>
+              <div className="col-md-1 text-center">Borrar</div>
             </div>
 
             {savedQuotations.map((quotation, index) => (
               <div className="row py-3 border-bottom" key={index}>
-                <div className="col-md-5 col-12">{quotation.description}</div>
-                <div className="col-md-2 col-12 text-end">
-                  {String(FormattedThousands({ num: quotation.qty }) || '')}
-                </div>
-                <div className="col-md-2 col-12 text-end">
-                  <p className="m-0">
-                    <span> $ </span>
-                    {String(
-                      FormattedPriceUnit({ num: quotation.priceUnit }) || '',
+                <div className="col-md-11 col-10">
+                  <div className="row">
+                    <div className="col-md-6 col-12 pb-2 pb-md-0">
+                      <span className="d-block d-md-none">
+                        <b>Descripción</b>
+                      </span>
+                      {quotation.description}
+                    </div>
+                    <div className="col-md-2 col-12 text-end d-flex d-md-block justify-content-between justify-content-md-start">
+                      <span className="d-block d-md-none">
+                        <b>Cantidad</b>
+                      </span>{' '}
+                      {String(FormattedThousands({ num: quotation.qty }) || '')}
+                    </div>
+                    <div className="col-md-2 col-12 text-end d-flex d-md-block justify-content-between justify-content-md-start">
+                      <span className="d-block d-md-none">
+                        <b>Precio Unitario</b>
+                      </span>
+                      <span>
+                        <span> $ </span>
+                        {String(
+                          FormattedPriceUnit({ num: quotation.priceUnit }) ||
+                            '',
+                        )}
+                      </span>
+                    </div>
+                    <div className="col-md-2 col-12 text-end d-flex d-md-block justify-content-between justify-content-md-start">
+                      <span className="d-block d-md-none">
+                        <b>Total</b>
+                      </span>
+                      <span>
+                        <span> $ </span>
+                        {String(
+                          FormattedThousands({ num: quotation.total }) || '',
+                        )}
+                      </span>
+                    </div>
+                    {quotation.notes ? (
+                      <div className="col-md-12 col-12">
+                        <span>
+                          <b>Notas: </b>
+                          {quotation.notes}
+                        </span>
+                      </div>
+                    ) : (
+                      ''
                     )}
-                  </p>
+                  </div>
                 </div>
-                <div className="col-md-2 col-12 text-end">
-                  <p className="m-0">
-                    <span> $ </span>
-                    {String(FormattedThousands({ num: quotation.total }) || '')}
-                  </p>
-                </div>
-                <div className="col-md-1 col-12">
+                <div className="col-md-1 col-2 d-flex justify-content-center">
                   <Button
                     variant="danger"
                     className="rounded-circle btn-circle m-auto"
@@ -365,12 +402,11 @@ const CreateQuotation: React.FC = () => {
                     x
                   </Button>
                 </div>
-                <div className="col-md-12 col-12">{quotation.notes}</div>
               </div>
             ))}
           </div>
 
-          <div className="offset-8 col-md-3 col-12 py-3">
+          <div className="offset-md-8 col-md-3 col-12 py-3">
             <div className="d-flex justify-content-between px-3">
               <strong>Sub-Total:</strong>$
               {Number(subTotal).toLocaleString('es-ES', {
@@ -490,31 +526,28 @@ const CreateQuotation: React.FC = () => {
             </Button>
           </div>
         </div>
-        <div className="d-flex justify-content-center py-5">
-          {!getCustomerData || savedQuotations.length === 0 ? (
-            <button className="btn btn-warning col-md-4 col-12" disabled>
-              Ingrese Información
-            </button>
-          ) : (
-            <button
-              onClick={handleConfirmation}
-              className="btn btn-warning col-md-4 col-12"
-            >
-              Confirmar cotización
-            </button>
-          )}
-        </div>
       </Form>
+
       <div className="d-flex justify-content-center">
-        <Button
-          variant="primary"
-          type="button"
-          onClick={handleViewQuote}
-          disabled={mutation.isPending}
-          className="col-md-4 col-12"
-        >
-          {mutation.isPending ? 'Guardando...' : 'Visualizar Cotización'}
-        </Button>
+        <ButtonGroup aria-label="Basic example" className="group">
+          {!getCustomerData || savedQuotations.length === 0 ? (
+            <Button className="btn btn-warning" disabled>
+              Ingrese Información
+            </Button>
+          ) : (
+            <Button onClick={handleConfirmation} className="btn btn-warning">
+              Confirmar cotización
+            </Button>
+          )}
+          <Button
+            variant="primary"
+            type="button"
+            onClick={handleViewQuote}
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? 'Guardando...' : 'Visualizar Cotización'}
+          </Button>
+        </ButtonGroup>
       </div>
 
       <Modal

@@ -64,7 +64,7 @@ const CustomerData: React.FC<SelectedCustomer> = ({
       <p className="my-3 text-black row p-3 d-flex align-items-center justify-content-between bg-danger-subtle">
         {error}
 
-        <Link to="/listar-clientes" className="col-md-4 btn btn-primary">
+        <Link to="/listar-clientes" className="col-md-4 btn btn-primary mt-3 mt-md-0">
           Agregar Cliente
         </Link>
       </p>
