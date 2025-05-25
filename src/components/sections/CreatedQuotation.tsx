@@ -93,7 +93,8 @@ const CreatedQuotation: React.FC<QuotationsItemsResponse> = ({
           <Alert
             message={alertMessage.alertMessage}
             variant={alertMessage.showAlert}
-            show={true}
+            showFixed={true}
+            showAlert={false}
           />
         )}
       </div>
