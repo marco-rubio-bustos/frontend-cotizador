@@ -32,8 +32,6 @@ const CreateCustomer: React.FC = () => {
 
   const {
     data: customersData,
-    error,
-    isLoading,
   } = useQuery<CustomersResponse>({
     queryKey: ['customers'],
     queryFn: () => getCustomers({ all: true, onPageChange: () => {} }),

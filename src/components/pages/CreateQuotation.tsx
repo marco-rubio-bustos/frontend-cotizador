@@ -29,8 +29,6 @@ import { RootState } from '../../store/store'
 const CreateQuotation: React.FC = () => {
   const [dataPdf, setDataPdf] = useState<DataPdf | null>(null)
   const [pdfData, setPdfData] = useState<any>(null)
-  const [pdfShow, setPdfShow] = useState(false)
-
   const [modalShow, setModalShow] = useState(false)
   const [modalShowDownload, setModalShowDownload] = useState(false)
 
@@ -115,7 +113,6 @@ const CreateQuotation: React.FC = () => {
 
   const handleConfirmation = (event: React.FormEvent) => {
     event.preventDefault()
-    setPdfShow(true)
     setModalShowDownload(true)
   }
 
@@ -298,7 +295,6 @@ const CreateQuotation: React.FC = () => {
     setPdfData(data)
     setModalShow(true)
   }
-  const nameCompany = getCustomerData?.name?.split(' ').join('_')
 
   return (
     <div className="container bg-light pb-5 px-4">
