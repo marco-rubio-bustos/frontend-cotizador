@@ -45,16 +45,12 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
   },
   boxCompany: {
-    width: 290,
-    //borderWidth: 1,
+    width: 310,
     padding: 0,
-    //justifyContent: 'center',
-    //alignItems: 'center',
   },
   boxQuotation: {
-    width: 150,
+    width: 130,
     padding: 0,
-    //justifyContent: 'center',
     alignItems: 'center',
   },
   boxInfo: {
@@ -62,8 +58,6 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 10,
     borderRightWidth: 0,
-    //justifyContent: 'center',
-    //alignItems: 'center',
   },
   boxInfoItem: {
     width: 30,
@@ -94,7 +88,6 @@ const styles = StyleSheet.create({
   },
 })
 
-// Componente del documento PDF
 const CreatePdf = ({
   quotation,
   customer,
@@ -136,9 +129,7 @@ const CreatePdf = ({
           <Text style={[styles.text, styles.boldText]}>
             {messages.company.name}
           </Text>
-          <Text style={styles.text}>
-            {messages.company.companyName}
-          </Text>
+          <Text style={styles.text}>{messages.company.companyName}</Text>
           <Text style={styles.text}>Dirección: {messages.company.address}</Text>
           <Text style={styles.text}>
             Fonos:{messages.company.phone} - {messages.company.celular}
@@ -163,7 +154,7 @@ const CreatePdf = ({
       {/* Información sobre el Cliente */}
       <View style={[styles.container, styles.paddingBottom]}>
         <View style={[styles.boxInfo, styles.boxInfoCustomerField]}>
-          <Text>Cliente</Text>
+          <Text style={[styles.boldText]}>Cliente</Text>
         </View>
         <View
           style={[
@@ -182,7 +173,7 @@ const CreatePdf = ({
             styles.borderTopWidth,
           ]}
         >
-          <Text>Dirección</Text>
+          <Text style={[styles.boldText]}>Dirección</Text>
         </View>
         <View
           style={[
@@ -202,7 +193,7 @@ const CreatePdf = ({
             styles.borderTopWidth,
           ]}
         >
-          <Text>Rut</Text>
+          <Text style={[styles.boldText]}>Rut</Text>
         </View>
         <View
           style={[
@@ -222,7 +213,7 @@ const CreatePdf = ({
             styles.borderTopWidth,
           ]}
         >
-          <Text>Fono</Text>
+          <Text style={[styles.boldText]}>Fono</Text>
         </View>
         <View
           style={[
@@ -241,7 +232,7 @@ const CreatePdf = ({
             styles.borderTopWidth,
           ]}
         >
-          <Text>Atención</Text>
+          <Text style={[styles.boldText]}>Atención</Text>
         </View>
         <View
           style={[
@@ -430,7 +421,7 @@ const CreatePdf = ({
       {/* Notas generales */}
       <View style={[styles.container, styles.paddingTop_10]}>
         <View style={[styles.boxInfo, styles.boxInfoDescription]}>
-          <Text>Notas generales</Text>
+          <Text style={[styles.boldText]}>Notas generales</Text>
         </View>
         <View
           style={[

@@ -3,7 +3,6 @@
   margin: 0 auto;
   padding: 2rem;
 }
-
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -16,7 +15,6 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
-
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -25,13 +23,14 @@
     transform: rotate(360deg);
   }
 }
-
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
-
+.navbar-nav .nav-link.custom.active, .navbar-nav .nav-link.custom.show {
+    color: rgb(215, 3, 102)
+}
 .card {
   padding: 2em;
 }

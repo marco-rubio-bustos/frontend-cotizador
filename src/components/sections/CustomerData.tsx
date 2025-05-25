@@ -35,14 +35,14 @@ const CustomerData: React.FC<SelectedCustomer> = ({
             setCustomer(foundCustomer)
             onUpdateCustomer(foundCustomer) // Envía el objeto al padre
           } else {
-            setError(messages.error.general.messge2)
+            setError(messages.error.general.message2)
             onUpdateCustomer(null) // Envía null si no se encuentra cliente
           }
         } else {
-          setError(messages.error.general.messge3)
+          setError(messages.error.general.message3)
         }
       } catch (err) {
-        setError(messages.error.general.messge4)
+        setError(messages.error.general.message4)
       } finally {
         setLoading(false)
       }

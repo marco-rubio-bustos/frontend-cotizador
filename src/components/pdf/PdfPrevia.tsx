@@ -7,6 +7,7 @@ import {
   Image,
   BlobProvider,
 } from '@react-pdf/renderer'
+import { Spinner } from 'react-bootstrap'
 import { FormattedThousands, FormattedDecimals } from '../misc/FormattedNumber'
 import { FormatRut } from '../misc/FormattedRut'
 import { messages } from '../locales/messages'
@@ -46,16 +47,12 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
   },
   boxCompany: {
-    width: 290,
-    //borderWidth: 1,
+    width: 310,
     padding: 0,
-    //justifyContent: 'center',
-    //alignItems: 'center',
   },
   boxQuotation: {
-    width: 150,
+    width: 130,
     padding: 0,
-    //justifyContent: 'center',
     alignItems: 'center',
   },
   boxInfo: {
@@ -63,8 +60,6 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 10,
     borderRightWidth: 0,
-    //justifyContent: 'center',
-    //alignItems: 'center',
   },
   boxInfoItem: {
     width: 30,
@@ -173,7 +168,7 @@ const PdfPrevia = ({
             {/* Información sobre el Cliente */}
             <View style={[styles.container, styles.paddingBottom]}>
               <View style={[styles.boxInfo, styles.boxInfoCustomerField]}>
-                <Text>Cliente</Text>
+                <Text style={[styles.boldText]}>Cliente</Text>
               </View>
               <View
                 style={[
@@ -192,7 +187,7 @@ const PdfPrevia = ({
                   styles.borderTopWidth,
                 ]}
               >
-                <Text>Dirección</Text>
+                <Text style={[styles.boldText]}>Dirección</Text>
               </View>
               <View
                 style={[
@@ -212,7 +207,7 @@ const PdfPrevia = ({
                   styles.borderTopWidth,
                 ]}
               >
-                <Text>Rut</Text>
+                <Text style={[styles.boldText]}>Rut</Text>
               </View>
               <View
                 style={[
@@ -232,7 +227,7 @@ const PdfPrevia = ({
                   styles.borderTopWidth,
                 ]}
               >
-                <Text>Fono</Text>
+                <Text style={[styles.boldText]}>Fono</Text>
               </View>
               <View
                 style={[
@@ -251,7 +246,7 @@ const PdfPrevia = ({
                   styles.borderTopWidth,
                 ]}
               >
-                <Text>Atención</Text>
+                <Text style={[styles.boldText]}>Atención</Text>
               </View>
               <View
                 style={[
@@ -461,7 +456,7 @@ const PdfPrevia = ({
             {/* Notas generales */}
             <View style={[styles.container, styles.paddingTop_10]}>
               <View style={[styles.boxInfo, styles.boxInfoDescription]}>
-                <Text>Notas generales</Text>
+                <Text style={[styles.boldText]}>Notas generales</Text>
               </View>
               <View
                 style={[
@@ -481,7 +476,9 @@ const PdfPrevia = ({
         url ? (
           <iframe src={url} style={{ width: '100%', height: '600px' }} />
         ) : (
-          'Cargando vista previa...'
+          <div className="d-flex justify-content-center align-items-center vh-100">
+            <Spinner animation="grow" variant="warning" />
+          </div>
         )
       }
     </BlobProvider>
