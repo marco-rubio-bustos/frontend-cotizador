@@ -1,6 +1,7 @@
 export type { AlertMessage } from './alertMessage'
 export type { CreatedQuotation } from './createdQuotation'
 export type { Current } from './current'
+export type { CleanSpaces } from './cleanSpaces'
 export type { Customer } from './customer'
 export type { CustomersResponse } from './customersResponse'
 export type { CustomModalMessage } from './customModalMessage'

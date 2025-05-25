@@ -13,6 +13,7 @@ import { CustomerData, CurrentNumberQuotation } from '../sections'
 import Alert from '../alerts/Alerts'
 import TimeOut from '../misc/TimeOut'
 import CustomModal from '../misc/CustomModal'
+import { cleanSpaces } from '../misc/CleanSpaces'
 import PdfPrevia from '../pdf/PdfPrevia'
 import { messages } from '../locales/messages'
 import '../../css/form.css'
@@ -297,6 +298,7 @@ const CreateQuotation: React.FC = () => {
     setPdfData(data)
     setModalShow(true)
   }
+  const nameCompany = getCustomerData?.name?.split(' ').join('_')
 
   return (
     <div className="container bg-light pb-5 px-4">
@@ -572,7 +574,7 @@ const CreateQuotation: React.FC = () => {
             className="btn btn-warning col-md-4 col-12"
             onClick={handleSave}
             document={<CreatePdf {...(dataPdf as any)} />}
-            fileName={`cotizacion_${getCustomerData?.name}_${(getCurrent?.lastId ?? 0) + 1}.pdf`}
+            fileName={`cotizacion_${cleanSpaces({ name: getCustomerData?.name })}_${(getCurrent?.lastId ?? 0) + 1}.pdf`}
           >
             Sí, descargar
           </PDFDownloadLink>
