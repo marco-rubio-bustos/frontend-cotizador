@@ -27,7 +27,7 @@ const CurrentNumberQuotation: React.FC<UpdateCurrentNumber> = ({
         const customerData = {
           number: currentNumber ?? 0, // Valor por defecto
           lastId: quotationData.lastId,
-        }
+        }        
 
         // Actualizamos el estado y notificamos al componente padre
         setCurrentNumber(quotationData.lastId)
@@ -42,7 +42,7 @@ const CurrentNumberQuotation: React.FC<UpdateCurrentNumber> = ({
       {isLoading ? (
         <Spinner animation="grow" variant="warning" />
       ) : (
-        (currentNumber ?? 0) + 1
+        (Number(currentNumber) ?? 0) + 1
       )}
     </h2>
   )

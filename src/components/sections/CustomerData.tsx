@@ -28,7 +28,7 @@ const CustomerData: React.FC<SelectedCustomer> = ({
         // Verificar si customersData y customersData.customers están definidos
         if (customersData && customersData.customers) {
           const foundCustomer = customersData.customers.find(
-            (c: Customer) => c.id === Number(selectedCustomer),
+            (c: Customer) => Number(c.id) === Number(selectedCustomer),
           )
 
           if (foundCustomer) {
@@ -52,12 +52,7 @@ const CustomerData: React.FC<SelectedCustomer> = ({
   }, [selectedCustomer])
 
   if (loading) {
-    return (
-      <>
-        <p>Cargando datos del cliente...</p>{' '}
-        <Spinner animation="grow" variant="warning" />
-      </>
-    )
+    return <Spinner animation="grow" variant="warning" />
   }
 
   if (error) {
@@ -66,7 +61,7 @@ const CustomerData: React.FC<SelectedCustomer> = ({
         {error}
 
         <Link
-          to="/listar-clientes"
+          to="/cotizador/listar-clientes"
           className="col-md-4 btn btn-primary mt-3 mt-md-0"
         >
           Agregar Cliente

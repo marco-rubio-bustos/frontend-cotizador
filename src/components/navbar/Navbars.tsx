@@ -1,14 +1,15 @@
 import { Container, Nav, Navbar } from 'react-bootstrap'
 import { Link, NavLink } from 'react-router-dom'
+import { URL_FRONT } from '../utils/config'
 
 function Navbars() {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand as={Link} to="/" className="p-0">
+        <Navbar.Brand as={Link} to="/cotizador" className="p-0">
           <img
             alt="logo etiquetando"
-            src="/src/components/img/etiquetando.png"
+            src={`${URL_FRONT}/img/etiquetando.png`}
             height="50"
             className="d-inline-block align-top p-0"
           />
@@ -17,33 +18,33 @@ function Navbars() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <NavLink
-              to="/crear-cliente"
+              to="/cotizador/crear-cliente"
               className={({ isActive }: { isActive: boolean }) =>
-                isActive ? "nav-link custom active" : "nav-link custom"
+                isActive ? 'nav-link custom active' : 'nav-link custom'
               }
             >
               Crear Cliente
             </NavLink>
             <NavLink
-              to="/listar-clientes"
+              to="/cotizador/listar-clientes"
               className={({ isActive }: { isActive: boolean }) =>
-                isActive ? "nav-link custom active" : "nav-link custom"
+                isActive ? 'nav-link custom active' : 'nav-link custom'
               }
             >
               Listar Clientes
             </NavLink>
             <NavLink
-              to="/crear-cotizacion"
+              to="/cotizador/crear-cotizacion"
               className={({ isActive }: { isActive: boolean }) =>
-                isActive ? "nav-link custom active" : "nav-link custom"
+                isActive ? 'nav-link custom active' : 'nav-link custom'
               }
             >
               Crear Cotización
             </NavLink>
             <NavLink
-              to="/listar-cotizaciones"
+              to="/cotizador/listar-cotizaciones"
               className={({ isActive }: { isActive: boolean }) =>
-                isActive ? "nav-link custom active" : "nav-link custom"
+                isActive ? 'nav-link custom active' : 'nav-link custom'
               }
             >
               Listar Cotizaciones
