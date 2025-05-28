@@ -40,7 +40,7 @@ const ListQuotation: React.FC = () => {
     isLoading,
   } = useQuery<QuotationsResponse>({
     queryKey: ['quotation', page],
-    queryFn: () => getQuotation({ page, pageSize, onPageChange: () => {} }),
+    queryFn: () => getQuotation(),
   })
 
   const showPagination = (quotationData?.totalItems ?? 0) > pageSize
