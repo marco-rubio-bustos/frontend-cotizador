@@ -101,7 +101,7 @@ const ListQuotation: React.FC = () => {
         />
       )}
       {/* Mostrar los resultados filtrados */}
-      {quotationData?.quotation && quotationData.quotation.length > 1 ? (
+      {quotationData?.quotation && quotationData.quotation.length >= 1 ? (
         quotationData.quotation.map((quotation: Quotation) => (
           <Accordion key={quotation.id}>
             <Accordion.Item
@@ -155,7 +155,7 @@ const ListQuotation: React.FC = () => {
                 <div className="row">
                   <div className="col-12 py-5 border-bottom">
                     <p className="m-0">
-                      <b>Notas generales:</b>{' '}
+                      <b>Notas generales: </b>
                       {customersData?.customers?.find(
                         (c) =>
                           String(c.id) === String(quotation.createdCustomer),
@@ -215,7 +215,7 @@ const ListQuotation: React.FC = () => {
                           </span>
                         </div>
                         <div className="col-12">
-                          <b>Notas: </b>
+                          {quotationItems.notes ? <b>Nota: </b> : ''}
                           {quotationItems.notes}
                         </div>
                       </div>

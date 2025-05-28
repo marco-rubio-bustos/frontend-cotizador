@@ -1,12 +1,14 @@
 import axios from 'axios'
+import { URL_API } from '../components/utils/config'
 
-const url =
-  import.meta.env.VITE_API_URL || 'http://localhost:5000/api/customers'
+const API_CUSTOMER = `${URL_API}/api/routes/customer.php`
+const API_QUOTATION = `${URL_API}/api/routes/getQuotation.php`
+const API_QUOTATIONITEMS = `${URL_API}/api/routes/getQuotationItems.php`
+const API_QUOTATIONPRICE = `${URL_API}/api/routes/quotationPrice.php`
+const API_GETCUSTOMERS = `${URL_API}/api/routes/getCustomers.php`
+const API_UPDATECUSTOMER = `${URL_API}/api/routes/updateCustomer.php`
+const API_CREATEQUOTATION = `${URL_API}/api/routes/createQuotation.php`
 
-const API_CUSTOMERS = `${url}/api/customers`
-const API_QUOTATION = `${url}/api/quotation`
-const API_QUOTATIONITEMS = `${url}/api/quotationItems`
-const API_QUOTATIONPRICE = `${url}/api/quotationPrice`
 // types
 import { Customer } from '../types/customer'
 import { QuotationData, QuotationItems } from '../types/quotationData'
@@ -14,7 +16,7 @@ import { PaginationParams } from '../types/paginationParams'
 
 export const createCustomer = async (data: Customer) => {
   try {
-    const response = await axios.post(API_CUSTOMERS, data)
+    const response = await axios.post(API_CUSTOMER, data)
     return response.data
   } catch (error) {
     console.error('Error al crear el cliente en la base de datos:', error)
@@ -25,7 +27,7 @@ export const createCustomer = async (data: Customer) => {
 // Obtengo la data desde mutationFn: createQuotation
 export const createQuotation = async (data: QuotationData) => {
   try {
-    const response = await axios.post(API_QUOTATION, data)
+    const response = await axios.post(API_CREATEQUOTATION, data)
     return response.data
   } catch (error) {
     console.error('Error al crear la cotización en la base de datos:', error)
@@ -37,24 +39,18 @@ export const createPriceQuote = async (data: QuotationItems) => {
   try {
     const response = await axios.post(API_QUOTATIONPRICE, data)
     if (response.data.idPrice) {
-      console.log('Datos guardados exitosamente con ID:', response.data.idPrice)
     }
     return response.data
   } catch (error) {
-    console.error('Error al crear la cotización en la base de datos:', error)
+    console.error(
+      'Error al guardar la data de la cotización en la base de datos:',
+      error,
+    )
     throw error // Lanza el error para que el frontend lo maneje
   }
 }
 
-//////////////
-
-// export const getCustomers = async ({ page, pageSize }: PaginationParams) => {
-//   const response = await axios.get(
-//     `${API_CUSTOMERS}?page=${page}&limit=${pageSize}`,
-//   )
-//   return response.data
-// }
-
+// Obtener
 export const getCustomers = async ({
   page,
   pageSize,
@@ -62,21 +58,18 @@ export const getCustomers = async ({
 }: PaginationParams) => {
   if (all) {
     // Realiza una solicitud al backend para obtener todos los clientes sin paginación
-    const response = await axios.get(`${API_CUSTOMERS}/get?all=true`)
+    const response = await axios.get(`${API_GETCUSTOMERS}?all=true`) // /get en localhost
     return response.data
   }
   // Lógica para manejar paginación si no se usa `all`
   const response = await axios.get(
-    `${API_CUSTOMERS}/get?page=${page}&limit=${pageSize}`,
+    `${API_GETCUSTOMERS}?page=${page}&limit=${pageSize}`, // /get en localhost
   )
-
   return response.data
 }
 
-export const getQuotation = async ({ page, pageSize }: PaginationParams) => {
-  const response = await axios.get(
-    `${API_QUOTATION}?page=${page}&limit=${pageSize}`,
-  )
+export const getQuotation = async () => {
+  const response = await axios.get(`${API_QUOTATION}`)
   return response.data
 }
 
@@ -86,16 +79,18 @@ export const getQuotationItems = async () => {
 }
 
 // Upgrade
-
 export const updateCustomer = async (id: string, updatedCustomer: Customer) => {
   try {
     const response = await axios.put(
-      `${API_CUSTOMERS}/update/${id}`,
+      `${API_UPDATECUSTOMER}?id=${id}`,
       updatedCustomer,
     )
     return response.data
-  } catch (error) {
-    console.error('Error al actualizar cliente:', error)
+  } catch (error: any) {
+    console.error(
+      'Error al actualizar cliente:',
+      error?.response?.data || error,
+    )
     throw error
   }
 }

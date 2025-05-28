@@ -39,6 +39,6 @@ export const messages = {
     website: 'www.etiquetando.cl',
     phone: '(02) 3580415',
     celular: '(09) 63410833',
-    logo: 'src/components/img/etiquetando.png',
+    logo: '/img/etiquetando.png',
   },
 }

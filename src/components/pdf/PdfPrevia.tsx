@@ -11,6 +11,7 @@ import { Spinner } from 'react-bootstrap'
 import { FormattedThousands, FormattedDecimals } from '../misc/FormattedNumber'
 import { FormatRut } from '../misc/FormattedRut'
 import { messages } from '../locales/messages'
+import { URL_FRONT } from '../utils/config'
 
 const styles = StyleSheet.create({
   image: {
@@ -89,7 +90,6 @@ const styles = StyleSheet.create({
     width: 470,
   },
 })
-
 const PdfPrevia = ({
   quotation,
   date,
@@ -141,11 +141,12 @@ const PdfPrevia = ({
             {/* Información sobre la Empresa */}
             <View style={[styles.container, styles.paddingBottom]}>
               <View>
-                <Image src={messages.company.logo} style={styles.image} />
+                <Image src={`${URL_FRONT}/${messages.company.logo}`} style={styles.image} />
               </View>
               <View style={styles.boxCompany}>
                 <Text style={[styles.text, styles.boldText]}>
-                  {messages.company.name}
+                  {messages.company.name} -{' '}
+                  {`${URL_FRONT}${messages.company.logo}`}
                 </Text>
                 <Text style={styles.text}>{messages.company.companyName}</Text>
                 <Text style={styles.text}>

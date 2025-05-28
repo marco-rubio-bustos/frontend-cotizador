@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import { Button, ListGroup, Accordion, Spinner } from 'react-bootstrap'
 import { getCustomers, getQuotationItems } from '../../api/apiConnection'
 import Alert from '../alerts/Alerts'
-import TimeOut from '../misc/TimeOut'
 import { FormatRut } from '../misc/FormattedRut'
 import Pagination from '../pagination/PaginationBasic'
 import { CreatedQuotation, Search } from '../sections'
@@ -75,12 +74,12 @@ const ListCustomer: React.FC = () => {
     if (customerId) {
       // Despachar la acción para actualizar el estado global
       dispatch(setSelectedCustomer(customerId))
-      navigate('/crear-cotizacion')
+      navigate('/cotizador/crear-cotizacion')
     }
   }
 
   const handleEdit = (customerId: string) => {
-    navigate(`/editar-cliente/${customerId}`)
+    navigate(`/cotizador/editar-cliente/${customerId}`)
   }
 
   // Manejo del valor de búsqueda desde el hijo
@@ -108,16 +107,12 @@ const ListCustomer: React.FC = () => {
   if (error)
     return (
       <div className="d-flex justify-content-center align-items-center">
-        <TimeOut
-          success={alertMessage.success}
-          setAlertMessage={setAlertMessage}
-        />
         {alertMessage.success && (
           <Alert
             message={alertMessage.alertMessage}
             variant={alertMessage.showAlert}
             showFixed={true}
-            showAlert={true}
+            showAlert={false}
           />
         )}
       </div>

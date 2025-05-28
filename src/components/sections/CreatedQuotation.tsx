@@ -38,7 +38,7 @@ const CreatedQuotation: React.FC<QuotationsItemsResponse> = ({
     isLoading,
   } = useQuery<QuotationsResponse>({
     queryKey: ['quotation'],
-    queryFn: () => getQuotation({ all: true, onPageChange: () => {} }),
+    queryFn: () => getQuotation(),
   })
 
   const { data: customerData } = useQuery<{ customers: Customer[] }>({

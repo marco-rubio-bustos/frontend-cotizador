@@ -81,7 +81,7 @@ const CreateQuotation: React.FC = () => {
         showAlert: messages.alert.danger,
         alertMessage: messages.error.quotation.message1,
       })
-      console.error(error)
+      console.error(error, ' errror')
     },
   })
 
@@ -227,7 +227,7 @@ const CreateQuotation: React.FC = () => {
   const iva = subTotal * 0.19
   const total = subTotal + iva
 
-  // redux
+  // redux - obtenfo el id desde listar clientes
   const selectedCustomer = useSelector(
     (state: RootState) => state.selectedCustomer,
   )
@@ -235,7 +235,7 @@ const CreateQuotation: React.FC = () => {
 
   const getQuoteObject = () => {
     return {
-      quotation: (getCurrent?.lastId ?? 0) + 1,
+      quotation: (Number(getCurrent?.lastId) ?? 0) + 1,
       customer: {
         name: getCustomerData?.name || '',
         address: getCustomerData?.address || '',
@@ -271,7 +271,7 @@ const CreateQuotation: React.FC = () => {
     }
 
     const data: DataPdf = {
-      quotation: (getCurrent?.lastId ?? 0) + 1,
+      quotation: (Number(getCurrent?.lastId) ?? 0) + 1,
       customer: {
         name: getCustomerData.name,
         address: getCustomerData.address,
@@ -570,7 +570,7 @@ const CreateQuotation: React.FC = () => {
             className="btn btn-warning col-md-4 col-12"
             onClick={handleSave}
             document={<CreatePdf {...(dataPdf as any)} />}
-            fileName={`cotizacion_${cleanSpaces({ name: getCustomerData?.name })}_${(getCurrent?.lastId ?? 0) + 1}.pdf`}
+            fileName={`cotizacion_${cleanSpaces({ name: getCustomerData?.name })}_${(Number(getCurrent?.lastId) ?? 0) + 1}.pdf`}
           >
             Sí, descargar
           </PDFDownloadLink>
@@ -597,7 +597,7 @@ const CreateQuotation: React.FC = () => {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            N° Cotización {(getCurrent?.lastId ?? 0) + 1}
+            N° Cotización {(Number(getCurrent?.lastId) ?? 0) + 1}
           </Modal.Title>
         </Modal.Header>
         {pdfData && <PdfPrevia {...pdfData} />}

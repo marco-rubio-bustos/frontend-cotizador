@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Form } from 'react-bootstrap'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -101,16 +101,16 @@ const CreateCustomer: React.FC = () => {
       notesGeneral: form.notesGeneral ?? '',
     })
     setTimeout(() => {
-      navigate('/listar-clientes')
+      navigate('/cotizador/listar-clientes')
     }, 3000)
   }
 
   return (
     <div className="container bg-light pb-5 px-4">
       {filteredCustomer?.map((customer: Customer) => (
-        <>
+        <React.Fragment  key={customer.id}>
           <h1 className="mb-4 pt-4">Editar Cliente</h1>
-          <Form className="row text-left position-relative" key={customer.id}>
+          <Form className="row text-left position-relative">
             <TimeOut
               success={alertMessage.success}
               setAlertMessage={setAlertMessage}
@@ -239,7 +239,7 @@ const CreateCustomer: React.FC = () => {
               {mutation.isPending ? 'Guardando...' : 'Actualizar Cliente'}
             </Button>
           </Form>
-        </>
+        </React.Fragment >
       ))}
     </div>
   )

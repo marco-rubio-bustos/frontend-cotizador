@@ -13,7 +13,7 @@ const Alerts: React.FC<AlertMessage> = ({
     <div className="container">
       <Alert
         variant={variant}
-        className={` z-3 ${showFixed ? 'position-fixed' : ''} ${showAlert ? 'showAlert' : ''}`}
+        className={`${showFixed ? 'position-fixed' : ''} z-3 ${showAlert ? 'showAlert' : ''}`}
       >
         {message}
       </Alert>

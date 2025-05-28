@@ -14,7 +14,7 @@ import { Provider } from 'react-redux'
 
 declare global {
   interface Window {
-    Buffer: typeof Buffer;
+    Buffer: typeof Buffer
   }
 }
 
@@ -26,12 +26,21 @@ function App() {
       <Router>
         <Navbars />
         <Routes>
-          <Route path="/" element={<Welcome />} />
-          <Route path="/crear-cliente" element={<CreateCustomer />} />
-          <Route path="/editar-cliente/:id" element={<EditCustomer />} />
-          <Route path="/listar-clientes" element={<ListCustomer />} />
-          <Route path="/crear-cotizacion" element={<CreateQuotation />} />
-          <Route path="/listar-cotizaciones" element={<ListQuotation />} />
+          <Route path="/cotizador" element={<Welcome />} />
+          <Route path="/cotizador/crear-cliente" element={<CreateCustomer />} />
+          <Route
+            path="/cotizador/editar-cliente/:id"
+            element={<EditCustomer />}
+          />
+          <Route path="/cotizador/listar-clientes" element={<ListCustomer />} />
+          <Route
+            path="/cotizador/crear-cotizacion"
+            element={<CreateQuotation />}
+          />
+          <Route
+            path="/cotizador/listar-cotizaciones"
+            element={<ListQuotation />}
+          />
         </Routes>
       </Router>
     </Provider>
