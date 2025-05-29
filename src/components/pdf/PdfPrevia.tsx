@@ -145,8 +145,7 @@ const PdfPrevia = ({
               </View>
               <View style={styles.boxCompany}>
                 <Text style={[styles.text, styles.boldText]}>
-                  {messages.company.name} -{' '}
-                  {`${URL_FRONT}${messages.company.logo}`}
+                  {messages.company.name}
                 </Text>
                 <Text style={styles.text}>{messages.company.companyName}</Text>
                 <Text style={styles.text}>
