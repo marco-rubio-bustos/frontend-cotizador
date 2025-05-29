@@ -73,9 +73,15 @@ export const getCustomers = async ({
 }
 
 export const getQuotation = async () => {
-  const response = await axios.get(`${API_QUOTATION}`)
-  return response.data
-}
+  try {
+    const response = await axios.get(`${API_QUOTATION}?ts=${Date.now()}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener cotización:", error);
+    return { quotation: [], error: "No se pudo obtener la cotización." };
+  }
+};
+
 
 export const getQuotationItems = async () => {
   const response = await axios.get(`${API_QUOTATIONITEMS}`)

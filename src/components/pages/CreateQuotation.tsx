@@ -572,7 +572,7 @@ const CreateQuotation: React.FC = () => {
             document={<CreatePdf {...(dataPdf as any)} />}
             fileName={`cotizacion_${cleanSpaces({ name: getCustomerData?.name })}_${(Number(getCurrent?.lastId) ?? 0) + 1}.pdf`}
           >
-            Sí, descargar
+            Sí, descargar y guardar
           </PDFDownloadLink>
         </Modal.Body>
         <Modal.Footer>
