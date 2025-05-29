@@ -56,16 +56,20 @@ export const getCustomers = async ({
   pageSize,
   all,
 }: PaginationParams) => {
-  if (all) {
-    // Realiza una solicitud al backend para obtener todos los clientes sin paginación
-    const response = await axios.get(`${API_GETCUSTOMERS}?all=true`) // /get en localhost
+  try {
+    // Agregar timestamp para evitar caché
+    const queryParams = all
+      ? `?all=true&ts=${Date.now()}`
+      : `?page=${page}&limit=${pageSize}&ts=${Date.now()}`
+
+    // Realizar la solicitud con queryParams
+    const response = await axios.get(`${API_GETCUSTOMERS}${queryParams}`)
+
     return response.data
+  } catch (error) {
+    console.error('Error al obtener clientes:', error)
+    return { customers: [], error: 'No se pudo obtener los clientes.' }
   }
-  // Lógica para manejar paginación si no se usa `all`
-  const response = await axios.get(
-    `${API_GETCUSTOMERS}?page=${page}&limit=${pageSize}`, // /get en localhost
-  )
-  return response.data
 }
 
 export const getQuotation = async () => {
