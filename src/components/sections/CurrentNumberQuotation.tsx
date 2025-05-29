@@ -17,7 +17,7 @@ const CurrentNumberQuotation: React.FC<UpdateCurrentNumber> = ({
   } = useQuery<Current>({
     queryKey: ['quotation'],
     queryFn: () =>
-      getQuotation({ page: 1, pageSize: 2, onPageChange: () => {} }),
+      getQuotation(),
     refetchInterval: 1000,
   })
 
